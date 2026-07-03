@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use App\Models\student_info;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -28,8 +30,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Get the authenticated user
-        $user = Auth::user();
+         // Get the authenticated user
+    $user = Auth::user();
+
+    // If Student, ensure student_info record exists
+    if ($user->userType === 'Student') {
+
+        student_info::firstOrCreate([
+            'usn' => $user->usn,
+        ]);
+
+        return redirect()->intended(route('StudentSide.home', absolute: false));
+    }
 
         // Redirect based on user type
         if ($user->userType === 'Admin') {
@@ -39,7 +51,9 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Default to Student home
-        return redirect()->intended(route('StudentSide.home', absolute: false));
+        elseif($user->userType==='Student'){
+            return redirect()->intended(route('StudentSide.home', absolute: false));
+        }
     }
 
     /**

@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 // =====================================================
 // ADMIN ROUTES
 // =====================================================
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/home', function (Request $request) {
         return view('AdminSide.home', [
             'user' => $request->user(),

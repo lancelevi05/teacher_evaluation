@@ -8,6 +8,7 @@ class AdminController extends Controller
 {
     public function index()
     {
+        
         $sections = StrandCourse::all();
         return view('AdminSide.sections', compact('sections'));
     }
