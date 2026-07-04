@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('password');
 
              $table->string('photo')->nullable();
-              $table->string('status');
+              $table->string('status')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

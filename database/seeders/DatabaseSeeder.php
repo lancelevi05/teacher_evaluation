@@ -23,14 +23,36 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-for ($i = 1; $i <= 15; $i++) {
+
+        User::create([
+            'usn' => '2022621300',
+            'fname' => 'Java',
+            'lname' => 'Lance',
+            'mname' => 'Molato',
+            'email' => 'lancelevi05@gmail.com',
+            'password' => Hash::make('password'),
+            'userType' => 'Student',
+        ]);
+
+        User::create([
+            'usn' => '09936303219',
+            'fname' => 'Dondoyano',
+            'lname' => 'Louise Mae',
+            'mname' => 'Ponso',
+            'email' => 'javalance05@gmail.com',
+            'password' => Hash::make('password'),
+            'userType' => 'Admin',
+        ]);
+
+
+        for ($i = 1; $i <= 15; $i++) {
             User::create([
                 'usn' => '2026' . str_pad($i, 5, '0', STR_PAD_LEFT),
                 'lname' => 'StudentLast' . $i,
                 'fname' => 'StudentFirst' . $i,
                 'mname' => 'M',
                 'userType' => 'Student',
-                'email' => 'student'.$i.'@gmail.com',
+                'email' => 'student' . $i . '@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
 
@@ -48,15 +70,15 @@ for ($i = 1; $i <= 15; $i++) {
                 'fname' => 'TeacherFirst' . $i,
                 'mname' => 'T',
                 'userType' => 'Teacher',
-                'email' => 'teacher'.$i.'@gmail.com',
+                'email' => 'teacher' . $i . '@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
 
                 'status' => 'Active',
-                
+
             ]);
         }
-        
+
     }
 
 

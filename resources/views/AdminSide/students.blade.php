@@ -126,6 +126,47 @@
             border-radius: 6px;
             margin-bottom: 15px;
         }
+
+
+
+
+        .student-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.3;
+        }
+
+        .student-subtitle {
+            font-size: 13px;
+            color: #7a7a7a;
+            margin-top: 2px;
+        }
+
+
+
+
+
+
+        .modal-overlay{
+    opacity:0;
+    visibility:hidden;
+    transition:.25s;
+}
+
+.modal-overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-box{
+    transform:scale(.95);
+    transition:.25s ease;
+}
+
+.modal-overlay.active .modal-box{
+    transform:scale(1);
+}
     </style>
 </head>
 
@@ -166,11 +207,13 @@
                 <main class="content">
                     <div class="sections-container">
 
+                    
+
                         <!-- LEFT : TABLE -->
                         <div class="card table-card">
                             <h2>Departments List</h2>
 
-                            @if($departments->isEmpty())
+                            @if($students->isEmpty())
                                 <div class="no-data">
                                     No data existed.
                                 </div>
@@ -184,23 +227,42 @@
                                     <table class="sections-table">
                                         <thead>
                                             <tr>
-                                                <th>NAME</th>
-                                                <th>CODE</th>
-                                                <th>HEAD</th>
+                                                <th>STUDENT</th>
+                                                <th>COURSE</th>
+                                                <th>SECTION</th>
+                                                <th>YEAR LEVEL</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            @foreach($departments as $department)
+                                            @foreach($students as $student)
                                                 <tr>
-                                                    <td>{{ $department->name }}</td>
-                                                    <td>{{ $department->code ?? 'N/A' }}</td>
                                                     <td>
-                                                        @php
-                                                            $teacher = $teachers->firstWhere('id', $department->head_id);
-                                                        @endphp
-
-                                                        {{ $teacher ? $teacher->fname . ' ' . $teacher->lname : 'N/A' }}
+                                                        <div class="student-name">
+                                                            {{ $student->lname }}, {{ $student->fname }}
+                                                        </div>
+                                                        <div class="student-subtitle">
+                                                            {{ $student->usn }}
+                                                        </div>
+                                                    </td>
+                                                    @php
+                                                        $info = $student_info->firstWhere('usn', $student->usn);
+                                                    @endphp
+                                                    <td>{{ $info->idstrandcourse ?? '--' }}</td>
+                                                    <td>
+                                                       {{ $info->section ?? '--' }}
+                                                    </td>
+                                                    <td>
+                                                       {{ $info->yglevel ?? '--' }}
+                                                    </td>
+                                                    <td>
+                                                       {{ $info->section ?? 'Active' }}
+                                                    </td>
+                                                    <td>
+                                                        <button style="background-color:yellow">Edit</button>
+                                                        <button style="background-color:red">Delete</button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -212,7 +274,7 @@
 
 
                         <!-- RIGHT : FORM -->
-                        <div class="card form-card">
+                        <!-- <div class="card form-card">
                             <h2>Add Section</h2>
 
                             <form method="POST" action="{{ route('departments.store') }}">
@@ -227,19 +289,12 @@
 
                                     <label>Head Department</label>
 
-                                    <select name="head_id" class="select-input" required>
-                                        <option value="0">Unnasigned</option>
-                                        @foreach ($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}">
-                                                {{ $teacher->lname }}, {{ $teacher->fname }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                   
                                 </div>
 
                                 <button class="btn-submit">Save Section</button>
                             </form>
-                        </div>
+                        </div> -->
 
                     </div>
                 </main>

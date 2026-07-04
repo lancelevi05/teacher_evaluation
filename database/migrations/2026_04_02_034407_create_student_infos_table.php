@@ -14,12 +14,14 @@ return new class extends Migration {
             $table->id();
 
             
-            $table->string('user_id');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate(); // 👈 add this
+            // $table->string('user_id');
+            // $table->foreign('user_id')
+            //     ->references('id')
+            //     ->on('users')
+            //     ->cascadeOnDelete()
+            //     ->cascadeOnUpdate(); // 👈 add this
+
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->string('usn');
             $table->foreign('usn')

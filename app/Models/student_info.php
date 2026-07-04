@@ -12,9 +12,8 @@ class student_info extends Model
         'idstrandcourse',
         'section',
         'shs_college',
-        'yglevel',
+        'yglevel'
         
-        
-        'status'
+       
     ];
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\StrandCourse;
 use App\Models\Department;
 use App\Models\User;
+use App\Models\student_info;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -76,6 +77,14 @@ class AdminController extends Controller
             ->route('departments.index')
             ->with('success', 'Departments added successfully!');
 
+    }
+    public function studentList(){
+         $students = User::where('userType', 'Student')->get();
+          $student_info = student_info::all();
+       
+        
+        return view('AdminSide.students', compact('students','student_info'));
+        
     }
 }
 

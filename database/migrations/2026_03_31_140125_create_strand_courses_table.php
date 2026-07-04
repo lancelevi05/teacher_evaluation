@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('strand_courses', function (Blueprint $table) {
             $table->id();
-            $table->string('idstrandcourse');
+            $table->string('idstrandcourse')->unique();
             $table->string('strandcourse');
             $table->string('max_section');
             $table->string('shs_college');
