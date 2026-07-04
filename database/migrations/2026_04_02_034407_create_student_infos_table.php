@@ -12,6 +12,15 @@ return new class extends Migration {
     {
         Schema::create('student_infos', function (Blueprint $table) {
             $table->id();
+
+            
+            $table->string('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate(); // 👈 add this
+
             $table->string('usn');
             $table->foreign('usn')
                 ->references('usn')

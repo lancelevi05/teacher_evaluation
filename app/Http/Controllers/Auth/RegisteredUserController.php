@@ -39,6 +39,9 @@ class RegisteredUserController extends Controller
             'mname' => ['required', 'string', 'max:55'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+
+            'photo' => ['nullable', 'string', 'max:55'],
+            'status' => ['nullable', 'string', 'max:55'],
         ], [
             'usn.unique' => 'This USN is already registered.',
         ]);
@@ -52,10 +55,14 @@ class RegisteredUserController extends Controller
                 'userType' => 'Student',
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'photo' => null, // or Pending
+                'status' => 'Active', // or Pending
             ]);
 
             student_info::firstOrCreate([
+                'user_id' => $user->id,
                 'usn' => $user->usn,
+                
             ]);
 
             return $user;

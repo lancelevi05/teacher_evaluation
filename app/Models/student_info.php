@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class student_info extends Model
 {
      protected $fillable = [
+        'user_id',
         'usn',
         'idstrandcourse',
+        'section',
         'yglevel',
         
-        'section',
-        'shs_college'
+        
+        'status'
     ];
 }

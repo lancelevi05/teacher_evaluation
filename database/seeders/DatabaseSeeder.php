@@ -33,6 +33,8 @@ for ($i = 1; $i <= 15; $i++) {
                 'email' => 'student'.$i.'@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
+
+                'status' => 'Active',
             ]);
         }
 
@@ -49,6 +51,9 @@ for ($i = 1; $i <= 15; $i++) {
                 'email' => 'teacher'.$i.'@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
+
+                'status' => 'Active',
+                
             ]);
         }
         

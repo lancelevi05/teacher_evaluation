@@ -37,7 +37,9 @@ class AuthenticatedSessionController extends Controller
     if ($user->userType === 'Student') {
 
         student_info::firstOrCreate([
+            'user_id' => $user->id,
             'usn' => $user->usn,
+            
         ]);
 
         return redirect()->intended(route('StudentSide.home', absolute: false));

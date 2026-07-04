@@ -9,10 +9,11 @@
                 <rect x="14" y="3" width="7" height="7" rx="1" />
                 <rect x="3" y="14" width="7" height="7" rx="1" />
                 <rect x="14" y="14" width="7" height="7" rx="1" />
-            </svg> Overview </a> <a class="nav-item" href="#">
+            </svg> Overview </a> <a class="nav-item"href="{{ route('sections.index') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20V10M18 20V4M6 20v-4" />
-            </svg> Analytics </a> <a class="nav-item" href="#">
+                <path d="M22 10L12 5 2 10l10 5 10-5z"/>
+        <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>
+            </svg>CourseS </a> <a class="nav-item" href="#">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2" />
                 <circle cx="9" cy="7" r="4" />
