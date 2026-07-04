@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\StrandCourse;
+use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -41,6 +43,39 @@ class AdminController extends Controller
         return redirect()
             ->route('sections.index')
             ->with('success', 'Section added successfully!');
+    }
+
+    public function departments()
+    {
+        $teachers = User::where('userType', 'Teacher')->get();
+        $departments = Department::all();
+        
+        return view('AdminSide.departments', compact('departments','teachers'));
+        
+    }
+
+    public function storeDepartment(Request $request){
+        // validation
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required|string|max:100',
+            'head_id' => 'nullable|exists:users,id',
+          
+        ]);
+
+        // insert data
+        Department::create([
+            'name' => $request->name,
+            'code'   => $request->code,
+            'head_id'    => $request->head_id,
+         
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('departments.index')
+            ->with('success', 'Departments added successfully!');
+
     }
 }
 

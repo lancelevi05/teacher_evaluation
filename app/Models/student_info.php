@@ -11,6 +11,7 @@ class student_info extends Model
         'usn',
         'idstrandcourse',
         'section',
+        'shs_college',
         'yglevel',
         
         

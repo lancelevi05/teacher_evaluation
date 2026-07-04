@@ -45,6 +45,15 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
      // SAVE DATA ✅
     Route::post('/sections', [AdminController::class, 'store'])
         ->name('sections.store');
+
+
+        // route::get('/Departments', [AdminController::class, 'departments']);
+    Route::get('/departments', [AdminController::class, 'departments'])
+    ->name('departments.index');
+
+     // SAVE DATA ✅
+     Route::post('/departments', [AdminController::class, 'storeDepartment'])
+         ->name('departments.store');
    
 });
 

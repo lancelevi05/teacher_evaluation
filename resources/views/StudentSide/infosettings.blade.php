@@ -202,7 +202,7 @@
                                     <!-- COLLEGE OR SHS -->
                                     <div class="form-group">
                                         <label>Category</label>
-                                        <select name="category" id="category" required>
+                                        <select name="shs_college" id="category" required>
                                             <option disabled {{ is_null($selectedCategory) ? 'selected' : '' }}>Select Category</option>
                                             <option value="1" {{ (string) $selectedCategory === '1' ? 'selected' : '' }}>SHS</option>
                                             <option value="0" {{ (string) $selectedCategory === '0' ? 'selected' : '' }}>College (BS)</option>

@@ -18,7 +18,7 @@ class StudentController extends Controller
     public function updateInfo(Request $request)
 {
     $request->validate([
-        'category' => 'required',
+        'shs_college' => 'required',
         'idstrandcourse' => 'required',
         'year_level' => 'required',
         'section' => 'required',
@@ -27,7 +27,7 @@ class StudentController extends Controller
     student_info::updateOrCreate(
         ['usn' => Auth::user()->usn],
         [
-            'shs_college' => $request->category,
+            'shs_college' => $request->shs_college,
             'idstrandcourse' => $request->idstrandcourse,
             'yglevel' => $request->year_level,
             'section' => $request->section,
