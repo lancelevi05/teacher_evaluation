@@ -12,14 +12,32 @@ class AdminController extends Controller
     public function index()
     {
         
-        $sections = StrandCourse::all();
-        return view('AdminSide.sections', compact('sections'));
+        // $sections = StrandCourse::all();
+        // return view('AdminSide.sections', compact('sections'));
+
+
+        //  if (Auth::id()) {
+        //     $usertype = Auth()->user()->usertype;
+
+        //     if ($usertype == "user") {
+        //         $room = Room::all();
+        //         $gallery = Gallery::all();
+        //         return view('home.index',compact('room','gallery'));
+        //     } else if ($usertype == "admin") {
+        //         return view("admin.index");
+        //     } else {
+        //         return redirect()->back();
+        //     }
+        // }
     }
 
     public function sections()
     {
-        $sections = StrandCourse::all();
+
         $departments = Department::all();
+        $sections = StrandCourse::all();
+      
+        
         
         return view('AdminSide.sections', compact('sections','departments'));
     }
@@ -30,6 +48,7 @@ class AdminController extends Controller
         $request->validate([
             'idstrandcourse' => 'required',
             'strandcourse' => 'required|string|max:100',
+            'department_id'  => 'required|integer|exists:departments,id',
             'max_section' => 'required|integer',
             'shs_college' => 'required|integer'
         ]);
@@ -38,6 +57,7 @@ class AdminController extends Controller
         StrandCourse::create([
             'idstrandcourse' => $request->idstrandcourse,
             'strandcourse'   => $request->strandcourse,
+            'department_id'   => $request->department_id,
             'max_section'    => $request->max_section,
             'shs_college'    => $request->shs_college,
         ]);
@@ -47,6 +67,32 @@ class AdminController extends Controller
             ->route('sections.index')
             ->with('success', 'Section added successfully!');
     }
+
+    public function updateSection(Request $request, $id)
+{
+    $section = StrandCourse::findOrFail($id);
+
+    $section->update([
+        'idstrandcourse' => $request->idstrandcourse,
+        'strandcourse' => $request->strandcourse,
+        'department_id' => $request->department_id,
+        'max_section' => $request->max_section,
+        'shs_college' => $request->shs_college,
+    ]);
+
+    return redirect()->route('sections.index')
+                     ->with('success', 'Section updated successfully.');
+}
+
+public function destroySection($id)
+{
+    $section = StrandCourse::findOrFail($id);
+
+    $section->delete();
+
+    return redirect()->route('sections.index')
+                     ->with('success', 'Section deleted successfully.');
+}
 
     public function departments()
     {

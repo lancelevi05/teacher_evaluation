@@ -38,13 +38,23 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ]);
     })->name('AdminSide.home');
 
-    // route::get('/Sections', [AdminController::class, 'sections']);
-    Route::get('/admin/sections', [AdminController::class, 'sections'])
+    // Display page
+Route::get('/admin/sections', [AdminController::class, 'sections'])
     ->name('sections.index');
 
-     // SAVE DATA ✅
-    Route::post('/admin/sections', [AdminController::class, 'store'])
-        ->name('sections.store');
+// Store
+Route::post('/admin/sections', [AdminController::class, 'store'])
+    ->name('sections.store');
+
+// Update
+Route::put('/admin/sections/{id}', [AdminController::class, 'updateSection'])
+    ->name('sections.update');
+
+// Delete
+Route::delete('/admin/sections/{id}', [AdminController::class, 'destroySection'])
+    ->name('sections.destroy');
+
+        
 
 
         // route::get('/Departments', [AdminController::class, 'departments']);

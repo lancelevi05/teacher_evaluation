@@ -269,8 +269,8 @@
                     <div class="section-header01">
 
                         <div class="section-title01">
-                            <h2>Course</h2>
-                            <p>Academic programs offered per department.</p>
+                            <h2>Sections</h2>
+                            <p>Manage strands and courses offered by each department.</p>
                         </div>
 
                         <div class="section-actions01">
@@ -324,43 +324,26 @@
                                         </thead>
 
                                         <tbody id="sectionTableBody01">
-                                            @foreach($sections as $section)
-                                                <tr class="sectionRow01">
-                                                    <td>{{ $section->idstrandcourse }}</td>
-                                                    <td>{{ $section->strandcourse ?? 'N/A' }}</td>
-                                                    <td>
-                                                        @php
-                                                            $info = $departments->firstWhere('id', $section->department_id);
-                                                        @endphp
+    @foreach($sections as $section)
+    <tr class="sectionRow01">
+        <td>{{ $section->idstrandcourse }}</td>
+        <td>{{ $section->strandcourse ?? 'N/A' }}</td>
+        <td>
+            @php
+                $info = $departments->firstWhere('id', $section->department_id);
+            @endphp
 
-                                                        {{ $info ? $info->name : '--' }}
-                                                    </td>
-                                                    <td>45</td>
-                                                    <td>{{ $section->max_section ?? '--' }}</td>
-                                                    <td>
-                                                        <button type="button" class="edit-btn01" data-id="{{ $section->id }}"
-                                                            data-code="{{ $section->idstrandcourse }}"
-                                                            data-course="{{ $section->strandcourse }}"
-                                                            data-max="{{ $section->max_section }}"
-                                                            data-department="{{ $section->department_id }}"
-                                                            data-category="{{ $section->shs_college }}">
-                                                            EDIT
-                                                        </button>
-
-                                                        <form action="{{ route('sections.destroy', $section->id) }}"
-                                                            method="POST" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-
-                                                            <button type="submit"
-                                                                onclick="return confirm('Delete this section?')">
-                                                                DELETE
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
+            {{ $info ? $info->name : '--' }}
+        </td>
+        <td>45</td>
+        <td>{{ $section->max_section ?? '--' }}</td>
+        <td>
+            <button>EDIT</button>
+            <button>DELETE</button>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
                                     </table>
                                 </div>
                             @endif
@@ -369,32 +352,25 @@
 
                         <!-- RIGHT : FORM -->
                         <div class="card form-card">
-                            <h2 id="formTitle01">Add Section</h2>
+                            <h2>Add Section</h2>
 
-                            
-
-
-
-                            <form id="sectionForm01" method="POST" action="{{ route('sections.store') }}">
-
-                                <input type="hidden" name="section_id" id="sectionId01">
+                            <form method="POST" action="{{ route('sections.store') }}">
                                 @csrf
 
                                 <div class="form-group">
                                     <label>CODE</label>
-                                    <input id="code01" type="text" name="idstrandcourse"
-                                        placeholder="Enter id strand or course" required>
+                                    <input type="text" name="idstrandcourse" placeholder="Enter id strand or course"
+                                        required>
 
                                     <label>COURSE NAME</label>
-                                    <input id="course01" type="text" name="strandcourse"
-                                        placeholder="Enter strand or course" required>
-                                    <label>Max Section</label>
-                                    <input id="max01" type="text" name="max_section" placeholder="Enter Maximum section"
+                                    <input type="text" name="strandcourse" placeholder="Enter strand or course"
                                         required>
+                                    <label>Max Section</label>
+                                    <input type="text" name="max_section" placeholder="Enter Maximum section" required>
 
                                     <label>DEPARTMENT</label>
 
-                                    <select id="department01" name="department_id" class="select-input" required>
+                                    <select name="department_id" class="select-input" required>
                                         <option value="" disabled selected>Select type</option>
                                         @foreach ($departments as $department)
                                             <option value="{{ $department->id }}">
@@ -405,7 +381,7 @@
 
                                     <label>Choose Category</label>
 
-                                    <select id="category01" name="shs_college" class="select-input" required>
+                                    <select name="shs_college" class="select-input" required>
                                         <option value="" disabled selected>Select type</option>
                                         <option value="1">SHS</option>
                                         <option value="0">BS</option>
@@ -413,13 +389,8 @@
                                     </select>
                                 </div>
 
-                                <button class="btn-submit" id="submitBtn01">
-                                    Save Course
-                                </button>
+                                <button class="btn-submit">Save Section</button>
                             </form>
-
-
-
                         </div>
 
                     </div>
@@ -430,53 +401,7 @@
         </footer>
     </div>
 
-<script>
 
-        
-const form01 = document.getElementById("sectionForm01");
-const formTitle01 = document.getElementById("formTitle01");
-const code01 = document.getElementById("code01");
-const course01 = document.getElementById("course01");
-const max01 = document.getElementById("max01");
-const department01 = document.getElementById("department01");
-const category01 = document.getElementById("category01");
-const sectionId01 = document.getElementById("sectionId01");
-const submitBtn01 = document.getElementById("submitBtn01");
-
-document.querySelectorAll(".edit-btn01").forEach(btn => {
-
-    btn.addEventListener("click", function(){
-
-    formTitle01.textContent = "Edit Section";
-        code01.value = this.dataset.code;
-        course01.value = this.dataset.course;
-        max01.value = this.dataset.max;
-        department01.value = this.dataset.department;
-        category01.value = this.dataset.category;
-        // sectionId01.value = this.dataset.id;
-       form01.action = "/admin/sections/" + this.dataset.id;
-
-        submitBtn01.innerHTML = "Update Section";
-        
-
-        
-
-        if(document.getElementById("methodField01") == null){
-
-            const method = document.createElement("input");
-
-            method.type = "hidden";
-            method.name = "_method";
-            method.value = "PUT";
-            method.id = "methodField01";
-
-            form01.appendChild(method);
-        }
-
-    });
-
-});
-</script>
     @include('AdminSide.javascript')
 </body>
 
