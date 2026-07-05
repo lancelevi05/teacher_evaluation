@@ -199,7 +199,7 @@
                                                         @php
                                                             $teacher = $teachers->firstWhere('id', $department->head_id);
                                                         @endphp
-
+                                                        
                                                         {{ $teacher ? $teacher->fname . ' ' . $teacher->lname : 'N/A' }}
                                                     </td>
                                                 </tr>

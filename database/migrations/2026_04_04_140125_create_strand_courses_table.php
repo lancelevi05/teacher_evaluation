@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('idstrandcourse')->unique();
             $table->string('strandcourse');
+             $table->foreignId('department_id')
+            ->nullable()
+            ->constrained('departments')
+            ->nullableOnDelete();
             $table->string('max_section');
             $table->string('shs_college');
             $table->timestamps();

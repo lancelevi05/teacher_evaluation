@@ -184,9 +184,12 @@
                                     <table class="sections-table">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Strand / Course</th>
+                                                <th>CODE</th>
+                                                <th>COURSE NAME</th>
+                                                <th>DEPARTMENT</th>
+                                                <th>STUDENT</th>
                                                 <th>Max Section</th>
+                                                <th>ACTIONS</th>
                                             </tr>
                                         </thead>
 
@@ -196,6 +199,10 @@
                                                     <td>{{ $section->idstrandcourse }}</td>
                                                     <td>{{ $section->strandcourse ?? 'N/A' }}</td>
                                                     <td>{{ $section->max_section ?? 'N/A' }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -213,15 +220,27 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <label>ID Strand / Course</label>
+                                    <label>CODE</label>
                                     <input type="text" name="idstrandcourse" placeholder="Enter id strand or course"
                                         required>
 
-                                    <label>Strand / Course</label>
+                                    <label>COURSE NAME</label>
                                     <input type="text" name="strandcourse" placeholder="Enter strand or course"
                                         required>
                                     <label>Max Section</label>
                                     <input type="text" name="max_section" placeholder="Enter Maximum section" required>
+
+                                    <label>DEPARTMENT</label>
+
+                                    <select name="head_id" class="select-input" required>
+                                        <option value="" disabled selected>Select type</option>
+                                        @foreach ($departments as $department)
+                                            <option value="{{ $department->id }}">
+                                                {{ $department->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
                                     <label>Choose Category</label>
 
                                     <select name="shs_college" class="select-input" required>

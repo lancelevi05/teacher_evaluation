@@ -19,7 +19,9 @@ class AdminController extends Controller
     public function sections()
     {
         $sections = StrandCourse::all();
-        return view('AdminSide.sections', compact('sections'));
+        $departments = Department::all();
+        
+        return view('AdminSide.sections', compact('sections','departments'));
     }
      // ✅ SAVE TO DATABASE
     public function store(Request $request)

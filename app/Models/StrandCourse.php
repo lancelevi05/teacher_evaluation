@@ -22,6 +22,7 @@ class StrandCourse extends Model
     protected $fillable = [
         'idstrandcourse',
         'strandcourse',
+        'department_id',
         'max_section',
         'shs_college'
     ];
