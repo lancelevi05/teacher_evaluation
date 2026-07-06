@@ -465,12 +465,115 @@
 
 
 
+/* ===== HEADER n SEARCH BAR ===== */
+
+        .section-header01 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .section-title01 h2 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .section-title01 p {
+            margin-top: 5px;
+            color: #777;
+            font-size: 15px;
+        }
+
+        .section-actions01 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input01 {
+            width: 250px;
+            padding: 10px 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input01:focus {
+            border-color: #4f46e5;
+        }
+
+        .search-btn01 {
+            width: 42px;
+            height: 42px;
+            border: 1px solid #dcdcdc;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .search-btn01:hover {
+            background: #f4f4f4;
+        }
+
+        .add-btn01 {
+            padding: 10px 18px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .add-btn01:hover {
+            background: #4338ca;
+        }
+
+        /* ===== MOBILE ===== */
+
+        @media(max-width:768px) {
+
+            .section-header01 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-actions01 {
+                width: 100%;
+            }
+
+            .search-input01 {
+                flex: 1;
+                width: 100%;
+            }
+        }
 
 
 
 
+.success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
 
-
+        .error-msg {
+            background: #edd9d4;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
 
 
 

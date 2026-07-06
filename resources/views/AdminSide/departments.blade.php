@@ -119,13 +119,14 @@
             background: white;
         }
 
-        .success-msg {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
+    
+
+
+
+
+
+
+
     </style>
 </head>
 
@@ -160,10 +161,37 @@
                         </form>
                     </div>
 
-
-
                 </header>
+
+
+                
                 <main class="content">
+
+
+                <div class="section-header01">
+
+                        <div class="section-title01">
+                            <h2>Course</h2>
+                            <p>Academic programs offered per department.</p>
+                        </div>
+
+                        <div class="section-actions01">
+                            <input type="text" class="search-input01" id="searchSection01"
+                                placeholder="Search section...">
+
+                            <button class="search-btn01" id="searchBtn01">
+                                🔍
+                            </button>
+
+                            <button class="add-btn01">
+                                + Add Section
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                    
                     <div class="sections-container">
 
                         <!-- LEFT : TABLE -->
@@ -187,6 +215,9 @@
                                                 <th>NAME</th>
                                                 <th>CODE</th>
                                                 <th>HEAD</th>
+                                                <th>TEACHERS</th>
+                                                <th>COURSES</th>
+                                                <th>ACTION</th>
                                             </tr>
                                         </thead>
 
@@ -202,6 +233,9 @@
                                                         
                                                         {{ $teacher ? $teacher->fname . ' ' . $teacher->lname : 'N/A' }}
                                                     </td>
+                                                    <td>UPDATING</td>
+                                                    <td>UPDATING</td>
+                                                    <td>UPDATING</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

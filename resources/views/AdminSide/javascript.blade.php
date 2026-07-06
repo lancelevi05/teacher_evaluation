@@ -3,51 +3,7 @@
 
 
 
-    
-const form01 = document.getElementById("sectionForm01");
 
-
-const code01 = document.getElementById("code01");
-const course01 = document.getElementById("course01");
-const max01 = document.getElementById("max01");
-const department01 = document.getElementById("department01");
-const category01 = document.getElementById("category01");
-const sectionId01 = document.getElementById("sectionId01");
-
-const submitBtn01 = document.getElementById("submitBtn01");
-
-document.querySelectorAll(".edit-btn01").forEach(btn => {
-
-    btn.addEventListener("click", function(){
-
-        code01.value = this.dataset.code;
-        course01.value = this.dataset.course;
-        max01.value = this.dataset.max;
-        department01.value = this.dataset.department;
-        category01.value = this.dataset.category;
-        // sectionId01.value = this.dataset.id;
-       form01.action = "/admin/sections/" + this.dataset.id;
-
-        submitBtn01.innerHTML = "Update Section";
-        
-
-        
-
-        if(document.getElementById("methodField01") == null){
-
-            const method = document.createElement("input");
-
-            method.type = "hidden";
-            method.name = "_method";
-            method.value = "PUT";
-            method.id = "methodField01";
-
-            form01.appendChild(method);
-        }
-
-    });
-
-});
 
 
 

@@ -19,12 +19,14 @@ Route::middleware('auth')->group(function () {
             'user' => $request->user(),
         ]);
     })->name('StudentSide.home');
-     Route::get('/infosettings', [StudentController::class, 'infosettings'])
-    ->name('infosettings');
-    
+    Route::get('/infosettings', [StudentController::class, 'infosettings'])
+        ->name('infosettings');
+
     // ✅ UPDATE STUDENT INFO
-    Route::put('/infosettings/update',
-        [StudentController::class, 'updateInfo'])
+    Route::put(
+        '/infosettings/update',
+        [StudentController::class, 'updateInfo']
+    )
         ->name('student.updateInfo');
 });
 
@@ -38,40 +40,48 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ]);
     })->name('AdminSide.home');
 
+
     // Display page
-Route::get('/admin/sections', [AdminController::class, 'sections'])
-    ->name('sections.index');
-
-// Store
-Route::post('/admin/sections', [AdminController::class, 'store'])
-    ->name('sections.store');
-
-// Update
-Route::put('/admin/sections/{id}', [AdminController::class, 'updateSection'])
-    ->name('sections.update');
-
-// Delete
-Route::delete('/admin/sections/{id}', [AdminController::class, 'destroySection'])
-    ->name('sections.destroy');
-
-        
+    Route::get('/admin/sections', [AdminController::class, 'sections'])
+        ->name('sections.index');
+    // Store
+    Route::post('/admin/sections', [AdminController::class, 'store'])
+        ->name('sections.store');
+    // Update
+    Route::put('/admin/sections/{id}', [AdminController::class, 'updateSection'])
+        ->name('sections.update');
+    // Delete
+    Route::delete('/admin/sections/{id}', [AdminController::class, 'destroySection'])
+        ->name('sections.destroy');
 
 
-        // route::get('/Departments', [AdminController::class, 'departments']);
+
+
+    // route::get('/Departments', [AdminController::class, 'departments']);
     Route::get('/admin/departments', [AdminController::class, 'departments'])
-    ->name('departments.index');
+        ->name('departments.index');
 
-     // SAVE DATA ✅
-     Route::post('/admin/departments', [AdminController::class, 'storeDepartment'])
-         ->name('departments.store');
+    // SAVE DATA ✅
+    Route::post('/admin/departments', [AdminController::class, 'storeDepartment'])
+        ->name('departments.store');
 
-          Route::get('/admin/students', [AdminController::class, 'studentList'])
-    ->name('students.index');
+    Route::get('/admin/students', [AdminController::class, 'studentList'])
+        ->name('students.index');
 
-     // SAVE DATA ✅
-     Route::post('/admin/students', [AdminController::class, 'storeStudentList'])
-         ->name('students.store');
-   
+    // SAVE DATA ✅
+    Route::post('/admin/students', [AdminController::class, 'storeStudentList'])
+        ->name('students.store');
+
+
+ // Display page
+    Route::get('/admin/subjects', [AdminController::class, 'subjects'])
+        ->name('subjects.index');
+    // Store
+    Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])
+        ->name('subjects.store');
+
+
+
 });
 
 // =====================================================
@@ -95,4 +105,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
