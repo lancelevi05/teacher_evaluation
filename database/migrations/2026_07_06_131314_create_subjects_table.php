@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+
+             $table->foreignId('department_id')
+            ->nullable()
+            ->constrained('departments')
+            ->nullableOnDelete();
+            $table->string('code')->unique();
+            $table->string('name')->unique();
+            $table->decimal('units', 3, 1);
             $table->timestamps();
         });
     }

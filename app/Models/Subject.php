@@ -8,14 +8,10 @@ class Subject extends Model
 {
     //
       protected $fillable = [
-        'user_id',
-        'usn',
-        'idstrandcourse',
-        'section',
-        'shs_college',
-        'yglevel'
-        
-       
+        'department_id',
+        'code',
+        'name',
+        'units'
     ];
 
 }

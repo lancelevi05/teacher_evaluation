@@ -5,8 +5,9 @@ use App\Models\StrandCourse;
 use App\Models\Department;
 use App\Models\User;
 use App\Models\student_info;
+use App\Models\Subject;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
+
 class AdminController extends Controller
 {
     public function index()
@@ -131,6 +132,7 @@ class AdminController extends Controller
             ->with('success', 'Departments added successfully!');
 
     }
+    
     public function studentList()
     {
         $students = User::where('userType', 'Student')->get();
@@ -141,6 +143,47 @@ class AdminController extends Controller
 
     }
 
+
+
+     public function subjects()
+    {
+
+        $departments = Department::all();
+        $sections = StrandCourse::all();
+
+
+
+        return view('AdminSide.sections', compact('sections', 'departments'));
+    }
+    // ✅ SAVE TO DATABASE
+    public function storeSubject(Request $request)
+    {
+        // validation
+        $request->validate([
+            
+            'department_id' => 'required|integer|exists:departments,id',
+            'code' => 'required|unique:subjects,code',
+            'units' => 'required|decimal:0,1|between:0,99.9',
+        ], [
+        'idstrandcourse.unique' => 'This course code already exists.',
+    ]);
+
+    
+            // insert data
+            StrandCourse::create([
+                'idstrandcourse' => $request->idstrandcourse,
+                'strandcourse' => $request->strandcourse,
+                'department_id' => $request->department_id,
+                'max_section' => $request->max_section,
+                'shs_college' => $request->shs_college,
+            ]);
+
+            // redirect back with message
+            return redirect()
+                ->route('sections.index')
+                ->with('success', 'Section added successfully!');
+        
+    }
     
 }
 

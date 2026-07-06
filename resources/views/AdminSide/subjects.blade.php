@@ -118,115 +118,6 @@
             width: 100%;
             background: white;
         }
-
-        .success-msg {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-
-
-
-
-
-
-
-
-
-
-
-        /* ===== HEADER ===== */
-
-        .section-header01 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .section-title01 h2 {
-            margin: 0;
-            font-size: 32px;
-            font-weight: 700;
-            color: #222;
-        }
-
-        .section-title01 p {
-            margin-top: 5px;
-            color: #777;
-            font-size: 15px;
-        }
-
-        .section-actions01 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .search-input01 {
-            width: 250px;
-            padding: 10px 14px;
-            border: 1px solid #dcdcdc;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .search-input01:focus {
-            border-color: #4f46e5;
-        }
-
-        .search-btn01 {
-            width: 42px;
-            height: 42px;
-            border: 1px solid #dcdcdc;
-            background: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .search-btn01:hover {
-            background: #f4f4f4;
-        }
-
-        .add-btn01 {
-            padding: 10px 18px;
-            background: #4f46e5;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .add-btn01:hover {
-            background: #4338ca;
-        }
-
-        /* ===== MOBILE ===== */
-
-        @media(max-width:768px) {
-
-            .section-header01 {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .section-actions01 {
-                width: 100%;
-            }
-
-            .search-input01 {
-                flex: 1;
-                width: 100%;
-            }
-        }
     </style>
 </head>
 
@@ -269,8 +160,8 @@
                     <div class="section-header01">
 
                         <div class="section-title01">
-                            <h2>Sections</h2>
-                            <p>Manage strands and courses offered by each department.</p>
+                            <h2>Course</h2>
+                            <p>Academic programs offered per department.</p>
                         </div>
 
                         <div class="section-actions01">
@@ -281,12 +172,13 @@
                                 🔍
                             </button>
 
-                            <button class="add-btn01">
+                            <button class="add-btn01" id="addBtn01">
                                 + Add Section
                             </button>
                         </div>
 
                     </div>
+
                     <div class="sections-container">
 
                         <!-- LEFT : TABLE -->
@@ -311,39 +203,65 @@
                                             {{ session('success') }}
                                         </div>
                                     @endif
+
+                                    @if($errors->any())
+                                        <div class="error-msg">
+                                            @foreach($errors->all() as $error)
+                                                {{ $error }}
+                                            @endforeach
+                                        </div>
+                                    @endif
+
                                     <table class="sections-table">
                                         <thead>
                                             <tr>
                                                 <th>CODE</th>
-                                                <th>COURSE NAME</th>
+                                                <th>SUBJECT</th>
                                                 <th>DEPARTMENT</th>
-                                                <th>STUDENT</th>
+                                                <th>UNITS</th>
                                                 <th>Max Section</th>
                                                 <th>ACTIONS</th>
                                             </tr>
                                         </thead>
 
                                         <tbody id="sectionTableBody01">
-    @foreach($sections as $section)
-    <tr class="sectionRow01">
-        <td>{{ $section->idstrandcourse }}</td>
-        <td>{{ $section->strandcourse ?? 'N/A' }}</td>
-        <td>
-            @php
-                $info = $departments->firstWhere('id', $section->department_id);
-            @endphp
+                                            @foreach($sections as $section)
+                                                <tr class="sectionRow01">
+                                                    <td>{{ $section->idstrandcourse }}</td>
+                                                    <td>{{ $section->strandcourse ?? 'N/A' }}</td>
+                                                    <td>
+                                                        @php
+                                                            $info = $departments->firstWhere('id', $section->department_id);
+                                                        @endphp
 
-            {{ $info ? $info->name : '--' }}
-        </td>
-        <td>45</td>
-        <td>{{ $section->max_section ?? '--' }}</td>
-        <td>
-            <button>EDIT</button>
-            <button>DELETE</button>
-        </td>
-    </tr>
-    @endforeach
-</tbody>
+                                                        {{ $info ? $info->name : '--' }}
+                                                    </td>
+                                                    <td>45</td>
+                                                    <td>{{ $section->max_section ?? '--' }}</td>
+                                                    <td>
+                                                        <button type="button" class="edit-btn01" data-id="{{ $section->id }}"
+                                                            data-code="{{ $section->idstrandcourse }}"
+                                                            data-course="{{ $section->strandcourse }}"
+                                                            data-max="{{ $section->max_section }}"
+                                                            data-department="{{ $section->department_id }}"
+                                                            data-category="{{ $section->shs_college }}">
+                                                            EDIT
+                                                        </button>
+
+                                                        <form action="{{ route('sections.destroy', $section->id) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                onclick="return confirm('Delete this section?')">
+                                                                DELETE
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                             @endif
@@ -352,25 +270,32 @@
 
                         <!-- RIGHT : FORM -->
                         <div class="card form-card">
-                            <h2>Add Section</h2>
+                            <h2 id="formTitle01">Add Subject</h2>
 
-                            <form method="POST" action="{{ route('sections.store') }}">
+
+
+
+
+                            <form id="sectionForm01" method="POST" action="{{ route('sections.store') }}">
+
+                                <input type="hidden" name="section_id" id="sectionId01">
                                 @csrf
 
                                 <div class="form-group">
                                     <label>CODE</label>
-                                    <input type="text" name="idstrandcourse" placeholder="Enter id strand or course"
-                                        required>
+                                    <input id="code01" type="text" name="idstrandcourse"
+                                        placeholder="Enter id strand or course" required>
 
                                     <label>COURSE NAME</label>
-                                    <input type="text" name="strandcourse" placeholder="Enter strand or course"
-                                        required>
+                                    <input id="course01" type="text" name="strandcourse"
+                                        placeholder="Enter strand or course" required>
                                     <label>Max Section</label>
-                                    <input type="text" name="max_section" placeholder="Enter Maximum section" required>
+                                    <input id="max01" type="text" name="max_section" placeholder="Enter Maximum section"
+                                        required>
 
                                     <label>DEPARTMENT</label>
 
-                                    <select name="department_id" class="select-input" required>
+                                    <select id="department01" name="department_id" class="select-input" required>
                                         <option value="" disabled selected>Select type</option>
                                         @foreach ($departments as $department)
                                             <option value="{{ $department->id }}">
@@ -381,7 +306,7 @@
 
                                     <label>Choose Category</label>
 
-                                    <select name="shs_college" class="select-input" required>
+                                    <select id="category01" name="shs_college" class="select-input" required>
                                         <option value="" disabled selected>Select type</option>
                                         <option value="1">SHS</option>
                                         <option value="0">BS</option>
@@ -389,8 +314,13 @@
                                     </select>
                                 </div>
 
-                                <button class="btn-submit">Save Section</button>
+                                <button class="btn-submit" id="submitBtn01">
+                                    Save Course
+                                </button>
                             </form>
+
+
+
                         </div>
 
                     </div>
@@ -401,7 +331,80 @@
         </footer>
     </div>
 
+    <script>
 
+
+
+
+        const form01 = document.getElementById("sectionForm01");
+        const formTitle01 = document.getElementById("formTitle01");
+        const code01 = document.getElementById("code01");
+        const course01 = document.getElementById("course01");
+        const max01 = document.getElementById("max01");
+        const department01 = document.getElementById("department01");
+        const category01 = document.getElementById("category01");
+        const sectionId01 = document.getElementById("sectionId01");
+        const submitBtn01 = document.getElementById("submitBtn01");
+
+        document.querySelectorAll(".edit-btn01").forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                formTitle01.textContent = "Edit Section";
+                code01.value = this.dataset.code;
+                course01.value = this.dataset.course;
+                max01.value = this.dataset.max;
+                department01.value = this.dataset.department;
+                category01.value = this.dataset.category;
+                // sectionId01.value = this.dataset.id;
+                form01.action = "/admin/sections/" + this.dataset.id;
+
+                submitBtn01.innerHTML = "Update Section";
+
+
+
+
+                if (document.getElementById("methodField01") == null) {
+
+                    const method = document.createElement("input");
+
+                    method.type = "hidden";
+                    method.name = "_method";
+                    method.value = "PUT";
+                    method.id = "methodField01";
+
+                    form01.appendChild(method);
+                }
+
+            });
+
+        });
+
+        const addBtn01 = document.getElementById("addBtn01");
+
+        addBtn01.addEventListener("click", function () {
+
+            // Reset all form inputs
+            form01.reset();
+
+            // Back to Add mode
+            formTitle01.textContent = "Add Subject";
+            submitBtn01.textContent = "Save Course";
+
+            // Restore form action
+            form01.action = "{{ route('sections.store') }}";
+
+            // Remove PUT method if it exists
+            const methodField = document.getElementById("methodField01");
+            if (methodField) {
+                methodField.remove();
+            }
+
+            // Reset dropdown placeholders
+            department01.selectedIndex = 0;
+            category01.selectedIndex = 0;
+        });
+    </script>
     @include('AdminSide.javascript')
 </body>
 
