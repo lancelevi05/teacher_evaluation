@@ -118,15 +118,6 @@
             width: 100%;
             background: white;
         }
-
-    
-
-
-
-
-
-
-
     </style>
 </head>
 
@@ -164,11 +155,11 @@
                 </header>
 
 
-                
+
                 <main class="content">
 
 
-                <div class="section-header01">
+                    <div class="section-header01">
 
                         <div class="section-title01">
                             <h2>Course</h2>
@@ -183,7 +174,7 @@
                                 🔍
                             </button>
 
-                            <button class="add-btn01">
+                            <button class="add-btn01" id="addBtn01">
                                 + Add Section
                             </button>
                         </div>
@@ -191,7 +182,7 @@
                     </div>
 
 
-                    
+
                     <div class="sections-container">
 
                         <!-- LEFT : TABLE -->
@@ -209,11 +200,25 @@
                                             {{ session('success') }}
                                         </div>
                                     @endif
+
+                                    @if($errors->any())
+                                        <div class="error-msg">
+                                            @foreach($errors->all() as $error)
+                                                {{ $error }}
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    @if(session('error')) <!------ THIS 2ND ERROR DIV FOR TRY CATCH ERROR FLASH-->
+                                        <div class="error-msg">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
                                     <table class="sections-table">
                                         <thead>
                                             <tr>
-                                                <th>NAME</th>
                                                 <th>CODE</th>
+                                                <th>NAME</th>
                                                 <th>HEAD</th>
                                                 <th>TEACHERS</th>
                                                 <th>COURSES</th>
@@ -224,18 +229,37 @@
                                         <tbody>
                                             @foreach($departments as $department)
                                                 <tr>
+                                                    <td>{{ $department->code ?? '--' }}</td>
                                                     <td>{{ $department->name }}</td>
-                                                    <td>{{ $department->code ?? 'N/A' }}</td>
+
                                                     <td>
                                                         @php
                                                             $teacher = $teachers->firstWhere('id', $department->head_id);
                                                         @endphp
-                                                        
-                                                        {{ $teacher ? $teacher->fname . ' ' . $teacher->lname : 'N/A' }}
+
+                                                        {{ $teacher ? $teacher->fname . ' ' . $teacher->lname : '--' }}
                                                     </td>
                                                     <td>UPDATING</td>
-                                                    <td>UPDATING</td>
-                                                    <td>UPDATING</td>
+                                                    <td>{{ $department->courses_count }}</td>
+                                                    <td><button type="button" class="edit-btn01" data-id="{{ $department->id }}"
+                                                            data-name="{{ $department->name }}"
+                                                            data-code="{{ $department->code }}"
+                                                            data-head_id="{{ $department->head_id }}"
+                                                            data-head_name="{{ $teacher ? $teacher->lname . ', ' . $teacher->fname : 'Unassigned' }}">
+                                                            EDIT
+                                                        </button>
+
+                                                        <form action="{{ route('departments.destroy', $department->id) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                onclick="return confirm('Delete this section?')">
+                                                                DELETE
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -247,31 +271,35 @@
 
                         <!-- RIGHT : FORM -->
                         <div class="card form-card">
-                            <h2>Add Section</h2>
+                            <h2 id="formTitle01">Add Department</h2>
 
-                            <form method="POST" action="{{ route('departments.store') }}">
+                            <form method="POST" id="sectionForm01" action="{{ route('departments.store') }}">
                                 @csrf
 
                                 <div class="form-group">
                                     <label>Department Name</label>
-                                    <input type="text" name="name" placeholder="Enter id strand or course" required>
+                                    <input id="name01" type="text" name="name" placeholder="Enter id strand or course"
+                                        required>
 
                                     <label>Code</label>
-                                    <input type="text" name="code" placeholder="e.g CS" required>
+                                    <input id="code01" type="text" name="code" placeholder="e.g CS" required>
 
                                     <label>Head Department</label>
 
-                                    <select name="head_id" class="select-input" required>
-                                        <option value="0">Unnasigned</option>
+                                    <select id="head_id01" name="head_id" class="select-input">
+                                        <option value="">Unnasigned</option>
                                         @foreach ($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}">
-                                                {{ $teacher->lname }}, {{ $teacher->fname }}
-                                            </option>
+
+                                            @if(!$departments->contains('head_id', $teacher->id))
+                                                <option value="{{ $teacher->id }}">
+                                                    {{ $teacher->lname }}, {{ $teacher->fname }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <button class="btn-submit">Save Section</button>
+                                <button class="btn-submit" id="submitBtn01">Save Department</button>
                             </form>
                         </div>
 
@@ -283,6 +311,116 @@
         </footer>
     </div>
 
+
+    <script>
+        const form01 = document.getElementById("sectionForm01");
+        const formTitle01 = document.getElementById("formTitle01");
+
+
+        const code01 = document.getElementById("code01");
+        const head_id01 = document.getElementById("head_id01");
+        const name01 = document.getElementById("name01");
+
+
+        const submitBtn01 = document.getElementById("submitBtn01");
+
+        document.querySelectorAll(".edit-btn01").forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                formTitle01.textContent = "Edit Subject";
+
+                name01.value = this.dataset.name;
+                code01.value = this.dataset.code;
+
+
+                /* ============================================================
+                //                       TEMPORARY FOR DEPARTMENT HEAD EDIT
+                  ============================================================ */
+                // Remove previously added edit option
+                const existing = document.getElementById("currentHeadOption");
+                if (existing) {
+                    existing.remove();
+                }
+
+                // If the current head isn't in the dropdown, add it temporarily
+                if (![...head_id01.options].some(opt => opt.value === this.dataset.head_id)) {
+                    const option = document.createElement("option");
+                    option.value = this.dataset.head_id;
+                    option.text = this.dataset.head_name;
+                    option.id = "currentHeadOption";
+
+                    head_id01.appendChild(option);
+                }
+
+                head_id01.value = this.dataset.head_id;
+
+
+                /* ============================================================
+                                           TEMPORARY FOR DEPARTMENT HEAD EDIT ///
+                  ============================================================ */
+
+                // sectionId01.value = this.dataset.id;
+                form01.action = "/admin/departments/" + this.dataset.id;
+
+                submitBtn01.innerHTML = "Update Department";
+
+
+
+
+                if (document.getElementById("methodField01") == null) {
+
+                    const method = document.createElement("input");
+
+                    method.type = "hidden";
+                    method.name = "_method";
+                    method.value = "PUT";
+                    method.id = "methodField01";
+
+                    form01.appendChild(method);
+                }
+
+            });
+
+        });
+
+        const addBtn01 = document.getElementById("addBtn01");
+
+        addBtn01.addEventListener("click", function () {
+
+            /* ============================================================
+            //                       TEMPORARY FOR DEPARTMENT HEAD EDIT
+              ============================================================ */
+
+            const existing = document.getElementById("currentHeadOption");
+            if (existing) {
+                existing.remove();
+            }
+
+            /* ============================================================
+                        TEMPORARY FOR DEPARTMENT HEAD EDIT              // 
+         ============================================================ */
+            // Reset all form inputs
+            form01.reset();
+
+            // Back to Add mode
+            formTitle01.textContent = "Add Department";
+            submitBtn01.textContent = "Save Department";
+
+            // Restore form action
+            form01.action = "{{ route('sections.store') }}";
+
+            // Remove PUT method if it exists
+            const methodField = document.getElementById("methodField01");
+            if (methodField) {
+                methodField.remove();
+            }
+
+            // Reset dropdown placeholders
+            department01.selectedIndex = 0;
+            category01.selectedIndex = 0;
+        });
+    </script>
 
     @include('AdminSide.javascript')
 </body>

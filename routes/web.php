@@ -64,6 +64,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // SAVE DATA ✅
     Route::post('/admin/departments', [AdminController::class, 'storeDepartment'])
         ->name('departments.store');
+        // Update
+    Route::put('/admin/departments/{id}', [AdminController::class, 'updateDepartment'])
+        ->name('departments.update');
+    // Delete
+    Route::delete('/admin/departments/{id}', [AdminController::class, 'destroyDepartment'])
+        ->name('departments.destroy');
+
 
     Route::get('/admin/students', [AdminController::class, 'studentList'])
         ->name('students.index');

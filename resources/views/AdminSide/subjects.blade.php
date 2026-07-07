@@ -160,8 +160,8 @@
                     <div class="section-header01">
 
                         <div class="section-title01">
-                            <h2>Course</h2>
-                            <p>Academic programs offered per department.</p>
+                            <h2>Subject</h2>
+                            <p>Subjects that can be assigned to teachers each semester.</p>
                         </div>
 
                         <div class="section-actions01">
@@ -183,13 +183,6 @@
 
                         <!-- LEFT : TABLE -->
                         <div class="card table-card">
-
-
-
-
-
-
-
 
 
                             @if($subjects->isEmpty())
@@ -279,7 +272,7 @@
 
                             <form id="sectionForm01" method="POST" action="{{ route('subjects.store') }}">
 
-                                <input type="hidden" name="section_id" id="sectionId01">
+                           
                                 @csrf
 
                                 <div class="form-group">
@@ -311,7 +304,7 @@
                                 </div>
 
                                 <button class="btn-submit" id="submitBtn01">
-                                    Save Course
+                                    Save Subject
                                 </button>
                             </form>
 
@@ -335,11 +328,10 @@
         const form01 = document.getElementById("sectionForm01");
         const formTitle01 = document.getElementById("formTitle01");
         const code01 = document.getElementById("code01");
-        const course01 = document.getElementById("course01");
-        const max01 = document.getElementById("max01");
+
+
         const department01 = document.getElementById("department01");
-        const category01 = document.getElementById("category01");
-        const sectionId01 = document.getElementById("sectionId01");
+        const subject01 = document.getElementById("subject01");
         const submitBtn01 = document.getElementById("submitBtn01");
 
         document.querySelectorAll(".edit-btn01").forEach(btn => {
@@ -347,11 +339,12 @@
             btn.addEventListener("click", function () {
 
                 formTitle01.textContent = "Edit Subject";
+                
                 code01.value = this.dataset.code;
                 subject01.value = this.dataset.name;
                 unit01.value = this.dataset.units;
                 department01.value = this.dataset.department;
-                category01.value = this.dataset.category;
+              
                 // sectionId01.value = this.dataset.id;
                 form01.action = "/admin/subjects/" + this.dataset.id;
 

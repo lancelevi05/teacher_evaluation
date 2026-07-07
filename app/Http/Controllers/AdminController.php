@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\student_info;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class AdminController extends Controller
 {
@@ -53,24 +54,24 @@ class AdminController extends Controller
             'max_section' => 'required|integer',
             'shs_college' => 'required|integer'
         ], [
-        'idstrandcourse.unique' => 'This course code already exists.',
-    ]);
+            'idstrandcourse.unique' => 'This course code already exists.',
+        ]);
 
-    
-            // insert data
-            StrandCourse::create([
-                'idstrandcourse' => $request->idstrandcourse,
-                'strandcourse' => $request->strandcourse,
-                'department_id' => $request->department_id,
-                'max_section' => $request->max_section,
-                'shs_college' => $request->shs_college,
-            ]);
 
-            // redirect back with message
-            return redirect()
-                ->route('sections.index')
-                ->with('success', 'Section added successfully!');
-        
+        // insert data
+        StrandCourse::create([
+            'idstrandcourse' => $request->idstrandcourse,
+            'strandcourse' => $request->strandcourse,
+            'department_id' => $request->department_id,
+            'max_section' => $request->max_section,
+            'shs_college' => $request->shs_college,
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('sections.index')
+            ->with('success', 'Section added successfully!');
+
     }
 
     public function updateSection(Request $request, $id)
@@ -104,6 +105,11 @@ class AdminController extends Controller
         $teachers = User::where('userType', 'Teacher')->get();
         $departments = Department::all();
 
+        foreach ($departments as $department) {
+            $department->courses_count = StrandCourse::where('department_id', $department->id)->count();
+        }
+
+
         return view('AdminSide.departments', compact('departments', 'teachers'));
 
     }
@@ -132,7 +138,48 @@ class AdminController extends Controller
             ->with('success', 'Departments added successfully!');
 
     }
-    
+
+    public function updateDepartment(Request $request, $id)
+    {
+        $department = Department::findOrFail($id);
+
+        $department->update([
+
+            'name' => $request->name,
+            'code' => $request->code,
+            'head_id' => $request->head_id,
+        ]);
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department updated successfully.');
+    }
+
+    public function destroyDepartment($id)
+    {
+    $department = Department::findOrFail($id);
+
+    try {
+        $department->delete();
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department deleted successfully.');
+
+    } catch (QueryException $e) {
+
+        // MySQL Error 1451 = Foreign key constraint
+        if ($e->errorInfo[1] == 1451) {
+            return redirect()->route('departments.index')
+                ->with('error', 'Cannot delete this department because it is being used by one or more strand/course records.');
+        }
+
+        // Any other database error
+        return redirect()->route('departments.index')
+            ->with('error', 'An unexpected error occurred while deleting the department.');
+    }
+}
+
+
+
     public function studentList()
     {
         $students = User::where('userType', 'Student')->get();
@@ -145,7 +192,7 @@ class AdminController extends Controller
 
 
 
-     public function subjects()
+    public function subjects()
     {
 
         $departments = Department::all();
@@ -163,29 +210,29 @@ class AdminController extends Controller
             'department_id' => 'required|integer|exists:departments,id',
             'code' => 'required|unique:subjects,code',
             'name' => 'required|string|max:100',
-            
-            
+
+
             'units' => 'required|decimal:0,1|between:0,99.9',
         ], [
-        'code.unique' => 'This code already exists.',
-    ]);
+            'code.unique' => 'This code already exists.',
+        ]);
 
-    
-            // insert data
-            Subject::create([
-                'department_id' => $request->department_id,
-                'code' => $request->code,
-                'name' => $request->name,
-                
-                
-                'units' => $request->units,
-            ]);
 
-            // redirect back with message
-            return redirect()
-                ->route('subjects.index')
-                ->with('success', 'Section added successfully!');
-        
+        // insert data
+        Subject::create([
+            'department_id' => $request->department_id,
+            'code' => $request->code,
+            'name' => $request->name,
+
+
+            'units' => $request->units,
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('subjects.index')
+            ->with('success', 'Section added successfully!');
+
     }
 
     public function updateSubject(Request $request, $id)
@@ -195,7 +242,7 @@ class AdminController extends Controller
         $subject->update([
             'department_id' => $request->department_id,
             'code' => $request->code,
-            
+
             'name' => $request->name,
             'units' => $request->units,
         ]);
@@ -213,6 +260,6 @@ class AdminController extends Controller
         return redirect()->route('subjects.index')
             ->with('success', 'Subject deleted successfully.');
     }
-    
+
 }
 
