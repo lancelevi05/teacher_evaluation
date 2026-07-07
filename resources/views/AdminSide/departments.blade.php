@@ -408,7 +408,7 @@
             submitBtn01.textContent = "Save Department";
 
             // Restore form action
-            form01.action = "{{ route('sections.store') }}";
+            form01.action = "{{ route('departments.store') }}";
 
             // Remove PUT method if it exists
             const methodField = document.getElementById("methodField01");

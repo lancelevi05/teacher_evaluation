@@ -192,7 +192,7 @@
 
 
 
-                            @if($sections->isEmpty())
+                            @if($courses->isEmpty())
                                 <div class="no-data">
                                     No data existed.
                                 </div>
@@ -225,30 +225,30 @@
                                         </thead>
 
                                         <tbody id="sectionTableBody01">
-                                            @foreach($sections as $section)
+                                            @foreach($courses as $course)
                                                 <tr class="sectionRow01">
-                                                    <td>{{ $section->idstrandcourse }}</td>
-                                                    <td>{{ $section->strandcourse ?? 'N/A' }}</td>
+                                                    <td>{{ $course->idstrandcourse }}</td>
+                                                    <td>{{ $course->strandcourse ?? 'N/A' }}</td>
                                                     <td>
                                                         @php
-                                                            $info = $departments->firstWhere('id', $section->department_id);
+                                                            $info = $departments->firstWhere('id', $course->department_id);
                                                         @endphp
 
                                                         {{ $info ? $info->name : '--' }}
                                                     </td>
                                                     <td>45</td>
-                                                    <td>{{ $section->max_section ?? '--' }}</td>
+                                                    <td>{{ $course->max_section ?? '--' }}</td>
                                                     <td>
-                                                        <button type="button" class="edit-btn01" data-id="{{ $section->id }}"
-                                                            data-code="{{ $section->idstrandcourse }}"
-                                                            data-course="{{ $section->strandcourse }}"
-                                                            data-max="{{ $section->max_section }}"
-                                                            data-department="{{ $section->department_id }}"
-                                                            data-category="{{ $section->shs_college }}">
+                                                        <button type="button" class="edit-btn01" data-id="{{ $course->id }}"
+                                                            data-code="{{ $course->idstrandcourse }}"
+                                                            data-course="{{ $course->strandcourse }}"
+                                                            data-max="{{ $course->max_section }}"
+                                                            data-department="{{ $course->department_id }}"
+                                                            data-category="{{ $course->shs_college }}">
                                                             EDIT
                                                         </button>
 
-                                                        <form action="{{ route('sections.destroy', $section->id) }}"
+                                                        <form action="{{ route('courses.destroy', $course->id) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
@@ -276,7 +276,7 @@
 
 
 
-                            <form id="sectionForm01" method="POST" action="{{ route('sections.store') }}">
+                            <form id="sectionForm01" method="POST" action="{{ route('courses.store') }}">
 
                                 <input type="hidden" name="section_id" id="sectionId01">
                                 @csrf
@@ -357,7 +357,7 @@
                 department01.value = this.dataset.department;
                 category01.value = this.dataset.category;
                 // sectionId01.value = this.dataset.id;
-                form01.action = "/admin/sections/" + this.dataset.id;
+                form01.action = "/admin/courses/" + this.dataset.id;
 
                 submitBtn01.innerHTML = "Update Section";
 
@@ -392,7 +392,7 @@
             submitBtn01.textContent = "Save Course";
 
             // Restore form action
-            form01.action = "{{ route('sections.store') }}";
+            form01.action = "{{ route('courses.store') }}";
 
             // Remove PUT method if it exists
             const methodField = document.getElementById("methodField01");

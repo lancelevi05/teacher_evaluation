@@ -15,7 +15,7 @@
                 <rect x="14" y="14" width="7" height="7" rx="1" />
             </svg> Overview </a>
 
-        <a class="nav-item {{ request()->routeIs('sections.*') ? 'active' : '' }}" href="{{ route('sections.index') }}">
+        <a class="nav-item {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 10L12 5 2 10l10 5 10-5z" />
                 <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
@@ -42,7 +42,7 @@
 
         <span class="nav-label" style="margin-top:12px">PEOPLE</span>
 
-        <a class="nav-item" href="{{ route('sections.index') }}">
+        <a class="nav-item" href="{{ route('courses.index') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />

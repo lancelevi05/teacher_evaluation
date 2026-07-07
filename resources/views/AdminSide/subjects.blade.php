@@ -381,7 +381,7 @@
             submitBtn01.textContent = "Save Course";
 
             // Restore form action
-            form01.action = "{{ route('sections.store') }}";
+            form01.action = "{{ route('subjects.store') }}";
 
             // Remove PUT method if it exists
             const methodField = document.getElementById("methodField01");

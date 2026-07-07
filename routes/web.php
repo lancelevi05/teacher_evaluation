@@ -42,17 +42,17 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 
 
     // Display page
-    Route::get('/admin/sections', [AdminController::class, 'sections'])
-        ->name('sections.index');
+    Route::get('/admin/courses', [AdminController::class, 'courses'])
+        ->name('courses.index');
     // Store
-    Route::post('/admin/sections', [AdminController::class, 'store'])
-        ->name('sections.store');
+    Route::post('/admin/courses', [AdminController::class, 'store'])
+        ->name('courses.store');
     // Update
-    Route::put('/admin/sections/{id}', [AdminController::class, 'updateSection'])
-        ->name('sections.update');
+    Route::put('/admin/courses/{id}', [AdminController::class, 'updateCourse'])
+        ->name('courses.update');
     // Delete
-    Route::delete('/admin/sections/{id}', [AdminController::class, 'destroySection'])
-        ->name('sections.destroy');
+    Route::delete('/admin/courses/{id}', [AdminController::class, 'destroyCourse'])
+        ->name('courses.destroy');
 
 
 

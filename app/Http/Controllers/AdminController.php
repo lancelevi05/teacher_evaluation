@@ -33,15 +33,15 @@ class AdminController extends Controller
         // }
     }
 
-    public function sections()
+    public function courses()
     {
 
         $departments = Department::all();
-        $sections = StrandCourse::all();
+        $courses = StrandCourse::all();
 
 
 
-        return view('AdminSide.sections', compact('sections', 'departments'));
+        return view('AdminSide.courses', compact('courses', 'departments'));
     }
     // ✅ SAVE TO DATABASE
     public function store(Request $request)
@@ -69,16 +69,16 @@ class AdminController extends Controller
 
         // redirect back with message
         return redirect()
-            ->route('sections.index')
-            ->with('success', 'Section added successfully!');
+            ->route('courses.index')
+            ->with('success', 'Course added successfully!');
 
     }
 
-    public function updateSection(Request $request, $id)
+    public function updateCourse(Request $request, $id)
     {
-        $section = StrandCourse::findOrFail($id);
+        $course = StrandCourse::findOrFail($id);
 
-        $section->update([
+        $course->update([
             'idstrandcourse' => $request->idstrandcourse,
             'strandcourse' => $request->strandcourse,
             'department_id' => $request->department_id,
@@ -86,18 +86,18 @@ class AdminController extends Controller
             'shs_college' => $request->shs_college,
         ]);
 
-        return redirect()->route('sections.index')
-            ->with('success', 'Section updated successfully.');
+        return redirect()->route('courses.index')
+            ->with('success', 'Course updated successfully.');
     }
 
-    public function destroySection($id)
+    public function destroyCourse($id)
     {
         $section = StrandCourse::findOrFail($id);
 
         $section->delete();
 
-        return redirect()->route('sections.index')
-            ->with('success', 'Section deleted successfully.');
+        return redirect()->route('courses.index')
+            ->with('success', 'Course deleted successfully.');
     }
 
     public function departments()
