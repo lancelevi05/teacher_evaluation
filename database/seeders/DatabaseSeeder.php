@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Department;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -32,7 +34,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'lancelevi05@gmail.com',
             'password' => Hash::make('password'),
             'userType' => 'Student',
+            'status' => 'Active'
         ]);
+
+      
 
         User::create([
             'usn' => '09936303219',
@@ -42,6 +47,53 @@ class DatabaseSeeder extends Seeder
             'email' => 'javalance05@gmail.com',
             'password' => Hash::make('password'),
             'userType' => 'Admin',
+            'status' => 'Active'
+        ]);
+        User::create([
+            'usn' => '09536313219',
+            'fname' => 'Leah',
+            'lname' => 'Mante',
+            'mname' => 'Dela Cruz',
+            'email' => 'javalance06@gmail.com',
+            'password' => Hash::make('password'),
+            'userType' => 'Teacher',
+        ]);
+        User::create([
+            'usn' => '09627645189',
+            'fname' => 'Angela',
+            'lname' => 'Garcia',
+            'mname' => 'Lopez',
+            'email' => 'angela.garcia@example.com',
+            'password' => Hash::make('password'),
+            'userType' => 'Teacher',
+            'status' => 'Active'
+        ]);
+        User::create([
+            'usn' => '09568341879',
+            'fname' => 'Karen',
+            'lname' => 'Torres',
+            'mname' => 'Flores',
+            'email' => 'karen.torres@example.com',
+            'password' => Hash::make('password'),
+            'userType' => 'Teacher',
+            'status' => 'Active'
+        ]);
+
+        Department::create([
+            'name' => 'Computer Studies',
+            'code' => 'CS'
+
+        ]);
+        Department::create([
+            'name' => 'Hospitality Management',
+            'code' => 'HM'
+
+        ]);
+
+        Department::create([
+            'name' => 'Business Department',
+            'code' => 'BS'
+
         ]);
 
 

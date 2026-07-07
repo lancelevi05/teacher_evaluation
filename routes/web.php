@@ -80,6 +80,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])
         ->name('subjects.store');
 
+         // Update
+    Route::put('/admin/subjects/{id}', [AdminController::class, 'updateSubject'])
+        ->name('subjects.update');
+    // Delete
+    Route::delete('/admin/subjects/{id}', [AdminController::class, 'destroySubject'])
+        ->name('subjects.destroy');
+
 
 
 });

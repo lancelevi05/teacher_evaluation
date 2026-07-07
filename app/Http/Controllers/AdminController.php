@@ -149,40 +149,69 @@ class AdminController extends Controller
     {
 
         $departments = Department::all();
-        $sections = StrandCourse::all();
+        $subjects = Subject::all();
 
 
 
-        return view('AdminSide.sections', compact('sections', 'departments'));
+        return view('AdminSide.subjects', compact('subjects', 'departments'));
     }
     // ✅ SAVE TO DATABASE
     public function storeSubject(Request $request)
     {
         // validation
         $request->validate([
-            
             'department_id' => 'required|integer|exists:departments,id',
             'code' => 'required|unique:subjects,code',
+            'name' => 'required|string|max:100',
+            
+            
             'units' => 'required|decimal:0,1|between:0,99.9',
         ], [
-        'idstrandcourse.unique' => 'This course code already exists.',
+        'code.unique' => 'This code already exists.',
     ]);
 
     
             // insert data
-            StrandCourse::create([
-                'idstrandcourse' => $request->idstrandcourse,
-                'strandcourse' => $request->strandcourse,
+            Subject::create([
                 'department_id' => $request->department_id,
-                'max_section' => $request->max_section,
-                'shs_college' => $request->shs_college,
+                'code' => $request->code,
+                'name' => $request->name,
+                
+                
+                'units' => $request->units,
             ]);
 
             // redirect back with message
             return redirect()
-                ->route('sections.index')
+                ->route('subjects.index')
                 ->with('success', 'Section added successfully!');
         
+    }
+
+    public function updateSubject(Request $request, $id)
+    {
+        $subject = Subject::findOrFail($id);
+
+        $subject->update([
+            'department_id' => $request->department_id,
+            'code' => $request->code,
+            
+            'name' => $request->name,
+            'units' => $request->units,
+        ]);
+
+        return redirect()->route('subjects.index')
+            ->with('success', 'Subject updated successfully.');
+    }
+
+    public function destroySubject($id)
+    {
+        $subject = Subject::findOrFail($id);
+
+        $subject->delete();
+
+        return redirect()->route('subjects.index')
+            ->with('success', 'Subject deleted successfully.');
     }
     
 }
