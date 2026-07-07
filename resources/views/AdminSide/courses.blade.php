@@ -236,7 +236,7 @@
 
                                                         {{ $info ? $info->name : '--' }}
                                                     </td>
-                                                    <td>45</td>
+                                                    <td>{{ $course->students_count }}</td>
                                                     <td>{{ $course->max_section ?? '--' }}</td>
                                                     <td>
                                                         <button type="button" class="edit-btn01" data-id="{{ $course->id }}"

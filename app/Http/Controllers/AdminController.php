@@ -8,7 +8,7 @@ use App\Models\student_info;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
     public function index()
@@ -38,6 +38,11 @@ class AdminController extends Controller
 
         $departments = Department::all();
         $courses = StrandCourse::all();
+        
+
+         foreach ($courses as $course) {
+            $course->students_count = student_info::where('idstrandcourse', $course->idstrandcourse)->count();
+        }
 
 
 
@@ -183,7 +188,15 @@ class AdminController extends Controller
     public function studentList()
     {
         $students = User::where('userType', 'Student')->get();
-        $student_info = student_info::all();
+        // $student_info = student_info::all();
+
+         $student_info = DB::table('student_infos')
+        ->leftJoin('strand_courses', 'student_infos.idstrandcourse', '=', 'strand_courses.idstrandcourse')
+        ->select(
+            'student_infos.*',
+            'strand_courses.strandcourse'
+        )
+        ->get();
 
 
         return view('AdminSide.students', compact('students', 'student_info'));

@@ -250,7 +250,7 @@
                                                     @php
                                                         $info = $student_info->firstWhere('usn', $student->usn);
                                                     @endphp
-                                                    <td>{{ $info->idstrandcourse ?? '--' }}</td>
+                                                    <td>{{ $info->strandcourse ?? '--' }}</td>
                                                     <td>
                                                        {{ $info->section ?? '--' }}
                                                     </td>
