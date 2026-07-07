@@ -30,7 +30,12 @@ return new class extends Migration {
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate(); // 👈 add this
             $table->string('idstrandcourse')->nullable();
-          
+            $table->foreign('idstrandcourse')
+                ->references('idstrandcourse')
+                ->on('strand_courses')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate(); // 👈 add this
+
             $table->string('yglevel')->nullable();
             $table->string('section')->nullable();
             $table->string('shs_college')->nullable();
