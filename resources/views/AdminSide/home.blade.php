@@ -63,13 +63,13 @@
                     <div class="cards-grid">
                         <div class="stat-card">
                             <div class="stat-label">
-                                Revenue
+                                TOTAL STUDENTS
                             </div>
                             <div class="stat-value">
-                                $24.8k
+                                {{ $totalcourses }}
                             </div>
                             <div class="stat-change">
-                                ↑ 12% this month
+                                <!-- ↑ 12% this month -->
                             </div>
                         </div>
                         <div class="stat-card">

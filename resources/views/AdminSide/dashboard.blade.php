@@ -4,8 +4,6 @@
         Dashboard
     </div>
     <nav class="sidebar-nav">
-        <span class="nav-label">ACADEMIC STRUCTURE</span>
-
         <a class="nav-item {{ request()->routeIs('AdminSide.home') ? 'active' : '' }}"
             href="{{ route('AdminSide.home') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -14,6 +12,9 @@
                 <rect x="3" y="14" width="7" height="7" rx="1" />
                 <rect x="14" y="14" width="7" height="7" rx="1" />
             </svg> Overview </a>
+        <span class="nav-label">ACADEMIC STRUCTURE</span>
+
+        
 
         <a class="nav-item {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -39,6 +40,12 @@
                 <path d="M15 14h.01" />
                 <path d="M11 21v-3h2v3" />
             </svg>Department </a>
+
+            <a class="nav-item {{ request()->routeIs('semesters.*') ? 'active' : '' }}" href="{{ route('semesters.index') }}">
+            <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10L12 5 2 10l10 5 10-5z" />
+                <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
+            </svg>Semesters </a>
 
         <span class="nav-label" style="margin-top:12px">PEOPLE</span>
 

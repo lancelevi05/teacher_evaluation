@@ -31,7 +31,20 @@ class AdminController extends Controller
         //         return redirect()->back();
         //     }
         // }
+        
     }
+
+    public function home(Request $request)
+{
+    $totalcourses = StrandCourse::count();
+
+
+
+    return view('AdminSide.home', [
+        'user' => $request->user(),
+        'totalcourses' => $totalcourses,
+    ]);
+}
 
     public function courses()
     {
@@ -272,6 +285,13 @@ class AdminController extends Controller
 
         return redirect()->route('subjects.index')
             ->with('success', 'Subject deleted successfully.');
+    }
+
+     public function semesters()
+    {
+       
+
+         return view('AdminSide.semesters');
     }
 
 }

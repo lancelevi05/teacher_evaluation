@@ -34,11 +34,14 @@ Route::middleware('auth')->group(function () {
 // ADMIN ROUTES
 // =====================================================
 Route::middleware(['auth', 'role:Admin'])->group(function () {
-    Route::get('/admin/home', function (Request $request) {
-        return view('AdminSide.home', [
-            'user' => $request->user(),
-        ]);
-    })->name('AdminSide.home');
+    // Route::get('/admin/home', function (Request $request) {
+    //     return view('AdminSide.home', [
+    //         'user' => $request->user(),
+    //     ]);
+    // })->name('AdminSide.home');
+
+    Route::get('/admin/home', [AdminController::class, 'home'])
+    ->name('AdminSide.home');
 
 
     // Display page
@@ -93,6 +96,15 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // Delete
     Route::delete('/admin/subjects/{id}', [AdminController::class, 'destroySubject'])
         ->name('subjects.destroy');
+
+
+         // Display page
+    Route::get('/admin/semesters', [AdminController::class, 'semesters'])
+        ->name('semesters.index');
+    // Store
+    Route::post('/admin/semesters', [AdminController::class, 'storsemesters'])
+        ->name('semesters.store');
+
 
 
 
