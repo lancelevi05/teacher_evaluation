@@ -324,6 +324,31 @@ class AdminController extends Controller
 
     }
 
+    public function openAcademic(Request $request, $id)
+    {
+        $academicYear = AcademicYear::findOrFail($id);
+
+        $academicYear->update([
+            'status' => 'active'
+            
+        ]);
+
+        return redirect()->route('academicsemesters.index')
+            ->with('success', 'Semester Opened successfully.');
+    }
+
+    public function closeAcademic($id)
+{
+    $academicYear = AcademicYear::findOrFail($id);
+
+    $academicYear->update([
+        'status' => 'archived',
+    ]);
+
+    return redirect()->route('academicsemesters.index')
+        ->with('success', 'Academic Archived successfully.');
+}
+
     public function storeSemester(Request $request)
     {
         // validation

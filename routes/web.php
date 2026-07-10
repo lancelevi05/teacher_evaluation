@@ -104,6 +104,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // Store Academic
     Route::post('/admin/academicsemesters/academic', [AdminController::class, 'storeAcademic'])
         ->name('academic.store');
+
+        // CHANGE ACADEMIC Open
+    Route::put('/admin/academicsemestersacademicrOpen/{id}', [AdminController::class, 'openAcademic'])
+        ->name('academic.change_open');
+        // CHANGE ACADEMIC CLOSE
+    Route::put('/admin/academicsemesters/academicClose/{id}', [AdminController::class, 'closeAcademic'])
+        ->name('academic.close');
          // Store Semester
          Route::post('/admin/academicsemesters/semester', [AdminController::class, 'storeSemester'])
         ->name('semester.store');

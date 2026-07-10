@@ -572,13 +572,26 @@
                                                                 </button> -->
 
                                                     @if($ay02->status == 'active')
-                                                        <button class="btn-archive">
+                                                        
+                                                        <form method="POST" action="{{ route('academic.close', $ay02->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <button class="btn-archive">
                                                             Archive
                                                         </button>
+                                                        </form>
                                                     @else
-                                                        <button class="btn-activate">
+                                                        
+
+                                                        <form method="POST" action="{{ route('academic.change_open', $ay02->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <button class="btn-activate">
                                                             Activate
                                                         </button>
+                                                        </form>
                                                     @endif
                                                 </td>
                                             </tr>

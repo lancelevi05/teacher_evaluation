@@ -1,14 +1,6 @@
 <script>
 
 
-
-
-
-
-
-
-
-
 //===============================// (OPEN)SEARCH BAR FUNCTION---------================//
 searchInput01.addEventListener("keypress", function(e){
 
