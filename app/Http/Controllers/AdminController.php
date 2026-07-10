@@ -350,6 +350,30 @@ class AdminController extends Controller
             ->with('success', 'Semester added successfully!');
 
     }
+    public function openSemester(Request $request, $id)
+    {
+        $semester = Semester::findOrFail($id);
+
+        $semester->update([
+            'status' => 'active'
+            
+        ]);
+
+        return redirect()->route('academicsemesters.index')
+            ->with('success', 'Semester Opened successfully.');
+    }
+
+    public function closeSemester($id)
+{
+    $semester = Semester::findOrFail($id);
+
+    $semester->update([
+        'status' => 'closed',
+    ]);
+
+    return redirect()->route('academicsemesters.index')
+        ->with('success', 'Semester closed successfully.');
+}
 
 }
 

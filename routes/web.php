@@ -102,12 +102,20 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/academicsemesters', [AdminController::class, 'academicsemesters'])
         ->name('academicsemesters.index');
     // Store Academic
-
     Route::post('/admin/academicsemesters/academic', [AdminController::class, 'storeAcademic'])
         ->name('academic.store');
          // Store Semester
          Route::post('/admin/academicsemesters/semester', [AdminController::class, 'storeSemester'])
         ->name('semester.store');
+
+        // CHANGE semester Open
+    Route::put('/admin/academicsemesters/semesterOpen/{id}', [AdminController::class, 'openSemester'])
+        ->name('semester.change_open');
+        // CHANGE semester CLOSE
+    Route::put('/admin/academicsemesters/semesterClose/{id}', [AdminController::class, 'closeSemester'])
+        ->name('semester.close');
+
+
 
 
 

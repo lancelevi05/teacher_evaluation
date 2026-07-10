@@ -172,6 +172,45 @@
             background: #3c2fa8;
         }
 
+        .btn-archive {
+            background: #f59e0b;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            cursor: pointer;
+        }
+
+        .btn-archive:hover {
+            background: #d97706;
+        }
+
+        .btn-close-semester {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            cursor: pointer;
+        }
+
+        .btn-close-semester:hover {
+            background: #dc2626;
+        }
+
+        .btn-activate {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            cursor: pointer;
+        }
+
+        .btn-activate:hover {
+            background: #16a34a;
+        }
+
         .ay-table-wrapper02 {
             overflow-x: auto;
         }
@@ -206,7 +245,7 @@
             background: #fafafa;
         }
 
-        .ay-status02 {
+        /* .ay-status02 {
             display: inline-block;
             padding: 3px 10px;
             border-radius: 12px;
@@ -220,8 +259,26 @@
         }
 
         .ay-status02.is-inactive02 {
-            background: #f2f2f2;
+            background: rgb(158, 158, 158);
             color: #888;
+        } */
+
+        .ay-status02 {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .ay-status02.is-active02 {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .ay-status02.is-archived02 {
+            background: #fee2e2;
+            color: #b91c1c;
         }
 
         .ay-btn-action02 {
@@ -505,14 +562,24 @@
                                                 <td>{{ $ay02->year_label }}</td>
                                                 <td>
                                                     <span
-                                                        class="ay-status02 {{ $ay02->status == 'Active' ? 'is-active02' : 'is-inactive02' }}">
-                                                        {{ $ay02->status }}
+                                                        class="ay-status02 {{ $ay02->status == 'active' ? 'is-active02' : 'is-archived02' }}">
+                                                        {{ ucfirst($ay02->status) }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <button class="ay-btn-action02">
-                                                        Archive
-                                                    </button>
+                                                    <!-- <button class="ay-btn-action02">
+                                                                    Archive
+                                                                </button> -->
+
+                                                    @if($ay02->status == 'active')
+                                                        <button class="btn-archive">
+                                                            Archive
+                                                        </button>
+                                                    @else
+                                                        <button class="btn-activate">
+                                                            Activate
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @empty
@@ -552,20 +619,41 @@
                                                 <td><strong>{{ $sem02->name }}</strong></td>
                                                 <td>
                                                     @php
-                                                    $info = $academicYears->firstWhere('id', $sem02->academic_year_id);
+                                                        $info = $academicYears->firstWhere('id', $sem02->academic_year_id);
                                                     @endphp
                                                     {{ $info ? $info->year_label : '--' }}
                                                 </td>
                                                 <td>
                                                     <span
-                                                        class="ay-status02 {{ $sem02->status == 'Active' ? 'is-active02' : 'is-inactive02' }}">
-                                                        {{ $sem02->status }}
+                                                        class="ay-status02 {{ $sem02->status == 'active' ? 'is-active02' : 'is-archived02' }}">
+                                                        {{ ucfirst($sem02->status) }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <button class="ay-btn-action02">
-                                                        Close
-                                                    </button>
+                                                    <!-- <button class="ay-btn-action02">
+                                                                    Close
+                                                                </button> -->
+
+                                                    @if($sem02->status == 'active')
+                                                        <form method="POST" action="{{ route('semester.close', $sem02->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <button type="submit" class="btn-close-semester">
+                                                                Close
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <form method="POST"
+                                                            action="{{ route('semester.change_open', $sem02->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <button type="submit" class="btn-activate">
+                                                                Activate
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @empty
