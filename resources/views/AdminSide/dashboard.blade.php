@@ -42,24 +42,38 @@
             </svg>Department </a>
 
             <a class="nav-item {{ request()->routeIs('academicsemesters.*') ? 'active' : '' }}" href="{{ route('academicsemesters.index') }}">
-            <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 10L12 5 2 10l10 5 10-5z" />
-                <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
-            </svg>Semesters </a>
+    <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+    </svg> Semesters </a>
 
         <span class="nav-label" style="margin-top:12px">PEOPLE</span>
 
         <a class="nav-item" href="{{ route('courses.index') }}">
-            <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-            </svg> Teacher </a>
+    <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 3h20" />
+        <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" />
+        <path d="m7 21 5-5 5 5" />
+    </svg> Teacher </a>
 
             <a class="nav-item" href="{{ route('students.index') }}">
-            <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-            </svg> Students </a>
+    <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+    </svg> Students </a>
+            <span class="nav-label" style="margin-top:12px">Evaluation</span>
+
+            <a class="nav-item" href="{{ route('students.index') }}">
+    <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+        <path d="M12 11h4" />
+        <path d="M12 16h4" />
+        <path d="M8 11h.01" />
+        <path d="M8 16h.01" />
+    </svg> Questionnaire </a>
 
 
 

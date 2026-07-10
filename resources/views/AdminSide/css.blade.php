@@ -38,7 +38,10 @@
             color: #c9daf0;
             display: flex;
             flex-direction: column;
-            padding: 0;
+                height: 100vh;      /* Full viewport height */
+    overflow-y: auto;   /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+
         }
 
         .sidebar-brand {
@@ -50,13 +53,20 @@
             border-bottom: 1px solid rgba(255, 255, 255, .08);
         }
 
-        .sidebar-nav {
+        /* .sidebar-nav {
             padding: 16px 12px;
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 2px;
-        }
+        } */
+
+            .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    /* padding: 16px 12px; */
+    padding: 16px 12px 80px; /* bottom padding */
+}
 
         .nav-label {
             font-size: 11px;
