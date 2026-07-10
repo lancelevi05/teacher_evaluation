@@ -98,12 +98,16 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('subjects.destroy');
 
 
-         // Display page
-    Route::get('/admin/semesters', [AdminController::class, 'semesters'])
-        ->name('semesters.index');
-    // Store
-    Route::post('/admin/semesters', [AdminController::class, 'storsemesters'])
-        ->name('semesters.store');
+         // Display page both semeseter and academic
+    Route::get('/admin/academicsemesters', [AdminController::class, 'academicsemesters'])
+        ->name('academicsemesters.index');
+    // Store Academic
+
+    Route::post('/admin/academicsemesters/academic', [AdminController::class, 'storeAcademic'])
+        ->name('academic.store');
+         // Store Semester
+         Route::post('/admin/academicsemesters/semester', [AdminController::class, 'storeSemester'])
+        ->name('semester.store');
 
 
 

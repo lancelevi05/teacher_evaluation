@@ -6,6 +6,8 @@ use App\Models\Department;
 use App\Models\User;
 use App\Models\student_info;
 use App\Models\Subject;
+use App\Models\Semester;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -31,29 +33,29 @@ class AdminController extends Controller
         //         return redirect()->back();
         //     }
         // }
-        
+
     }
 
     public function home(Request $request)
-{
-    $totalcourses = StrandCourse::count();
+    {
+        $totalcourses = StrandCourse::count();
 
 
 
-    return view('AdminSide.home', [
-        'user' => $request->user(),
-        'totalcourses' => $totalcourses,
-    ]);
-}
+        return view('AdminSide.home', [
+            'user' => $request->user(),
+            'totalcourses' => $totalcourses,
+        ]);
+    }
 
     public function courses()
     {
 
         $departments = Department::all();
         $courses = StrandCourse::all();
-        
 
-         foreach ($courses as $course) {
+
+        foreach ($courses as $course) {
             $course->students_count = student_info::where('idstrandcourse', $course->idstrandcourse)->count();
         }
 
@@ -174,27 +176,27 @@ class AdminController extends Controller
 
     public function destroyDepartment($id)
     {
-    $department = Department::findOrFail($id);
+        $department = Department::findOrFail($id);
 
-    try {
-        $department->delete();
+        try {
+            $department->delete();
 
-        return redirect()->route('departments.index')
-            ->with('success', 'Department deleted successfully.');
-
-    } catch (QueryException $e) {
-
-        // MySQL Error 1451 = Foreign key constraint
-        if ($e->errorInfo[1] == 1451) {
             return redirect()->route('departments.index')
-                ->with('error', 'Cannot delete this department because it is being used by one or more strand/course records.');
-        }
+                ->with('success', 'Department deleted successfully.');
 
-        // Any other database error
-        return redirect()->route('departments.index')
-            ->with('error', 'An unexpected error occurred while deleting the department.');
+        } catch (QueryException $e) {
+
+            // MySQL Error 1451 = Foreign key constraint
+            if ($e->errorInfo[1] == 1451) {
+                return redirect()->route('departments.index')
+                    ->with('error', 'Cannot delete this department because it is being used by one or more strand/course records.');
+            }
+
+            // Any other database error
+            return redirect()->route('departments.index')
+                ->with('error', 'An unexpected error occurred while deleting the department.');
+        }
     }
-}
 
 
 
@@ -203,13 +205,13 @@ class AdminController extends Controller
         $students = User::where('userType', 'Student')->get();
         // $student_info = student_info::all();
 
-         $student_info = DB::table('student_infos')
-        ->leftJoin('strand_courses', 'student_infos.idstrandcourse', '=', 'strand_courses.idstrandcourse')
-        ->select(
-            'student_infos.*',
-            'strand_courses.strandcourse'
-        )
-        ->get();
+        $student_info = DB::table('student_infos')
+            ->leftJoin('strand_courses', 'student_infos.idstrandcourse', '=', 'strand_courses.idstrandcourse')
+            ->select(
+                'student_infos.*',
+                'strand_courses.strandcourse'
+            )
+            ->get();
 
 
         return view('AdminSide.students', compact('students', 'student_info'));
@@ -287,11 +289,66 @@ class AdminController extends Controller
             ->with('success', 'Subject deleted successfully.');
     }
 
-     public function semesters()
+    public function academicsemesters()
     {
-       
+        $academicYears = AcademicYear::orderByDesc('id')->get();
+        $semesters = Semester::all();
 
-         return view('AdminSide.semesters');
+
+        return view('AdminSide.academicsemesters', compact('academicYears', 'semesters'));
+    }
+
+    public function storeAcademic(Request $request)
+    {
+        // validation
+        $request->validate([
+            'academic_year' => 'required|unique:academic_years,year_label',
+
+
+
+        ], [
+            'year_label.unique' => 'This year label already exists.',
+        ]);
+
+
+        // insert data
+        AcademicYear::create([
+            'year_label' => $request->academic_year,
+            'status' => 'active',
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('academicsemesters.index')
+            ->with('success', 'Academic Year added successfully!');
+
+    }
+
+    public function storeSemester(Request $request)
+    {
+        // validation
+        $request->validate([
+            'academic_year_id' => 'required|integer|exists:academic_years,id',
+            'name'=> 'required|string|max:100',
+            
+
+
+
+        ]);
+
+
+        // insert data
+        Semester::create([
+            'academic_year_id' => $request->academic_year_id,
+            'name'=>$request->name,
+            'status' => 'active',
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('academicsemesters.index')
+            ->with('success', 'Semester added successfully!');
+
     }
 
 }

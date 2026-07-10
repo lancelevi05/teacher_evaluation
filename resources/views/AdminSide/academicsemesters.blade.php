@@ -358,6 +358,20 @@
             border-color: #4b3cc9;
         }
 
+        .ay-input02 {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 14px;
+            color: #1a1a2e;
+        }
+
+        .ay-input02:focus {
+            outline: none;
+            border-color: #4b3cc9;
+        }
+
         .ay-modal-footer02 {
             display: flex;
             justify-content: flex-end;
@@ -434,28 +448,37 @@
                 </header>
                 <main class="content">
 
+                    @if(session('success'))
+                        <div class="success-msg">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="error-msg">
+                            @foreach($errors->all() as $error)
+                                {{ $error }}
+                            @endforeach
+                        </div>
+                    @endif
+
                     <div class="section-header01">
 
                         <div class="section-title01">
                             <h2>Academic Years & Semesters</h2>
                             <p>Manage the academic calendar used across evaluations.</p>
+
                         </div>
+
 
                     </div>
 
-                    {{-- ===== MOCK DATA (remove once wired to the DB) ===== --}}
-                    @php
-                        $academicYears02 = [
-                            ['id' => 1, 'year' => '2026-2027', 'status' => 'Active'],
-                            ['id' => 2, 'year' => '2025-2026', 'status' => 'Active'],
-                        ];
 
-                        $semesters02 = [
-                            ['id' => 1, 'name' => 'First Semester', 'academic_year' => '2026-2027', 'status' => 'Active'],
-                        ];
-                    @endphp
 
                     <div class="ay-container02">
+
+
+
 
                         {{-- ===== ACADEMIC YEARS CARD ===== --}}
                         <div class="ay-card02" id="academicYearsCard02">
@@ -467,6 +490,7 @@
                             </div>
 
                             <div class="ay-table-wrapper02">
+
                                 <table class="ay-table02" id="academicYearsTable02">
                                     <thead>
                                         <tr>
@@ -476,25 +500,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($academicYears02 as $ay02)
-                                            <tr data-id="{{ $ay02['id'] }}">
-                                                <td>{{ $ay02['year'] }}</td>
+                                        @forelse($academicYears as $ay02)
+                                            <tr>
+                                                <td>{{ $ay02->year_label }}</td>
                                                 <td>
                                                     <span
-                                                        class="ay-status02 {{ $ay02['status'] === 'Active' ? 'is-active02' : 'is-inactive02' }}">
-                                                        {{ $ay02['status'] }}
+                                                        class="ay-status02 {{ $ay02->status == 'Active' ? 'is-active02' : 'is-inactive02' }}">
+                                                        {{ $ay02->status }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="ay-btn-action02 archive-year-btn02"
-                                                        data-id="{{ $ay02['id'] }}">
+                                                    <button class="ay-btn-action02">
                                                         Archive
                                                     </button>
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="3" class="ay-no-data02">No academic years found.</td>
+                                                <td colspan="3" class="ay-no-data02">
+                                                    No academic years found.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -522,26 +547,32 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($semesters02 as $sem02)
-                                            <tr data-id="{{ $sem02['id'] }}">
-                                                <td><strong>{{ $sem02['name'] }}</strong></td>
-                                                <td>{{ $sem02['academic_year'] }}</td>
+                                        @forelse($semesters as $sem02)
+                                            <tr>
+                                                <td><strong>{{ $sem02->name }}</strong></td>
+                                                <td>
+                                                    @php
+                                                    $info = $academicYears->firstWhere('id', $sem02->academic_year_id);
+                                                    @endphp
+                                                    {{ $info ? $info->year_label : '--' }}
+                                                </td>
                                                 <td>
                                                     <span
-                                                        class="ay-status02 {{ $sem02['status'] === 'Active' ? 'is-active02' : 'is-inactive02' }}">
-                                                        {{ $sem02['status'] }}
+                                                        class="ay-status02 {{ $sem02->status == 'Active' ? 'is-active02' : 'is-inactive02' }}">
+                                                        {{ $sem02->status }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="ay-btn-action02 close-semester-btn02"
-                                                        data-id="{{ $sem02['id'] }}">
+                                                    <button class="ay-btn-action02">
                                                         Close
                                                     </button>
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="ay-no-data02">No semesters found.</td>
+                                                <td colspan="4" class="ay-no-data02">
+                                                    No semesters found.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -549,6 +580,44 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    {{-- ===== ADD ACADEMIC YEAR MODAL ===== --}}
+                    <div class="ay-modal-overlay02" id="academicYearModalOverlay02">
+                        <div class="ay-modal02" role="dialog" aria-modal="true"
+                            aria-labelledby="academicYearModalTitle02">
+                            <div class="ay-modal-header02">
+                                <h3 id="academicYearModalTitle02">Add Academic Year</h3>
+                                <button type="button" class="ay-modal-close02" id="closeAcademicYearModalBtn02"
+                                    aria-label="Close">&times;</button>
+                            </div>
+
+                            <form id="academicYearForm02" method="POST" action="{{ route('academic.store') }}">
+                                @csrf
+                                <div class="ay-modal-body02">
+                                    <div class="ay-form-group02">
+                                        <label for="academicYear02">Academic Year</label>
+                                        <input type="text" class="ay-input02" id="academicYear02" name="academic_year"
+                                            placeholder="2026-2027" required>
+                                    </div>
+
+
+                                    <!-- <div class="ay-form-group02">
+                                        <label for="academicYearStatus02">Status</label>
+                                        <select class="ay-select02" id="academicYearStatus02" name="status">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div> -->
+                                </div>
+
+                                <div class="ay-modal-footer02">
+                                    <button type="button" class="ay-btn-cancel02"
+                                        id="cancelAcademicYearBtn02">Cancel</button>
+                                    <button type="submit" class="ay-btn-save02" id="saveAcademicYearBtn02">Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
                     {{-- ===== ADD SEMESTER MODAL ===== --}}
@@ -560,21 +629,21 @@
                                     aria-label="Close">&times;</button>
                             </div>
 
-                            <form id="semesterForm02" method="POST" action="#">
+                            <form id="semesterForm02" method="POST" action="{{ route('semester.store') }}">
                                 @csrf
                                 <div class="ay-modal-body02">
                                     <div class="ay-form-group02">
                                         <label for="semesterAcademicYear02">Academic Year</label>
                                         <select class="ay-select02" id="semesterAcademicYear02" name="academic_year_id">
-                                            @foreach ($academicYears02 as $ay02)
-                                                <option value="{{ $ay02['id'] }}">{{ $ay02['year'] }}</option>
+                                            @foreach ($academicYears as $ay02)
+                                                <option value="{{ $ay02['id'] }}">{{ $ay02['year_label'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <div class="ay-form-group02">
                                         <label for="semesterName02">Semester</label>
-                                        <select class="ay-select02" id="semesterName02" name="semester_name">
+                                        <select class="ay-select02" id="semesterName02" name="name">
                                             <option value="First Semester">First Semester</option>
                                             <option value="Second Semester">Second Semester</option>
                                             <option value="Summer">Summer</option>
@@ -583,7 +652,8 @@
                                 </div>
 
                                 <div class="ay-modal-footer02">
-                                    <button type="button" class="ay-btn-cancel02" id="cancelSemesterBtn02">Cancel</button>
+                                    <button type="button" class="ay-btn-cancel02"
+                                        id="cancelSemesterBtn02">Cancel</button>
                                     <button type="submit" class="ay-btn-save02" id="saveSemesterBtn02">Save</button>
                                 </div>
                             </form>
@@ -601,9 +671,41 @@
         // These are wired to the mock data above for now.
         // Swap the console.log lines for real fetch()/form submissions once endpoints exist.
 
-        document.getElementById('addAcademicYearBtn02')?.addEventListener('click', function () {
-            console.log('Open Add Academic Year modal/form (02)');
+        // ----- Add Academic Year modal (smooth open/close) -----
+        const academicYearModalOverlay02 = document.getElementById('academicYearModalOverlay02');
+        const academicYearForm02 = document.getElementById('academicYearForm02');
+
+        function openAcademicYearModal02() {
+            academicYearModalOverlay02.style.display = 'flex';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    academicYearModalOverlay02.classList.add('is-open02');
+                });
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAcademicYearModal02() {
+            academicYearModalOverlay02.classList.remove('is-open02');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                if (!academicYearModalOverlay02.classList.contains('is-open02')) {
+                    academicYearModalOverlay02.style.display = 'none';
+                }
+            }, 250);
+        }
+
+        document.getElementById('addAcademicYearBtn02')?.addEventListener('click', openAcademicYearModal02);
+        document.getElementById('closeAcademicYearModalBtn02')?.addEventListener('click', closeAcademicYearModal02);
+        document.getElementById('cancelAcademicYearBtn02')?.addEventListener('click', closeAcademicYearModal02);
+
+        academicYearModalOverlay02?.addEventListener('click', function (e) {
+            if (e.target === academicYearModalOverlay02) {
+                closeAcademicYearModal02();
+            }
         });
+
+
 
         // ----- Add Semester modal (smooth open/close) -----
         const semesterModalOverlay02 = document.getElementById('semesterModalOverlay02');
@@ -642,35 +744,20 @@
             }
         });
 
-        // Close on Escape key
+        // Close on Escape key (either modal)
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && semesterModalOverlay02.classList.contains('is-open02')) {
+            if (e.key !== 'Escape') return;
+            if (semesterModalOverlay02.classList.contains('is-open02')) {
                 closeSemesterModal02();
+            }
+            if (academicYearModalOverlay02.classList.contains('is-open02')) {
+                closeAcademicYearModal02();
             }
         });
 
-        semesterForm02?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const academicYear02 = document.getElementById('semesterAcademicYear02').value;
-            const semesterName02 = document.getElementById('semesterName02').value;
-            console.log('Save semester (02):', { academicYear02, semesterName02 });
-            // TODO: replace with a real fetch()/form submit once the endpoint exists
-            closeSemesterModal02();
-        });
 
-        document.querySelectorAll('.archive-year-btn02').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                const id02 = this.dataset.id;
-                console.log('Archive academic year id (02):', id02);
-            });
-        });
 
-        document.querySelectorAll('.close-semester-btn02').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                const id02 = this.dataset.id;
-                console.log('Close semester id (02):', id02);
-            });
-        });
+
     </script>
 
     @include('AdminSide.javascript')

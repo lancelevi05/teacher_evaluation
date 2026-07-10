@@ -41,7 +41,7 @@
                 <path d="M11 21v-3h2v3" />
             </svg>Department </a>
 
-            <a class="nav-item {{ request()->routeIs('semesters.*') ? 'active' : '' }}" href="{{ route('semesters.index') }}">
+            <a class="nav-item {{ request()->routeIs('academicsemesters.*') ? 'active' : '' }}" href="{{ route('academicsemesters.index') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 10L12 5 2 10l10 5 10-5z" />
                 <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
