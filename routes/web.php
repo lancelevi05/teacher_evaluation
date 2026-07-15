@@ -41,7 +41,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // })->name('AdminSide.home');
 
     Route::get('/admin/home', [AdminController::class, 'home'])
-    ->name('AdminSide.home');
+        ->name('AdminSide.home');
 
 
     // Display page
@@ -67,7 +67,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // SAVE DATA ✅
     Route::post('/admin/departments', [AdminController::class, 'storeDepartment'])
         ->name('departments.store');
-        // Update
+    // Update
     Route::put('/admin/departments/{id}', [AdminController::class, 'updateDepartment'])
         ->name('departments.update');
     // Delete
@@ -83,14 +83,14 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('students.store');
 
 
- // Display page
+    // Display page
     Route::get('/admin/subjects', [AdminController::class, 'subjects'])
         ->name('subjects.index');
     // Store
     Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])
         ->name('subjects.store');
 
-         // Update
+    // Update
     Route::put('/admin/subjects/{id}', [AdminController::class, 'updateSubject'])
         ->name('subjects.update');
     // Delete
@@ -98,29 +98,40 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('subjects.destroy');
 
 
-         // Display page both semeseter and academic
+    // Display page both semeseter and academic
     Route::get('/admin/academicsemesters', [AdminController::class, 'academicsemesters'])
         ->name('academicsemesters.index');
     // Store Academic
     Route::post('/admin/academicsemesters/academic', [AdminController::class, 'storeAcademic'])
         ->name('academic.store');
 
-        // CHANGE ACADEMIC Open
+    // CHANGE ACADEMIC Open
     Route::put('/admin/academicsemestersacademicrOpen/{id}', [AdminController::class, 'openAcademic'])
         ->name('academic.change_open');
-        // CHANGE ACADEMIC CLOSE
+    // CHANGE ACADEMIC CLOSE
     Route::put('/admin/academicsemesters/academicClose/{id}', [AdminController::class, 'closeAcademic'])
         ->name('academic.close');
-         // Store Semester
-         Route::post('/admin/academicsemesters/semester', [AdminController::class, 'storeSemester'])
+    // Store Semester
+    Route::post('/admin/academicsemesters/semester', [AdminController::class, 'storeSemester'])
         ->name('semester.store');
 
-        // CHANGE semester Open
+    // CHANGE semester Open
     Route::put('/admin/academicsemesters/semesterOpen/{id}', [AdminController::class, 'openSemester'])
         ->name('semester.change_open');
-        // CHANGE semester CLOSE
+    // CHANGE semester CLOSE
     Route::put('/admin/academicsemesters/semesterClose/{id}', [AdminController::class, 'closeSemester'])
         ->name('semester.close');
+
+    // Display page
+    Route::get('/admin/questionnaire', [AdminController::class, 'questionnaire'])
+        ->name('questionnaire.index');
+
+    // Toggle active/inactive
+    Route::patch('/admin/questionnaire/{question}/toggle', [AdminController::class, 'toggleQuestion'])
+        ->name('questionnaire.toggle');
+// INSERT QUESTION 
+    Route::post('/admin/questionnaire', [AdminController::class, 'storequestionnaire'])
+        ->name('questionnaire.store');
 
 
 

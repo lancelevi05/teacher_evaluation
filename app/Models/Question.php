@@ -14,4 +14,11 @@ class Question extends Model
         'is_active'
        
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(QuestionCategory::class, 'category_id');
+    }
+
+    
 }

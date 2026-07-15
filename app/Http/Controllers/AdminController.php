@@ -1,16 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\StrandCourse;
 use App\Models\Department;
 use App\Models\User;
 use App\Models\student_info;
 use App\Models\Subject;
+use App\Models\Question;
+use App\Models\QuestionCategory;
 use App\Models\Semester;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+
 class AdminController extends Controller
 {
     public function index()
@@ -91,7 +95,6 @@ class AdminController extends Controller
         return redirect()
             ->route('courses.index')
             ->with('success', 'Course added successfully!');
-
     }
 
     public function updateCourse(Request $request, $id)
@@ -131,7 +134,6 @@ class AdminController extends Controller
 
 
         return view('AdminSide.departments', compact('departments', 'teachers'));
-
     }
 
     public function storeDepartment(Request $request)
@@ -156,7 +158,6 @@ class AdminController extends Controller
         return redirect()
             ->route('departments.index')
             ->with('success', 'Departments added successfully!');
-
     }
 
     public function updateDepartment(Request $request, $id)
@@ -183,7 +184,6 @@ class AdminController extends Controller
 
             return redirect()->route('departments.index')
                 ->with('success', 'Department deleted successfully.');
-
         } catch (QueryException $e) {
 
             // MySQL Error 1451 = Foreign key constraint
@@ -215,7 +215,6 @@ class AdminController extends Controller
 
 
         return view('AdminSide.students', compact('students', 'student_info'));
-
     }
 
 
@@ -260,7 +259,6 @@ class AdminController extends Controller
         return redirect()
             ->route('subjects.index')
             ->with('success', 'Section added successfully!');
-
     }
 
     public function updateSubject(Request $request, $id)
@@ -321,7 +319,6 @@ class AdminController extends Controller
         return redirect()
             ->route('academicsemesters.index')
             ->with('success', 'Academic Year added successfully!');
-
     }
 
     public function openAcademic(Request $request, $id)
@@ -330,7 +327,7 @@ class AdminController extends Controller
 
         $academicYear->update([
             'status' => 'active'
-            
+
         ]);
 
         return redirect()->route('academicsemesters.index')
@@ -338,24 +335,24 @@ class AdminController extends Controller
     }
 
     public function closeAcademic($id)
-{
-    $academicYear = AcademicYear::findOrFail($id);
+    {
+        $academicYear = AcademicYear::findOrFail($id);
 
-    $academicYear->update([
-        'status' => 'archived',
-    ]);
+        $academicYear->update([
+            'status' => 'archived',
+        ]);
 
-    return redirect()->route('academicsemesters.index')
-        ->with('success', 'Academic Archived successfully.');
-}
+        return redirect()->route('academicsemesters.index')
+            ->with('success', 'Academic Archived successfully.');
+    }
 
     public function storeSemester(Request $request)
     {
         // validation
         $request->validate([
             'academic_year_id' => 'required|integer|exists:academic_years,id',
-            'name'=> 'required|string|max:100',
-            
+            'name' => 'required|string|max:100',
+
 
 
 
@@ -365,7 +362,7 @@ class AdminController extends Controller
         // insert data
         Semester::create([
             'academic_year_id' => $request->academic_year_id,
-            'name'=>$request->name,
+            'name' => $request->name,
             'status' => 'active',
         ]);
 
@@ -373,7 +370,6 @@ class AdminController extends Controller
         return redirect()
             ->route('academicsemesters.index')
             ->with('success', 'Semester added successfully!');
-
     }
     public function openSemester(Request $request, $id)
     {
@@ -381,7 +377,7 @@ class AdminController extends Controller
 
         $semester->update([
             'status' => 'active'
-            
+
         ]);
 
         return redirect()->route('academicsemesters.index')
@@ -389,16 +385,57 @@ class AdminController extends Controller
     }
 
     public function closeSemester($id)
-{
-    $semester = Semester::findOrFail($id);
+    {
+        $semester = Semester::findOrFail($id);
 
-    $semester->update([
-        'status' => 'closed',
-    ]);
+        $semester->update([
+            'status' => 'closed',
+        ]);
 
-    return redirect()->route('academicsemesters.index')
-        ->with('success', 'Semester closed successfully.');
+        return redirect()->route('academicsemesters.index')
+            ->with('success', 'Semester closed successfully.');
+    }
+
+    public function questionnaire()
+    {
+
+        $categories = QuestionCategory::with('questions')->get();
+
+        return view('AdminSide.questionnaire', compact('categories'));
+    }
+
+    public function toggleQuestion(Question $question)
+    {
+        $question->update([
+            'is_active' => !$question->is_active,
+        ]);
+
+        return redirect()
+            ->route('questionnaire.index')
+            ->with('success', 'Question status updated successfully.');
+    }
+
+    public function storequestionnaire(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|integer|exists:question_categories,id',
+            'question_text' => 'required|string',
+            'type' => 'required|in:likert,multiple_choice,text,checkbox,yes_no',
+            
+        ]);
+
+
+        // insert data
+        Question::create([
+            'category_id' => $request->category_id,
+            'question_text' => $request->question_text,
+            'type' => $request->type,
+            
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('questionnaire.index')
+            ->with('success', 'Section added successfully!');
+    }
 }
-
-}
-

@@ -12,4 +12,10 @@ class QuestionCategory extends Model
         'description',
        
     ];
+
+
+     public function questions()
+    {
+        return $this->hasMany(Question::class, 'category_id');
+    }
 }

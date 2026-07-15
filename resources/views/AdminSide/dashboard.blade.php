@@ -65,7 +65,7 @@
     </svg> Students </a>
             <span class="nav-label" style="margin-top:12px">Evaluation</span>
 
-            <a class="nav-item" href="{{ route('students.index') }}">
+            <a class="nav-item {{ request()->routeIs('questionnaire*') ? 'active' : '' }}" href="{{ route('questionnaire.index') }}">
     <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
