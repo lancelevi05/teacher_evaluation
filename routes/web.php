@@ -81,6 +81,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // SAVE DATA ✅
     Route::post('/admin/students', [AdminController::class, 'storeStudentList'])
         ->name('students.store');
+        //UPDATE STUDENT
+    Route::put('/admin/students/{user}', [AdminController::class, 'updateStudentList'])
+        ->name('students.update');
+
+        //DELETE STUDENT
+    Route::delete('/admin/students/{user}', [AdminController::class, 'destroyStudentList'])
+        ->name('students.destroy');
 
 
     // Display page
@@ -129,15 +136,15 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // Toggle active/inactive
     Route::patch('/admin/questionnaire/{question}/toggle', [AdminController::class, 'toggleQuestion'])
         ->name('questionnaire.toggle');
-// INSERT QUESTION 
+    // INSERT QUESTION 
     Route::post('/admin/questionnaire/question/', [AdminController::class, 'storequestionnaire'])
         ->name('questionnaire.store');
 
-        // INSERT QUESTION CATEGORY
+    // INSERT QUESTION CATEGORY
     Route::post('/admin/questionnaire/category/', [AdminController::class, 'storecategory'])
         ->name('category.store');
 
-        // Delete Category
+    // Delete Category
     Route::delete('/admin/questionnaire/{id}', [AdminController::class, 'destroycategory'])
         ->name('category.destroy');
 

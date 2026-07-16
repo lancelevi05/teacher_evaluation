@@ -214,8 +214,97 @@ class AdminController extends Controller
             ->get();
 
 
-        return view('AdminSide.students', compact('students', 'student_info'));
+        $strandCourses = DB::table('strand_courses')->get();
+        return view('AdminSide.students', compact('students', 'student_info', 'strandCourses'));
     }
+
+    public function storeStudentList(Request $request)
+    {
+        $validated = $request->validate([
+            'usn' => 'required|string|unique:users,usn',
+            'email' => 'required|email|unique:users,email',
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'mname' => 'nullable|string',
+            'password' => 'required|string|min:6',
+            'shs_college' => 'required',
+            'idstrandcourse' => 'required',
+            'yglevel' => 'required',
+            'section' => 'required',
+        ]);
+
+        $user = User::create([
+            'usn' => $validated['usn'],
+            'email' => $validated['email'],
+            'fname' => $validated['fname'],
+            'lname' => $validated['lname'],
+            'mname' => $validated['mname'],
+            'password' => bcrypt($validated['password']),
+            'userType' => 'Student',
+        ]);
+
+        DB::table('student_infos')->insert([
+            'user_id' => $user->id,
+            'usn' => $user->usn,
+            'idstrandcourse' => $validated['idstrandcourse'],
+            'yglevel' => $validated['yglevel'],
+            'section' => $validated['section'],
+            'shs_college' => $validated['shs_college'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Student added successfully.');
+    }
+
+    public function updateStudentList(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'usn' => 'required|string|unique:users,usn,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'mname' => 'nullable|string',
+            'password' => 'nullable|string|min:6',
+            'shs_college' => 'required',
+            'idstrandcourse' => 'required',
+            'yglevel' => 'required',
+            'section' => 'required',
+        ]);
+
+        $user->update([
+            'usn' => $validated['usn'],
+            'email' => $validated['email'],
+            'fname' => $validated['fname'],
+            'lname' => $validated['lname'],
+            'mname' => $validated['mname'],
+            ...(!empty($validated['password']) ? ['password' => bcrypt($validated['password'])] : []),
+        ]);
+
+        DB::table('student_infos')->updateOrInsert(
+            ['usn' => $user->usn],
+            [
+                'user_id' => $user->id,
+                'idstrandcourse' => $validated['idstrandcourse'],
+                'yglevel' => $validated['yglevel'],
+                'section' => $validated['section'],
+                'shs_college' => $validated['shs_college'],
+                'updated_at' => now(),
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Student updated successfully.');
+    }
+
+    public function destroyStudentList(User $user)
+    {
+        DB::table('student_infos')->where('usn', $user->usn)->delete();
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Student removed successfully.');
+    }
+
+
 
 
 
@@ -421,7 +510,7 @@ class AdminController extends Controller
             'category_id' => 'required|integer|exists:question_categories,id',
             'question_text' => 'required|string',
             'type' => 'required|in:likert,multiple_choice,text,checkbox,yes_no',
-            
+
         ]);
 
 
@@ -430,7 +519,7 @@ class AdminController extends Controller
             'category_id' => $request->category_id,
             'question_text' => $request->question_text,
             'type' => $request->type,
-            
+
         ]);
 
         // redirect back with message
@@ -442,11 +531,11 @@ class AdminController extends Controller
     public function storecategory(Request $request)
     {
         $request->validate([
-     
+
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:100',
-       
-            
+
+
         ]);
 
 
@@ -454,8 +543,8 @@ class AdminController extends Controller
         QuestionCategory::create([
             'name' => $request->name,
             'description' => $request->description,
-            
-            
+
+
         ]);
 
         // redirect back with message
