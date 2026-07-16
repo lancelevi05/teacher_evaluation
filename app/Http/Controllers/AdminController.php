@@ -97,21 +97,38 @@ class AdminController extends Controller
             ->with('success', 'Course added successfully!');
     }
 
-    public function updateCourse(Request $request, $id)
-    {
-        $course = StrandCourse::findOrFail($id);
+    // public function updateCourse(Request $request, $id)
+    // {
+    //     $course = StrandCourse::findOrFail($id);
 
-        $course->update([
-            'idstrandcourse' => $request->idstrandcourse,
-            'strandcourse' => $request->strandcourse,
-            'department_id' => $request->department_id,
-            'max_section' => $request->max_section,
-            'shs_college' => $request->shs_college,
-        ]);
+    //     $course->update([
+    //         'idstrandcourse' => $request->idstrandcourse,
+    //         'strandcourse' => $request->strandcourse,
+    //         'department_id' => $request->department_id,
+    //         'max_section' => $request->max_section,
+    //         'shs_college' => $request->shs_college,
+    //     ]);
 
-        return redirect()->route('courses.index')
-            ->with('success', 'Course updated successfully.');
-    }
+    //     return redirect()->route('courses.index')
+    //         ->with('success', 'Course updated successfully.');
+    // }
+
+    public function updateCourse(Request $request, StrandCourse $course)
+{
+    $validated = $request->validate([
+        'idstrandcourse' => 'required|string|max:20',
+        'strandcourse' => 'required|string|max:100',
+        'department_id' => 'required|exists:departments,id',
+        'max_section' => 'required|integer|min:1',
+        'shs_college' => 'required|string|max:100',
+    ]);
+
+    $course->update($validated);
+
+    return redirect()
+        ->route('courses.index')
+        ->with('success', 'Course updated successfully.');
+}
 
     public function destroyCourse($id)
     {
