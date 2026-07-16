@@ -436,6 +436,41 @@ class AdminController extends Controller
         // redirect back with message
         return redirect()
             ->route('questionnaire.index')
-            ->with('success', 'Section added successfully!');
+            ->with('success', 'Question added successfully!');
+    }
+
+    public function storecategory(Request $request)
+    {
+        $request->validate([
+     
+            'name' => 'required|string|max:100',
+            'description' => 'required|string|max:100',
+       
+            
+        ]);
+
+
+        // insert data
+        QuestionCategory::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            
+            
+        ]);
+
+        // redirect back with message
+        return redirect()
+            ->route('questionnaire.index')
+            ->with('success', 'Category added successfully!');
+    }
+
+    public function destroycategory($id)
+    {
+        $category = QuestionCategory::findOrFail($id);
+
+        $category->delete();
+
+        return redirect()->route('questionnaire.index')
+            ->with('success', 'Category deleted successfully.');
     }
 }

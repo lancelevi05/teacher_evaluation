@@ -130,8 +130,17 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::patch('/admin/questionnaire/{question}/toggle', [AdminController::class, 'toggleQuestion'])
         ->name('questionnaire.toggle');
 // INSERT QUESTION 
-    Route::post('/admin/questionnaire', [AdminController::class, 'storequestionnaire'])
+    Route::post('/admin/questionnaire/question/', [AdminController::class, 'storequestionnaire'])
         ->name('questionnaire.store');
+
+        // INSERT QUESTION CATEGORY
+    Route::post('/admin/questionnaire/category/', [AdminController::class, 'storecategory'])
+        ->name('category.store');
+
+        // Delete Category
+    Route::delete('/admin/questionnaire/{id}', [AdminController::class, 'destroycategory'])
+        ->name('category.destroy');
+
 
 
 

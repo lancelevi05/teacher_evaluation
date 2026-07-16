@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->foreign('idstrandcourse')
                 ->references('idstrandcourse')
                 ->on('strand_courses')
-                ->cascadeOnDelete()
+                ->nullOnDelete()
                 ->cascadeOnUpdate(); // 👈 add this
 
             $table->string('yglevel')->nullable();

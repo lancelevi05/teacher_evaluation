@@ -432,9 +432,10 @@
                                     <h4 class="category-title">{{ $cat->name }}</h4>
                                     <p class="category-desc">{{ $cat->description }}</p>
                                 </div>
-                                <form method="POST" action="#"
-                                    onsubmit="return confirm('Delete this category and all its questions?') &amp;&amp; false;">
-                                    {{-- @csrf / route('admin.categories.destroy', $cat->id) once wired to a real controller --}}
+                                <form method="POST" action="{{ route('category.destroy', $cat->id) }}"
+                                    onsubmit="return confirm('Delete this category and all its questions?')">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit" class="btn-icon-danger" title="Delete category">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
@@ -491,8 +492,8 @@
     <div class="modal-overlay" id="categoryModal">
         <div class="modal-box">
             <h5 class="modal-title">Add Category</h5>
-            <form method="POST" action="#" onsubmit="return false;">
-                {{-- @csrf / route('admin.categories.store') once wired to a real controller --}}
+            <form method="POST" action="{{ route('category.store') }}" >
+                 @csrf 
                 <div class="form-group">
                     <label>Category Name</label>
                     <input type="text" name="name" placeholder="e.g. Teaching Skills" required>

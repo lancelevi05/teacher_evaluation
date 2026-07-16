@@ -205,6 +205,28 @@
 
                 </header>
                 <main class="content">
+
+                <div class="section-header01">
+
+                        <div class="section-title01">
+                            <h2>Student</h2>
+                            <p>Manage student records and course assignments.</p>
+                        </div>
+
+                        <div class="section-actions01">
+                            <input type="text" class="search-input01" id="searchSection01"
+                                placeholder="Search section...">
+
+                            <button class="search-btn01" id="searchBtn01">
+                                🔍
+                            </button>
+
+                            <button class="add-btn01" id="addBtn01">
+                                + Add Section
+                            </button>
+                        </div>
+
+                    </div>
                     <div class="sections-container">
 
                     
