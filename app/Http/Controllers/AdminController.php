@@ -321,6 +321,96 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Student removed successfully.');
     }
 
+    public function teacherList()
+{
+    $teachers = User::where('userType', 'Teacher')->get();
+
+    $teacher_info = DB::table('teachers')
+        ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+        ->select(
+            'teachers.*',
+            'departments.name as department_name'
+        )
+        ->get();
+
+    $departments = DB::table('departments')->get();
+
+    return view('AdminSide.teachers', compact('teachers', 'teacher_info', 'departments'));
+}
+
+
+public function storeTeacherList(Request $request)
+{
+    $validated = $request->validate([
+        'usn'           => 'nullable|string|unique:users,usn',
+        'email'         => 'required|email|unique:users,email',
+        'fname'         => 'required|string',
+        'lname'         => 'required|string',
+        'mname'         => 'nullable|string',
+        'status' => 'required|in:Active,Inactive,Retired',
+        'password'      => 'required|string|min:6',
+        'employee_id'   => 'required|string|unique:teachers,employee_id',
+        'department_id' => 'required|exists:departments,id',
+    ]);
+
+    $user = User::create([
+        'usn'      => $validated['usn']?? null,
+        'email'    => $validated['email'],
+        'fname'    => $validated['fname'],
+        'lname'    => $validated['lname'],
+        'mname'    => $validated['mname'],
+        'status' => $validated['status'],
+        'password' => bcrypt($validated['password']),
+        'userType' => 'Teacher',
+    
+    ]);
+
+    DB::table('teachers')->insert([
+        'user_id'       => $user->id,
+        'department_id' => $validated['department_id'],
+        'employee_id'   => $validated['employee_id'],
+        'created_at'    => now(),
+        'updated_at'    => now(),
+    ]);
+
+    return redirect()->back()->with('success', 'Teacher added successfully.');
+}
+
+public function updateTeacherList(Request $request, User $user)
+{
+    $validated = $request->validate([
+        'usn'           => 'nullable|string|unique:users,usn,' . $user->id,
+        'email'         => 'required|email|unique:users,email,' . $user->id,
+        'fname'         => 'required|string',
+        'lname'         => 'required|string',
+        'mname'         => 'nullable|string',
+        'status' => 'required|in:Active,Inactive,Retired',
+        'password'      => 'nullable|string|min:6',
+        'employee_id'   => 'required|string|unique:teachers,employee_id,' . $user->id . ',user_id',
+        'department_id' => 'required|exists:departments,id',
+    ]);
+
+    $user->update([
+        'usn'   => $validated['usn'] ?? null,
+        'email' => $validated['email'],
+        'fname' => $validated['fname'],
+        'lname' => $validated['lname'],
+        'mname' => $validated['mname'],
+        'status' => $validated['status'],
+        ...(!empty($validated['password']) ? ['password' => bcrypt($validated['password'])] : []),
+    ]);
+
+    DB::table('teachers')->updateOrInsert(
+        ['user_id' => $user->id],
+        [
+            'department_id' => $validated['department_id'],
+            'employee_id'   => $validated['employee_id'],
+            'updated_at'    => now(),
+        ]
+    );
+
+    return redirect()->back()->with('success', 'Teacher updated successfully.');
+}
 
 
 

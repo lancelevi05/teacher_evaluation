@@ -51,14 +51,14 @@
 
         <span class="nav-label" style="margin-top:12px">PEOPLE</span>
 
-        <a class="nav-item" href="{{ route('courses.index') }}">
+         <a class="nav-item {{ request()->routeIs('teacahers*') ? 'active' : '' }}" href="{{ route('teachers.index') }}">
     <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M2 3h20" />
         <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" />
         <path d="m7 21 5-5 5 5" />
     </svg> Teacher </a>
 
-            <a class="nav-item" href="{{ route('students.index') }}">
+            <a class="nav-item {{ request()->routeIs('students*') ? 'active' : '' }}" href="{{ route('students.index') }}">
     <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="8" r="4" />
         <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />

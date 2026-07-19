@@ -75,6 +75,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('departments.destroy');
 
 
+        //display student
     Route::get('/admin/students', [AdminController::class, 'studentList'])
         ->name('students.index');
 
@@ -88,6 +89,18 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         //DELETE STUDENT
     Route::delete('/admin/students/{user}', [AdminController::class, 'destroyStudentList'])
         ->name('students.destroy');
+
+        //display teacher
+    Route::get('/admin/teachers', [AdminController::class, 'teacherList'])
+        ->name('teachers.index');
+
+        // SAVE DATA ✅
+    Route::post('/admin/teachers', [AdminController::class, 'storeTeacherList'])
+        ->name('teachers.store');
+
+        //UPDATE TEACHER
+    Route::put('/admin/teachers/{user}', [AdminController::class, 'updateTeacherList'])
+        ->name('teachers.update');
 
 
     // Display page

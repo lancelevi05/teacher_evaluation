@@ -2,14 +2,14 @@
 
 
 //===============================// (OPEN)SEARCH BAR FUNCTION---------================//
-searchInput01.addEventListener("keypress", function(e){
+// searchInput01.addEventListener("keypress", function(e){
 
-    if(e.key === "Enter"){
-        e.preventDefault();
-        searchSection01();
-    }
+//     if(e.key === "Enter"){
+//         e.preventDefault();
+//         searchSection01();
+//     }
 
-});
+// });
 
 document.addEventListener("DOMContentLoaded", function () {
 
