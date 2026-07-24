@@ -406,7 +406,7 @@
                                                             Edit
                                                         </button>
 
-                                                        <form method="POST" action="" class="inline-form"
+                                                        <form method="POST" action="{{ route('teacher.destroy',$teacher->id) }}" class="inline-form"
                                                             onsubmit="return confirm('Remove {{ $teacher->fname }} {{ $teacher->lname }}? This cannot be undone.');">
                                                             @csrf
                                                             @method('DELETE')

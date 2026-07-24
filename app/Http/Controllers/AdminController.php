@@ -6,10 +6,13 @@ use App\Models\StrandCourse;
 use App\Models\Department;
 use App\Models\User;
 use App\Models\student_info;
+use App\Models\Teacher;
+use App\Models\TeacherAssignment;
 use App\Models\Subject;
 use App\Models\Question;
 use App\Models\QuestionCategory;
 use App\Models\Semester;
+
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -114,21 +117,21 @@ class AdminController extends Controller
     // }
 
     public function updateCourse(Request $request, StrandCourse $course)
-{
-    $validated = $request->validate([
-        'idstrandcourse' => 'required|string|max:20',
-        'strandcourse' => 'required|string|max:100',
-        'department_id' => 'required|exists:departments,id',
-        'max_section' => 'required|integer|min:1',
-        'shs_college' => 'required|string|max:100',
-    ]);
+    {
+        $validated = $request->validate([
+            'idstrandcourse' => 'required|string|max:20',
+            'strandcourse' => 'required|string|max:100',
+            'department_id' => 'required|exists:departments,id',
+            'max_section' => 'required|integer|min:1',
+            'shs_college' => 'required|string|max:100',
+        ]);
 
-    $course->update($validated);
+        $course->update($validated);
 
-    return redirect()
-        ->route('courses.index')
-        ->with('success', 'Course updated successfully.');
-}
+        return redirect()
+            ->route('courses.index')
+            ->with('success', 'Course updated successfully.');
+    }
 
     public function destroyCourse($id)
     {
@@ -322,95 +325,101 @@ class AdminController extends Controller
     }
 
     public function teacherList()
-{
-    $teachers = User::where('userType', 'Teacher')->get();
+    {
+        $teachers = User::where('userType', 'Teacher')->get();
 
-    $teacher_info = DB::table('teachers')
-        ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
-        ->select(
-            'teachers.*',
-            'departments.name as department_name'
-        )
-        ->get();
+        $teacher_info = DB::table('teachers')
+            ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+            ->select(
+                'teachers.*',
+                'departments.name as department_name'
+            )
+            ->get();
 
-    $departments = DB::table('departments')->get();
+        $departments = DB::table('departments')->get();
 
-    return view('AdminSide.teachers', compact('teachers', 'teacher_info', 'departments'));
-}
+        return view('AdminSide.teachers', compact('teachers', 'teacher_info', 'departments'));
+    }
 
 
-public function storeTeacherList(Request $request)
-{
-    $validated = $request->validate([
-        'usn'           => 'nullable|string|unique:users,usn',
-        'email'         => 'required|email|unique:users,email',
-        'fname'         => 'required|string',
-        'lname'         => 'required|string',
-        'mname'         => 'nullable|string',
-        'status' => 'required|in:Active,Inactive,Retired',
-        'password'      => 'required|string|min:6',
-        'employee_id'   => 'required|string|unique:teachers,employee_id',
-        'department_id' => 'required|exists:departments,id',
-    ]);
+    public function storeTeacherList(Request $request)
+    {
+        $validated = $request->validate([
+            'usn' => 'nullable|string|unique:users,usn',
+            'email' => 'required|email|unique:users,email',
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'mname' => 'nullable|string',
+            'status' => 'required|in:Active,Inactive,Retired',
+            'password' => 'required|string|min:6',
+            'employee_id' => 'required|string|unique:teachers,employee_id',
+            'department_id' => 'required|exists:departments,id',
+        ]);
 
-    $user = User::create([
-        'usn'      => $validated['usn']?? null,
-        'email'    => $validated['email'],
-        'fname'    => $validated['fname'],
-        'lname'    => $validated['lname'],
-        'mname'    => $validated['mname'],
-        'status' => $validated['status'],
-        'password' => bcrypt($validated['password']),
-        'userType' => 'Teacher',
-    
-    ]);
+        $user = User::create([
+            'usn' => $validated['usn'] ?? null,
+            'email' => $validated['email'],
+            'fname' => $validated['fname'],
+            'lname' => $validated['lname'],
+            'mname' => $validated['mname'],
+            'status' => $validated['status'],
+            'password' => bcrypt($validated['password']),
+            'userType' => 'Teacher',
 
-    DB::table('teachers')->insert([
-        'user_id'       => $user->id,
-        'department_id' => $validated['department_id'],
-        'employee_id'   => $validated['employee_id'],
-        'created_at'    => now(),
-        'updated_at'    => now(),
-    ]);
+        ]);
 
-    return redirect()->back()->with('success', 'Teacher added successfully.');
-}
-
-public function updateTeacherList(Request $request, User $user)
-{
-    $validated = $request->validate([
-        'usn'           => 'nullable|string|unique:users,usn,' . $user->id,
-        'email'         => 'required|email|unique:users,email,' . $user->id,
-        'fname'         => 'required|string',
-        'lname'         => 'required|string',
-        'mname'         => 'nullable|string',
-        'status' => 'required|in:Active,Inactive,Retired',
-        'password'      => 'nullable|string|min:6',
-        'employee_id'   => 'required|string|unique:teachers,employee_id,' . $user->id . ',user_id',
-        'department_id' => 'required|exists:departments,id',
-    ]);
-
-    $user->update([
-        'usn'   => $validated['usn'] ?? null,
-        'email' => $validated['email'],
-        'fname' => $validated['fname'],
-        'lname' => $validated['lname'],
-        'mname' => $validated['mname'],
-        'status' => $validated['status'],
-        ...(!empty($validated['password']) ? ['password' => bcrypt($validated['password'])] : []),
-    ]);
-
-    DB::table('teachers')->updateOrInsert(
-        ['user_id' => $user->id],
-        [
+        DB::table('teachers')->insert([
+            'user_id' => $user->id,
             'department_id' => $validated['department_id'],
-            'employee_id'   => $validated['employee_id'],
-            'updated_at'    => now(),
-        ]
-    );
+            'employee_id' => $validated['employee_id'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-    return redirect()->back()->with('success', 'Teacher updated successfully.');
-}
+        return redirect()->back()->with('success', 'Teacher added successfully.');
+    }
+
+    public function updateTeacherList(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'usn' => 'nullable|string|unique:users,usn,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'mname' => 'nullable|string',
+            'status' => 'required|in:Active,Inactive,Retired',
+            'password' => 'nullable|string|min:6',
+            'employee_id' => 'required|string|unique:teachers,employee_id,' . $user->id . ',user_id',
+            'department_id' => 'required|exists:departments,id',
+        ]);
+
+        $user->update([
+            'usn' => $validated['usn'] ?? null,
+            'email' => $validated['email'],
+            'fname' => $validated['fname'],
+            'lname' => $validated['lname'],
+            'mname' => $validated['mname'],
+            'status' => $validated['status'],
+            ...(!empty($validated['password']) ? ['password' => bcrypt($validated['password'])] : []),
+        ]);
+
+        DB::table('teachers')->updateOrInsert(
+            ['user_id' => $user->id],
+            [
+                'department_id' => $validated['department_id'],
+                'employee_id' => $validated['employee_id'],
+                'updated_at' => now(),
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Teacher updated successfully.');
+    }
+    public function destroyTeacherList(User $user)
+    {
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Teacher removed successfully.');
+    }
 
 
 
@@ -669,4 +678,43 @@ public function updateTeacherList(Request $request, User $user)
         return redirect()->route('questionnaire.index')
             ->with('success', 'Category deleted successfully.');
     }
+
+
+    public function teacherassignment()
+    {
+         $assignments = TeacherAssignment::with('teacher.user','subject','semester')->get();
+
+    $teachers = Teacher::all();
+    $semesters = Semester::all();
+    $subjects = Subject::all();
+    $users = User::all();
+   
+
+        return view("AdminSide.teacherassignment", compact('assignments', 'teachers', 'semesters', 'subjects', 'users'));
+    }
+
+    public function storeteacherassignment(Request $request)
+    {
+        $validated = $request->validate([
+            'teacher_id' => 'required|exists:teachers,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'semester_id' => 'required|exists:semesters,id',
+            'section' => 'nullable|string|max:100',
+        ]);
+
+        TeacherAssignment::create($validated);
+
+        return back()->with('success', 'Assignment created successfully.');
+    }
+
+    public function destroyteacherassignment($id)
+    {
+        $teacher = TeacherAssignment::findOrFail($id);
+
+        $teacher->delete();
+
+        return redirect()->route('teacherassignment.index')
+            ->with('success', 'Teacher deleted successfully.');
+    }
+
 }

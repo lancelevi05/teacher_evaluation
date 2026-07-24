@@ -100,7 +100,11 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 
         //UPDATE TEACHER
     Route::put('/admin/teachers/{user}', [AdminController::class, 'updateTeacherList'])
-        ->name('teachers.update');
+        ->name('teacher.update');
+
+        // Delete TEACHER
+    Route::delete('/admin/teachers/{user}', [AdminController::class, 'destroyTeacherList'])
+        ->name('teacher.destroy');
 
 
     // Display page
@@ -160,6 +164,19 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // Delete Category
     Route::delete('/admin/questionnaire/{id}', [AdminController::class, 'destroycategory'])
         ->name('category.destroy');
+
+        // Display subject assignment
+    Route::get('/admin/teacherassignment', [AdminController::class, 'teacherassignment'])
+        ->name('teacherassignment.index');
+
+
+         // SAVE DATA TEACHER ASSIGNMENT ✅
+    Route::post('/admin/teacherassignment', [AdminController::class, 'storeteacherassignment'])
+        ->name('teacherassignment.store');
+
+        // Delete
+    Route::delete('/admin/teacherassignment/{id}', [AdminController::class, 'destroyteacherassignment'])
+        ->name('teacherassignment.destroy');
 
 
 
