@@ -274,8 +274,7 @@
                 </main>
             </div>
         </div>
-        <footer class="app-footer"><span id="footerText">© 2025 Dashboard — Built with care.</span>
-        </footer>
+        @include('StudentSide.z-footer')
     </div>
 
 

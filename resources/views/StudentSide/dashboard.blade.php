@@ -3,7 +3,9 @@
     <div class="sidebar-brand" id="sidebarBrand">
         Dashboard
     </div>
-    <nav class="sidebar-nav"><span class="nav-label">Menu</span> <a class="nav-item active"href="{{ route('StudentSide.home') }}">
+    <nav class="sidebar-nav"><span class="nav-label">Menu</span> 
+    <a class="nav-item {{ request()->routeIs('StudentSide.home') ? 'active' : '' }}"
+            href="{{ route('StudentSide.home') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7" rx="1" />
                 <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -12,7 +14,9 @@
             </svg> Dashboard </a> <a class="nav-item" href="#">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 20V10M18 20V4M6 20v-4" />
-            </svg> Evaluate Teacher </a> <a class="nav-item" href="{{ route('infosettings') }}">
+            </svg> Evaluate Teacher </a> 
+             <a class="nav-item {{ request()->routeIs('infosettings*') ? 'active' : '' }}"
+             href="{{ route('infosettings') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2" />
                 <circle cx="9" cy="7" r="4" />
