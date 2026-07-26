@@ -368,7 +368,9 @@
                                                     <td>
                                                         {{ $assignment->subject->code }} — {{ $assignment->subject->name }}
                                                     </td>
-                                                    <td>{{ $assignment->semester->name }}</td>
+                                                    <td>
+                                                    {{ $assignment->semester->name }} 
+                                                    {{ $assignment->semester->academicyear->year_label}}</td>
                                                     <td class="action-cell">
                                                         <form method="POST"
                                                             action="{{ route('teacherassignment.destroy',$assignment->id) }}"
@@ -464,6 +466,8 @@
                             @foreach($semesters as $semester)
                                 <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
                                     {{ $semester->name }}
+                                    {{ $semester->academicyear->year_label }}
+                                    
                                 </option>
                             @endforeach
                         </select>

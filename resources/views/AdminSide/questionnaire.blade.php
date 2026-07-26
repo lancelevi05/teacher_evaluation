@@ -437,7 +437,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-icon-danger" title="Delete category">
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i class="fa-solid fa-trash">🗑</i>
                                     </button>
                                 </form>
                             </div>
@@ -470,7 +470,7 @@
                                         onsubmit="return confirm('Delete this question?') &amp;&amp; false;">
                                         {{-- @csrf / route('admin.questions.destroy', $q->id) once wired to a real controller --}}
                                         <button type="submit" class="btn-icon-danger btn-icon-danger-sm" title="Delete question">
-                                            <i class="fa-solid fa-trash"></i>
+                                            <i class="fa-solid fa-trash">🗑</i>
                                         </button>
                                     </form>
                                 </div>

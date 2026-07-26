@@ -3,20 +3,24 @@
     <div class="sidebar-brand" id="sidebarBrand">
         Dashboard
     </div>
-    <nav class="sidebar-nav"><span class="nav-label">Menu</span> 
-    <a class="nav-item {{ request()->routeIs('StudentSide.home') ? 'active' : '' }}"
+    <nav class="sidebar-nav"><span class="nav-label">Menu</span>
+        <a class="nav-item {{ request()->routeIs('StudentSide.home') ? 'active' : '' }}"
             href="{{ route('StudentSide.home') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7" rx="1" />
                 <rect x="14" y="3" width="7" height="7" rx="1" />
                 <rect x="3" y="14" width="7" height="7" rx="1" />
                 <rect x="14" y="14" width="7" height="7" rx="1" />
-            </svg> Dashboard </a> <a class="nav-item" href="#">
+            </svg> Dashboard </a> 
+            
+            <a class="nav-item {{ request()->routeIs('evaluate*') ? 'active' : '' }}"
+            href="{{ route('evaluate') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 20V10M18 20V4M6 20v-4" />
-            </svg> Evaluate Teacher </a> 
-             <a class="nav-item {{ request()->routeIs('infosettings*') ? 'active' : '' }}"
-             href="{{ route('infosettings') }}">
+            </svg> Evaluate Teacher </a>
+
+        <a class="nav-item {{ request()->routeIs('infosettings*') ? 'active' : '' }}"
+            href="{{ route('infosettings') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -25,8 +29,8 @@
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
-            </svg> Evaluate History </a> 
-            <!-- <span class="nav-label" style="margin-top:12px">Settings</span> <a class="nav-item"
+            </svg> Evaluate History </a>
+        <!-- <span class="nav-label" style="margin-top:12px">Settings</span> <a class="nav-item"
             href="#">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="3" />

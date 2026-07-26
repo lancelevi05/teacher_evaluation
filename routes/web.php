@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
             'user' => $request->user(),
         ]);
     })->name('StudentSide.home');
+
     Route::get('/infosettings', [StudentController::class, 'infosettings'])
         ->name('infosettings');
 
@@ -28,6 +29,10 @@ Route::middleware('auth')->group(function () {
         [StudentController::class, 'updateInfo']
     )
         ->name('student.updateInfo');
+
+        //DISPLAY evaluation
+        Route::get('/student/evaluate', [StudentController::class, 'studentEvaluate'])
+        ->name('evaluate');
 });
 
 // =====================================================

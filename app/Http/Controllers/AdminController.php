@@ -682,10 +682,11 @@ class AdminController extends Controller
 
     public function teacherassignment()
     {
-         $assignments = TeacherAssignment::with('teacher.user','subject','semester')->get();
+         $assignments = TeacherAssignment::with('teacher.user','subject','semester.academicyear')->get();
 
     $teachers = Teacher::all();
     $semesters = Semester::all();
+    
     $subjects = Subject::all();
     $users = User::all();
    
