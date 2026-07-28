@@ -54,6 +54,7 @@ class AuthenticatedSessionController extends Controller
             'employee_id' => $user->usn,
             
         ]);
+        return redirect()->intended(route('TeacherSide.home', absolute: false));
 
         
     }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Subject;
 use App\Models\QuestionCategory;
 use App\Models\Question;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,110 +28,113 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        QuestionCategory::create([
-        'name' => 'Teaching Skills',
-        'description' => 'Clarity, methods, and delivery of lessons',
-    ]);
-
-    QuestionCategory::create([
-        'name' => 'Knowledge',
-        'description' => 'Command of the subject matter',
-    ]);
-
-    QuestionCategory::create([
-        'name' => 'Communication',
-        'description' => 'How well the teacher communicates with students',
-    ]);
-
-    QuestionCategory::create([
-        'name' => 'Professionalism',
-        'description' => 'Punctuality, fairness, and conduct',
-    ]);
-
-    QuestionCategory::create([
-        'name' => 'Classroom Management',
-        'description' => 'Discipline and control of the classroom',
-    ]);
-
-    QuestionCategory::create([
-        'name' => 'Overall Satisfaction',
-        'description' => 'General student satisfaction',
-    ]);
-
-     $questions = [
-        [
-            'category_id' => 1,
-            'question_text' => 'Explains lessons clearly.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 1,
-            'question_text' => 'Uses appropriate teaching methods.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 1,
-            'question_text' => 'Comes prepared for class.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 2,
-            'question_text' => 'Demonstrates strong command of the subject.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 3,
-            'question_text' => 'Encourages student participation.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 3,
-            'question_text' => 'Communicates ideas effectively.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 4,
-            'question_text' => 'Treats students fairly.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 4,
-            'question_text' => 'Is punctual and well-organized.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 5,
-            'question_text' => 'Maintains good classroom discipline.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 6,
-            'question_text' => 'Overall, I am satisfied with this teacher.',
-            'type' => 'likert',
-            'is_active' => true,
-        ],
-        [
-            'category_id' => 6,
-            'question_text' => 'Additional comments (optional).',
-            'type' => 'text',
-            'is_active' => true,
-        ],
-    ];
-
-    foreach ($questions as $question) {
-        Question::create($question);
-    }
-
         
+    
+
+        QuestionCategory::create([
+            'name' => 'Teaching Skills',
+            'description' => 'Clarity, methods, and delivery of lessons',
+        ]);
+
+        QuestionCategory::create([
+            'name' => 'Knowledge',
+            'description' => 'Command of the subject matter',
+        ]);
+
+        QuestionCategory::create([
+            'name' => 'Communication',
+            'description' => 'How well the teacher communicates with students',
+        ]);
+
+        QuestionCategory::create([
+            'name' => 'Professionalism',
+            'description' => 'Punctuality, fairness, and conduct',
+        ]);
+
+        QuestionCategory::create([
+            'name' => 'Classroom Management',
+            'description' => 'Discipline and control of the classroom',
+        ]);
+
+        QuestionCategory::create([
+            'name' => 'Overall Satisfaction',
+            'description' => 'General student satisfaction',
+        ]);
+
+        $questions = [
+            [
+                'category_id' => 1,
+                'question_text' => 'Explains lessons clearly.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 1,
+                'question_text' => 'Uses appropriate teaching methods.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 1,
+                'question_text' => 'Comes prepared for class.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 2,
+                'question_text' => 'Demonstrates strong command of the subject.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 3,
+                'question_text' => 'Encourages student participation.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 3,
+                'question_text' => 'Communicates ideas effectively.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 4,
+                'question_text' => 'Treats students fairly.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 4,
+                'question_text' => 'Is punctual and well-organized.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 5,
+                'question_text' => 'Maintains good classroom discipline.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 6,
+                'question_text' => 'Overall, I am satisfied with this teacher.',
+                'type' => 'likert',
+                'is_active' => true,
+            ],
+            [
+                'category_id' => 6,
+                'question_text' => 'Additional comments (optional).',
+                'type' => 'text',
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($questions as $question) {
+            Question::create($question);
+        }
+
+
 
         User::create([
             'usn' => '2022621300',
@@ -143,7 +147,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'Active'
         ]);
 
-      
+
 
         User::create([
             'usn' => '09936303219',
@@ -236,6 +240,141 @@ class DatabaseSeeder extends Seeder
 
             ]);
         }
+
+
+        Subject::insert([
+            // =========================
+            // CS DEP (Department ID: 1)
+            // =========================
+            [
+                'department_id' => 1,
+                'code' => 'CS101',
+                'name' => 'Introduction to Computing',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 1,
+                'code' => 'CS102',
+                'name' => 'Computer Programming 1',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 1,
+                'code' => 'CS201',
+                'name' => 'Data Structures and Algorithms',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 1,
+                'code' => 'CS202',
+                'name' => 'Database Management Systems',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 1,
+                'code' => 'CS301',
+                'name' => 'Web Development',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // =========================
+            // HM DEP (Department ID: 2)
+            // =========================
+            [
+                'department_id' => 2,
+                'code' => 'HM101',
+                'name' => 'Introduction to Hospitality',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 2,
+                'code' => 'HM102',
+                'name' => 'Food and Beverage Service',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 2,
+                'code' => 'HM201',
+                'name' => 'Housekeeping Operations',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 2,
+                'code' => 'HM202',
+                'name' => 'Front Office Operations',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 2,
+                'code' => 'HM301',
+                'name' => 'Hospitality Marketing',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // =========================
+            // BS DEP (Department ID: 3)
+            // =========================
+            [
+                'department_id' => 3,
+                'code' => 'BS101',
+                'name' => 'Principles of Management',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 3,
+                'code' => 'BS102',
+                'name' => 'Financial Accounting',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 3,
+                'code' => 'BS201',
+                'name' => 'Business Communication',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 3,
+                'code' => 'BS202',
+                'name' => 'Marketing Management',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'department_id' => 3,
+                'code' => 'BS301',
+                'name' => 'Human Resource Management',
+                'units' => 3.0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
     }
 

@@ -357,7 +357,7 @@ class AdminController extends Controller
         ]);
 
         $user = User::create([
-            'usn' => $validated['usn'] ?? null,
+            'usn' => $validated['employee_id'] ?? null,
             'email' => $validated['email'],
             'fname' => $validated['fname'],
             'lname' => $validated['lname'],
@@ -394,7 +394,7 @@ class AdminController extends Controller
         ]);
 
         $user->update([
-            'usn' => $validated['usn'] ?? null,
+            'usn' => $validated['employee_id'] ?? null,
             'email' => $validated['email'],
             'fname' => $validated['fname'],
             'lname' => $validated['lname'],
