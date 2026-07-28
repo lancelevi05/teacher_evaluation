@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\student_info;
 use App\Models\StrandCourse;
+use App\Models\User;
+use App\Models\Teacher;
+use App\Models\TeacherAssignment;
+use App\Models\Semester;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,7 +46,15 @@ class StudentController extends Controller
     }
     public function studentEvaluate(){
 
+$evaluates = TeacherAssignment::with('teacher.user','subject','semester.academicyear')->get();
 
-    return view('StudentSide.evaluate');
+    $teachers = Teacher::all();
+    $semesters = Semester::all();
+    
+    $subjects = Subject::all();
+    $users = User::all();
+   
+
+        return view("StudentSide.evaluate", compact('evaluates', 'teachers', 'semesters', 'subjects', 'users'));
     }
 }

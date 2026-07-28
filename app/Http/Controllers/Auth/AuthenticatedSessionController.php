@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 use App\Models\student_info;
+use App\Models\Teacher;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -43,6 +44,18 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         return redirect()->intended(route('StudentSide.home', absolute: false));
+    }
+
+    // If teacher, ensure Teachers record exists
+    if ($user->userType === 'Teacher') {
+
+        Teacher::firstOrCreate([
+            'user_id' => $user->id,
+            'employee_id' => $user->usn,
+            
+        ]);
+
+        
     }
 
         // Redirect based on user type

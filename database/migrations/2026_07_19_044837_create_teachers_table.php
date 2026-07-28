@@ -21,8 +21,13 @@ return new class extends Migration {
                 ->constrained('departments')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
-
             $table->string('employee_id')->nullable();
+
+            $table->foreign('employee_id')
+                ->references('usn')
+                ->on('users')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
 
 
             $table->timestamps();
