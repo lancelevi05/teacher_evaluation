@@ -459,6 +459,31 @@
                 font-size: 14px;
             }
         }
+
+
+        /* ===== HEADER n SEARCH BAR ===== */
+
+        .section-header01 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .section-title01 h2 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .section-title01 p {
+            margin-top: 5px;
+            color: #777;
+            font-size: 15px;
+        }
     </style>
     <style>
         body {

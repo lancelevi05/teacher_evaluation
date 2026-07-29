@@ -11,13 +11,20 @@
                 <rect x="14" y="3" width="7" height="7" rx="1" />
                 <rect x="3" y="14" width="7" height="7" rx="1" />
                 <rect x="14" y="14" width="7" height="7" rx="1" />
-            </svg> Dashboard </a> 
-            
-            <a class="nav-item {{ request()->routeIs('student.evaluate*') ? 'active' : '' }}"
+            </svg> Dashboard </a>
+
+        <a class="nav-item {{ request()->routeIs('student.evaluate*') ? 'active' : '' }}"
             href="{{ route('student.evaluate') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 20V10M18 20V4M6 20v-4" />
             </svg> Evaluate Teacher </a>
+
+            <a class="nav-item {{ request()->routeIs('student.history*') ? 'active' : '' }}"
+            href="{{ route('student.history') }}">
+            <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20V10M18 20V4M6 20v-4" />
+            </svg>Evaluation History </a>
+            
 
         <a class="nav-item {{ request()->routeIs('infosettings*') ? 'active' : '' }}"
             href="{{ route('infosettings') }}">

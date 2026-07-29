@@ -33,7 +33,10 @@ Route::middleware('auth')->group(function () {
     //DISPLAY evaluation
     Route::get('/student/evaluate', [StudentController::class, 'studentEvaluate'])
         ->name('student.evaluate');
-    Route::post('/student/evaluate', [StudentController::class, 'storeEvaluation'])->name('student.evaluate.store');
+    Route::post('/student/evaluate', [StudentController::class, 'storeEvaluation'])->name
+    ('student.evaluate.store');
+    Route::get('/student/history', [StudentController::class, 'studentHistory'])
+    ->name('student.history');
 });
 
 // =====================================================
