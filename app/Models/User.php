@@ -33,6 +33,29 @@ public function student()
 {
     return $this->hasOne(student_info::class, 'user_id');
 }
+
+
+// app/Models/User.php
+
+public function isStudent(): bool
+{
+    return $this->userType === 'Student';
+}
+
+public function isTeacher(): bool
+{
+    return $this->userType === 'Teacher';
+}
+
+public function isAdmin(): bool
+{
+    return $this->userType === 'Admin';
+}
+
+public function getRoleLabelAttribute(): string
+{
+    return ucfirst($this->role);
+}
     
 
     /**

@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\auditLog;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\StrandCourse;
 use App\Models\Department;
@@ -12,6 +15,7 @@ use App\Models\Subject;
 use App\Models\Question;
 use App\Models\QuestionCategory;
 use App\Models\Semester;
+
 
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
@@ -55,6 +59,17 @@ class AdminController extends Controller
         ]);
     }
 
+
+
+    public function auditLOG()
+    {
+        $auditLogs = auditLog::with('user')
+            ->latest()
+            ->paginate(20);
+
+        return view('AdminSide.audit_logs', compact('auditLogs'));
+    }
+
     public function courses()
     {
 
@@ -92,6 +107,15 @@ class AdminController extends Controller
             'department_id' => $request->department_id,
             'max_section' => $request->max_section,
             'shs_college' => $request->shs_college,
+        ]);
+
+        // ===========================
+        // AUDIT LOG
+        // ===========================
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Course',
+            'details' => 'Added course: ' . $request->strandcourse,
         ]);
 
         // redirect back with message
@@ -138,6 +162,8 @@ class AdminController extends Controller
         $section = StrandCourse::findOrFail($id);
 
         $section->delete();
+
+        
 
         return redirect()->route('courses.index')
             ->with('success', 'Course deleted successfully.');
@@ -326,19 +352,52 @@ class AdminController extends Controller
 
     public function teacherList()
     {
+
+        // Sync teachers table with users table
+        $teacherUsers = User::where('userType', 'Teacher')->get();
+
+        foreach ($teacherUsers as $user) {
+            Teacher::firstOrCreate(
+                ['user_id' => $user->id], // Check if already exists
+                [
+                    'department_id' => null,
+                    'employee_id' => null,
+                ]
+            );
+        }
+
+
+
+
         $teachers = User::where('userType', 'Teacher')->get();
 
         $teacher_info = DB::table('teachers')
             ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+            ->leftJoin('evaluations', 'teachers.id', '=', 'evaluations.teacher_id')
             ->select(
                 'teachers.*',
-                'departments.name as department_name'
+                'departments.name as department_name',
+                DB::raw('COUNT(DISTINCT evaluations.student_id) as evaluations_count'),
+                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+            )
+            ->groupBy(
+                'teachers.id',
+                'teachers.user_id',
+                'teachers.department_id',
+                'teachers.employee_id',
+                'teachers.created_at',
+                'teachers.updated_at',
+                'departments.name'
             )
             ->get();
 
         $departments = DB::table('departments')->get();
 
-        return view('AdminSide.teachers', compact('teachers', 'teacher_info', 'departments'));
+        return view('AdminSide.teachers', compact(
+            'teachers',
+            'teacher_info',
+            'departments'
+        ));
     }
 
 
@@ -682,14 +741,14 @@ class AdminController extends Controller
 
     public function teacherassignment()
     {
-         $assignments = TeacherAssignment::with('teacher.user','subject','semester.academicyear')->get();
+        $assignments = TeacherAssignment::with('teacher.user', 'subject', 'semester.academicyear')->get();
 
-    $teachers = Teacher::all();
-    $semesters = Semester::all();
-    
-    $subjects = Subject::all();
-    $users = User::all();
-   
+        $teachers = Teacher::all();
+        $semesters = Semester::all();
+
+        $subjects = Subject::all();
+        $users = User::all();
+
 
         return view("AdminSide.teacherassignment", compact('assignments', 'teachers', 'semesters', 'subjects', 'users'));
     }

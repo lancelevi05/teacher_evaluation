@@ -12,6 +12,8 @@ use Illuminate\View\View;
 use App\Models\student_info;
 use App\Models\Teacher;
 
+use App\Models\auditLog;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -31,33 +33,42 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-         // Get the authenticated user
-    $user = Auth::user();
+        // Get the authenticated user
+        $user = Auth::user();
 
-    // If Student, ensure student_info record exists
-    if ($user->userType === 'Student') {
-
-        student_info::firstOrCreate([
+        // ===========================
+        // INSERT LOGIN AUDIT LOG HERE
+        // ===========================
+        auditLog::create([
             'user_id' => $user->id,
-            'usn' => $user->usn,
-            
+            'action' => 'Login',
+            'details' => 'User logged in.',
         ]);
 
-        return redirect()->intended(route('StudentSide.home', absolute: false));
-    }
+        // If Student, ensure student_info record exists
+        if ($user->userType === 'Student') {
 
-    // If teacher, ensure Teachers record exists
-    if ($user->userType === 'Teacher') {
+            student_info::firstOrCreate([
+                'user_id' => $user->id,
+                'usn' => $user->usn,
 
-        Teacher::firstOrCreate([
-            'user_id' => $user->id,
-            'employee_id' => $user->usn,
-            
-        ]);
-        return redirect()->intended(route('TeacherSide.home', absolute: false));
+            ]);
 
-        
-    }
+            return redirect()->intended(route('StudentSide.home', absolute: false));
+        }
+
+        // If teacher, ensure Teachers record exists
+        if ($user->userType === 'Teacher') {
+
+            Teacher::firstOrCreate([
+                'user_id' => $user->id,
+                'employee_id' => $user->usn,
+
+            ]);
+            return redirect()->intended(route('TeacherSide.home', absolute: false));
+
+
+        }
 
         // Redirect based on user type
         if ($user->userType === 'Admin') {
@@ -67,7 +78,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Default to Student home
-        elseif($user->userType==='Student'){
+        elseif ($user->userType === 'Student') {
             return redirect()->intended(route('StudentSide.home', absolute: false));
         }
     }
@@ -77,6 +88,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+
+        // ============================
+        // INSERT LOGOUT AUDIT LOG HERE
+        // ============================
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Logout',
+            'details' => 'User logged out.',
+        ]);
+        
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

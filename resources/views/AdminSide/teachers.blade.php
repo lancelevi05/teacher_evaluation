@@ -393,20 +393,21 @@
 
                                                     <td>{{ $teacher->status ?? 'Active' }}</td>
                                                     <td>{{ $info->rating ?? '--' }}</td>
-                                                    <td>{{ $info->evaluations_count ?? '--' }}</td>
+                                                    <td>{{ $info->evaluations_count ?? 0 }}</td>
                                                     <td class="action-cell">
                                                         <button type="button" class="btn-edit" data-id="{{ $teacher->id }}"
                                                             data-usn="{{ $teacher->usn }}" data-email="{{ $teacher->email }}"
                                                             data-fname="{{ $teacher->fname }}"
                                                             data-lname="{{ $teacher->lname }}"
                                                             data-mname="{{ $teacher->mname }}"
-                                                             data-status="{{ $teacher->status }}"
+                                                            data-status="{{ $teacher->status }}"
                                                             data-employee-id="{{ $info->employee_id ?? '' }}"
                                                             data-department="{{ $info->department_id ?? '' }}">
                                                             Edit
                                                         </button>
 
-                                                        <form method="POST" action="{{ route('teacher.destroy',$teacher->id) }}" class="inline-form"
+                                                        <form method="POST" action="{{ route('teacher.destroy', $teacher->id) }}"
+                                                            class="inline-form"
                                                             onsubmit="return confirm('Remove {{ $teacher->fname }} {{ $teacher->lname }}? This cannot be undone.');">
                                                             @csrf
                                                             @method('DELETE')

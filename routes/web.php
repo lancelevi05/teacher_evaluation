@@ -52,6 +52,9 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/home', [AdminController::class, 'home'])
         ->name('AdminSide.home');
 
+        Route::get('/admin/auditlogs', [AdminController::class, 'auditLOG'])
+        ->name('auditLogs.index');
+
 
     // Display page
     Route::get('/admin/courses', [AdminController::class, 'courses'])
