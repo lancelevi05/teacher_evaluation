@@ -30,9 +30,10 @@ Route::middleware('auth')->group(function () {
     )
         ->name('student.updateInfo');
 
-        //DISPLAY evaluation
-        Route::get('/student/evaluate', [StudentController::class, 'studentEvaluate'])
-        ->name('evaluate');
+    //DISPLAY evaluation
+    Route::get('/student/evaluate', [StudentController::class, 'studentEvaluate'])
+        ->name('student.evaluate');
+    Route::post('/student/evaluate', [StudentController::class, 'storeEvaluation'])->name('student.evaluate.store');
 });
 
 // =====================================================
@@ -80,34 +81,34 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('departments.destroy');
 
 
-        //display student
+    //display student
     Route::get('/admin/students', [AdminController::class, 'studentList'])
         ->name('students.index');
 
     // SAVE DATA ✅
     Route::post('/admin/students', [AdminController::class, 'storeStudentList'])
         ->name('students.store');
-        //UPDATE STUDENT
+    //UPDATE STUDENT
     Route::put('/admin/students/{user}', [AdminController::class, 'updateStudentList'])
         ->name('students.update');
 
-        //DELETE STUDENT
+    //DELETE STUDENT
     Route::delete('/admin/students/{user}', [AdminController::class, 'destroyStudentList'])
         ->name('students.destroy');
 
-        //display teacher
+    //display teacher
     Route::get('/admin/teachers', [AdminController::class, 'teacherList'])
         ->name('teachers.index');
 
-        // SAVE DATA ✅
+    // SAVE DATA ✅
     Route::post('/admin/teachers', [AdminController::class, 'storeTeacherList'])
         ->name('teachers.store');
 
-        //UPDATE TEACHER
+    //UPDATE TEACHER
     Route::put('/admin/teachers/{user}', [AdminController::class, 'updateTeacherList'])
         ->name('teacher.update');
 
-        // Delete TEACHER
+    // Delete TEACHER
     Route::delete('/admin/teachers/{user}', [AdminController::class, 'destroyTeacherList'])
         ->name('teacher.destroy');
 
@@ -170,16 +171,16 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::delete('/admin/questionnaire/{id}', [AdminController::class, 'destroycategory'])
         ->name('category.destroy');
 
-        // Display subject assignment
+    // Display subject assignment
     Route::get('/admin/teacherassignment', [AdminController::class, 'teacherassignment'])
         ->name('teacherassignment.index');
 
 
-         // SAVE DATA TEACHER ASSIGNMENT ✅
+    // SAVE DATA TEACHER ASSIGNMENT ✅
     Route::post('/admin/teacherassignment', [AdminController::class, 'storeteacherassignment'])
         ->name('teacherassignment.store');
 
-        // Delete
+    // Delete
     Route::delete('/admin/teacherassignment/{id}', [AdminController::class, 'destroyteacherassignment'])
         ->name('teacherassignment.destroy');
 

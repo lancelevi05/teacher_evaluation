@@ -25,8 +25,8 @@ return new class extends Migration {
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->tinyInteger('rating');
-            $table->text('answer_text');
+            $table->tinyInteger('rating')->nullable();
+            $table->text('answer_text')->nullable();
 
             $table->timestamps();
 

@@ -29,7 +29,10 @@ class User extends Authenticatable
         'photo',
         'status',
     ];
-
+public function student()
+{
+    return $this->hasOne(student_info::class, 'user_id');
+}
     
 
     /**

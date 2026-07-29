@@ -13,8 +13,8 @@
                 <rect x="14" y="14" width="7" height="7" rx="1" />
             </svg> Dashboard </a> 
             
-            <a class="nav-item {{ request()->routeIs('evaluate*') ? 'active' : '' }}"
-            href="{{ route('evaluate') }}">
+            <a class="nav-item {{ request()->routeIs('student.evaluate*') ? 'active' : '' }}"
+            href="{{ route('student.evaluate') }}">
             <svg class="nav-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 20V10M18 20V4M6 20v-4" />
             </svg> Evaluate Teacher </a>
