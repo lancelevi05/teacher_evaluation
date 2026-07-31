@@ -163,7 +163,7 @@ class AdminController extends Controller
 
         $section->delete();
 
-        
+
 
         return redirect()->route('courses.index')
             ->with('success', 'Course deleted successfully.');
@@ -776,5 +776,118 @@ class AdminController extends Controller
         return redirect()->route('teacherassignment.index')
             ->with('success', 'Teacher deleted successfully.');
     }
+
+    
+public function teacherReport(Request $request)
+{
+    $type = $request->input('type', 'teacher');
+ 
+    $teacherInfo     = collect();
+    $departmentReport = collect();
+    $semesterReport   = collect();
+ 
+    if ($type === 'teacher') {
+ 
+        $teacherInfo = DB::table('teachers')
+            ->join('users', 'teachers.user_id', '=', 'users.id')
+            ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+            ->leftJoin('evaluations', 'teachers.id', '=', 'evaluations.teacher_id')
+            ->select(
+                'teachers.id as teacher_id',
+                'teachers.employee_id',
+                'users.fname',
+                'users.lname',
+                'departments.name as department_name',
+                DB::raw('COUNT(DISTINCT evaluations.student_id) as evaluations_count'),
+                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+            )
+            ->groupBy(
+                'teachers.id',
+                'teachers.employee_id',
+                'users.fname',
+                'users.lname',
+                'departments.name'
+            )
+            ->orderByDesc('rating')
+            ->get()
+            ->map(function ($row) {
+                $row->perf_label = $this->ratingLabel($row->rating);
+                $row->perf_class = $this->ratingClass($row->rating);
+                return $row;
+            });
+ 
+    } elseif ($type === 'department') {
+ 
+        $departmentReport = DB::table('departments')
+            ->leftJoin('teachers', 'teachers.department_id', '=', 'departments.id')
+            ->leftJoin('evaluations', 'evaluations.teacher_id', '=', 'teachers.id')
+            ->select(
+                'departments.name',
+                DB::raw('COUNT(DISTINCT teachers.id) as teacher_count'),
+                DB::raw('COUNT(DISTINCT evaluations.id) as evaluations_count'),
+                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+            )
+            ->groupBy('departments.id', 'departments.name')
+            ->orderByDesc('rating')
+            ->get()
+            ->map(function ($row) {
+                $row->perf_label = $this->ratingLabel($row->rating);
+                $row->perf_class = $this->ratingClass($row->rating);
+                return $row;
+            });
+ 
+    } else { // semester
+ 
+        $semesterReport = DB::table('semesters')
+            ->join('academic_years', 'semesters.academic_year_id', '=', 'academic_years.id')
+            ->leftJoin('evaluations', 'evaluations.semester_id', '=', 'semesters.id')
+            ->select(
+                'semesters.name as semester_name',
+                'academic_years.year_label',
+                DB::raw('COUNT(evaluations.id) as evaluations_count'),
+                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+            )
+            ->groupBy('semesters.id', 'semesters.name', 'academic_years.year_label')
+            ->orderByDesc('academic_years.year_label')
+            ->orderBy('semesters.id')
+            ->get();
+    }
+ 
+    $departments = DB::table('departments')->get();
+ 
+    return view('AdminSide.reports', compact(
+        'type',
+        'teacherInfo',
+        'departmentReport',
+        'semesterReport',
+        'departments'
+    ));
+}
+ 
+/**
+ * Maps an average rating to a human label.
+ * Adjust thresholds to match your rating scale.
+ */
+private function ratingLabel($rating)
+{
+    if ($rating === null) return 'No Data';
+    if ($rating >= 4.5) return 'Excellent';
+    if ($rating >= 3.5) return 'Good';
+    if ($rating >= 2.5) return 'Average';
+    return 'Poor';
+}
+ 
+/**
+ * Maps an average rating to the matching CSS class
+ * from the .performance-* styles in the Blade view.
+ */
+private function ratingClass($rating)
+{
+    if ($rating === null) return 'performance-nodata';
+    if ($rating >= 4.5) return 'performance-excellent';
+    if ($rating >= 3.5) return 'performance-good';
+    if ($rating >= 2.5) return 'performance-average';
+    return 'performance-poor';
+}
 
 }

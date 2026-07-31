@@ -50,14 +50,20 @@
         }
 
         .sections-table th {
-            background: #f5f6fa;
-            padding: 12px;
+              background: #f3f2fb;
+            color: #4b3cc9;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.03em;
             text-align: left;
+            padding: 12px;
         }
 
         .sections-table td {
-            padding: 12px;
+             padding: 12px;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #1a1a2e;
         }
 
         .sections-table tr:hover {

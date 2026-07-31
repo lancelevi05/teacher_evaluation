@@ -191,6 +191,12 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('teacherassignment.destroy');
 
 
+        // Display reports
+    Route::get('/admin/reports', [AdminController::class, 'teacherReport'])
+        ->name('reports.index');
+
+
+
 
 
 

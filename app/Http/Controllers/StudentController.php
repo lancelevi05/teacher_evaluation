@@ -195,20 +195,20 @@ class StudentController extends Controller
     }
 
     public function studentHistory()
-{
-    $student = Auth::user()->student;
+    {
+        $student = Auth::user()->student;
 
-    if (!$student) {
-        return view('StudentSide.history', ['noProfile' => true]);
+        if (!$student) {
+            return view('StudentSide.history', ['noProfile' => true]);
+        }
+
+        $evaluations = Evaluation::with('teacher.user', 'subject', 'semester.academicyear')
+            ->where('student_id', $student->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('StudentSide.history', [
+            'evaluations' => $evaluations,
+        ]);
     }
-
-    $evaluations = Evaluation::with('teacher.user', 'subject', 'semester.academicyear')
-        ->where('student_id', $student->id)
-        ->orderByDesc('created_at')
-        ->get();
-
-    return view('StudentSide.history', [
-        'evaluations' => $evaluations,
-    ]);
-}
 }
