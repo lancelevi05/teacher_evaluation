@@ -99,6 +99,12 @@ class AdminController extends Controller
             'idstrandcourse.unique' => 'This course code already exists.',
         ]);
 
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Course',
+            'details' => 'Added course: ' . $request->strandcourse,
+        ]);
+
 
         // insert data
         StrandCourse::create([
@@ -109,14 +115,7 @@ class AdminController extends Controller
             'shs_college' => $request->shs_college,
         ]);
 
-        // ===========================
-        // AUDIT LOG
-        // ===========================
-        auditLog::create([
-            'user_id' => Auth::id(),
-            'action' => 'Add Course',
-            'details' => 'Added course: ' . $request->strandcourse,
-        ]);
+        
 
         // redirect back with message
         return redirect()
@@ -150,7 +149,17 @@ class AdminController extends Controller
             'shs_college' => 'required|string|max:100',
         ]);
 
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Update Course',
+            'details' => 'Updated course: ' . $request->strandcourse .
+                ' (' . $request->idstrandcourse . ')',
+        ]);
+
         $course->update($validated);
+
+        
 
         return redirect()
             ->route('courses.index')
@@ -161,8 +170,22 @@ class AdminController extends Controller
     {
         $section = StrandCourse::findOrFail($id);
 
+        // Save details before deleting
+        $courseName = $section->strandcourse;
+        $courseCode = $section->idstrandcourse;
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Delete Course',
+            'details' => 'Deleted course: ' . $courseName .
+                ' (' . $courseCode . ')',
+        ]);
+
+
         $section->delete();
 
+        
 
 
         return redirect()->route('courses.index')
@@ -192,6 +215,14 @@ class AdminController extends Controller
 
         ]);
 
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Department',
+            'details' => 'Added department: ' . $request->name.
+                ' (' . $request->code . ')',
+        ]);
+
         // insert data
         Department::create([
             'name' => $request->name,
@@ -217,6 +248,15 @@ class AdminController extends Controller
             'head_id' => $request->head_id,
         ]);
 
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Update Department',
+            'details' => 'Updated department: ' . $request->name.
+                ' (' . $request->code . ')',
+        ]);
+
         return redirect()->route('departments.index')
             ->with('success', 'Department updated successfully.');
     }
@@ -224,6 +264,18 @@ class AdminController extends Controller
     public function destroyDepartment($id)
     {
         $department = Department::findOrFail($id);
+
+        // Save details before deleting
+        $Name = $department->name;
+        $Code= $department->code;
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Delete Department',
+            'details' => 'Deleted department: ' . $Name .
+                ' (' . $Code . ')',
+        ]);
 
         try {
             $department->delete();
@@ -508,6 +560,8 @@ class AdminController extends Controller
             'code.unique' => 'This code already exists.',
         ]);
 
+        
+
 
         // insert data
         Subject::create([
@@ -517,6 +571,14 @@ class AdminController extends Controller
 
 
             'units' => $request->units,
+        ]);
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Subject',
+            'details' => 'Added subject: ' . $request->name.
+                ' (' . $request->code . ')',
         ]);
 
         // redirect back with message
@@ -537,6 +599,16 @@ class AdminController extends Controller
             'units' => $request->units,
         ]);
 
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Update Subject',
+            'details' => 'Updated subject: ' . $request->name.
+                ' (' . $request->code . ')',
+        ]);
+
+        
+
         return redirect()->route('subjects.index')
             ->with('success', 'Subject updated successfully.');
     }
@@ -544,6 +616,14 @@ class AdminController extends Controller
     public function destroySubject($id)
     {
         $subject = Subject::findOrFail($id);
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Delete Subject',
+            'details' => 'Deleted subject: ' . $subject->name.
+                ' (' . $subject->code . ')',
+        ]);
 
         $subject->delete();
 
@@ -566,8 +646,6 @@ class AdminController extends Controller
         $request->validate([
             'academic_year' => 'required|unique:academic_years,year_label',
 
-
-
         ], [
             'year_label.unique' => 'This year label already exists.',
         ]);
@@ -577,6 +655,13 @@ class AdminController extends Controller
         AcademicYear::create([
             'year_label' => $request->academic_year,
             'status' => 'active',
+        ]);
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Academic Year',
+            'details' =>  $request->academic_year
         ]);
 
         // redirect back with message
@@ -593,6 +678,8 @@ class AdminController extends Controller
             'status' => 'active'
 
         ]);
+
+        
 
         return redirect()->route('academicsemesters.index')
             ->with('success', 'Semester Opened successfully.');
@@ -628,6 +715,13 @@ class AdminController extends Controller
             'academic_year_id' => $request->academic_year_id,
             'name' => $request->name,
             'status' => 'active',
+        ]);
+
+        // AUDIT LOG
+        auditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'Add Semester',
+            'details' =>  $request->name
         ]);
 
         // redirect back with message
@@ -777,117 +871,125 @@ class AdminController extends Controller
             ->with('success', 'Teacher deleted successfully.');
     }
 
-    
-public function teacherReport(Request $request)
-{
-    $type = $request->input('type', 'teacher');
- 
-    $teacherInfo     = collect();
-    $departmentReport = collect();
-    $semesterReport   = collect();
- 
-    if ($type === 'teacher') {
- 
-        $teacherInfo = DB::table('teachers')
-            ->join('users', 'teachers.user_id', '=', 'users.id')
-            ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
-            ->leftJoin('evaluations', 'teachers.id', '=', 'evaluations.teacher_id')
-            ->select(
-                'teachers.id as teacher_id',
-                'teachers.employee_id',
-                'users.fname',
-                'users.lname',
-                'departments.name as department_name',
-                DB::raw('COUNT(DISTINCT evaluations.student_id) as evaluations_count'),
-                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
-            )
-            ->groupBy(
-                'teachers.id',
-                'teachers.employee_id',
-                'users.fname',
-                'users.lname',
-                'departments.name'
-            )
-            ->orderByDesc('rating')
-            ->get()
-            ->map(function ($row) {
-                $row->perf_label = $this->ratingLabel($row->rating);
-                $row->perf_class = $this->ratingClass($row->rating);
-                return $row;
-            });
- 
-    } elseif ($type === 'department') {
- 
-        $departmentReport = DB::table('departments')
-            ->leftJoin('teachers', 'teachers.department_id', '=', 'departments.id')
-            ->leftJoin('evaluations', 'evaluations.teacher_id', '=', 'teachers.id')
-            ->select(
-                'departments.name',
-                DB::raw('COUNT(DISTINCT teachers.id) as teacher_count'),
-                DB::raw('COUNT(DISTINCT evaluations.id) as evaluations_count'),
-                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
-            )
-            ->groupBy('departments.id', 'departments.name')
-            ->orderByDesc('rating')
-            ->get()
-            ->map(function ($row) {
-                $row->perf_label = $this->ratingLabel($row->rating);
-                $row->perf_class = $this->ratingClass($row->rating);
-                return $row;
-            });
- 
-    } else { // semester
- 
-        $semesterReport = DB::table('semesters')
-            ->join('academic_years', 'semesters.academic_year_id', '=', 'academic_years.id')
-            ->leftJoin('evaluations', 'evaluations.semester_id', '=', 'semesters.id')
-            ->select(
-                'semesters.name as semester_name',
-                'academic_years.year_label',
-                DB::raw('COUNT(evaluations.id) as evaluations_count'),
-                DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
-            )
-            ->groupBy('semesters.id', 'semesters.name', 'academic_years.year_label')
-            ->orderByDesc('academic_years.year_label')
-            ->orderBy('semesters.id')
-            ->get();
+
+    public function teacherReport(Request $request)
+    {
+        $type = $request->input('type', 'teacher');
+
+        $teacherInfo = collect();
+        $departmentReport = collect();
+        $semesterReport = collect();
+
+        if ($type === 'teacher') {
+
+            $teacherInfo = DB::table('teachers')
+                ->join('users', 'teachers.user_id', '=', 'users.id')
+                ->leftJoin('departments', 'teachers.department_id', '=', 'departments.id')
+                ->leftJoin('evaluations', 'teachers.id', '=', 'evaluations.teacher_id')
+                ->select(
+                    'teachers.id as teacher_id',
+                    'teachers.employee_id',
+                    'users.fname',
+                    'users.lname',
+                    'departments.name as department_name',
+                    DB::raw('COUNT(DISTINCT evaluations.student_id) as evaluations_count'),
+                    DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+                )
+                ->groupBy(
+                    'teachers.id',
+                    'teachers.employee_id',
+                    'users.fname',
+                    'users.lname',
+                    'departments.name'
+                )
+                ->orderByDesc('rating')
+                ->get()
+                ->map(function ($row) {
+                    $row->perf_label = $this->ratingLabel($row->rating);
+                    $row->perf_class = $this->ratingClass($row->rating);
+                    return $row;
+                });
+
+        } elseif ($type === 'department') {
+
+            $departmentReport = DB::table('departments')
+                ->leftJoin('teachers', 'teachers.department_id', '=', 'departments.id')
+                ->leftJoin('evaluations', 'evaluations.teacher_id', '=', 'teachers.id')
+                ->select(
+                    'departments.name',
+                    DB::raw('COUNT(DISTINCT teachers.id) as teacher_count'),
+                    DB::raw('COUNT(DISTINCT evaluations.id) as evaluations_count'),
+                    DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+                )
+                ->groupBy('departments.id', 'departments.name')
+                ->orderByDesc('rating')
+                ->get()
+                ->map(function ($row) {
+                    $row->perf_label = $this->ratingLabel($row->rating);
+                    $row->perf_class = $this->ratingClass($row->rating);
+                    return $row;
+                });
+
+        } else { // semester
+
+            $semesterReport = DB::table('semesters')
+                ->join('academic_years', 'semesters.academic_year_id', '=', 'academic_years.id')
+                ->leftJoin('evaluations', 'evaluations.semester_id', '=', 'semesters.id')
+                ->select(
+                    'semesters.name as semester_name',
+                    'academic_years.year_label',
+                    DB::raw('COUNT(evaluations.id) as evaluations_count'),
+                    DB::raw('ROUND(AVG(evaluations.overall_rating), 2) as rating')
+                )
+                ->groupBy('semesters.id', 'semesters.name', 'academic_years.year_label')
+                ->orderByDesc('academic_years.year_label')
+                ->orderBy('semesters.id')
+                ->get();
+        }
+
+        $departments = DB::table('departments')->get();
+
+        return view('AdminSide.reports', compact(
+            'type',
+            'teacherInfo',
+            'departmentReport',
+            'semesterReport',
+            'departments'
+        ));
     }
- 
-    $departments = DB::table('departments')->get();
- 
-    return view('AdminSide.reports', compact(
-        'type',
-        'teacherInfo',
-        'departmentReport',
-        'semesterReport',
-        'departments'
-    ));
-}
- 
-/**
- * Maps an average rating to a human label.
- * Adjust thresholds to match your rating scale.
- */
-private function ratingLabel($rating)
-{
-    if ($rating === null) return 'No Data';
-    if ($rating >= 4.5) return 'Excellent';
-    if ($rating >= 3.5) return 'Good';
-    if ($rating >= 2.5) return 'Average';
-    return 'Poor';
-}
- 
-/**
- * Maps an average rating to the matching CSS class
- * from the .performance-* styles in the Blade view.
- */
-private function ratingClass($rating)
-{
-    if ($rating === null) return 'performance-nodata';
-    if ($rating >= 4.5) return 'performance-excellent';
-    if ($rating >= 3.5) return 'performance-good';
-    if ($rating >= 2.5) return 'performance-average';
-    return 'performance-poor';
-}
+
+    /**
+     * Maps an average rating to a human label.
+     * Adjust thresholds to match your rating scale.
+     */
+    private function ratingLabel($rating)
+    {
+        if ($rating === null)
+            return 'No Data';
+        if ($rating >= 4.5)
+            return 'Excellent';
+        if ($rating >= 3.5)
+            return 'Good';
+        if ($rating >= 2.5)
+            return 'Average';
+        return 'Poor';
+    }
+
+    /**
+     * Maps an average rating to the matching CSS class
+     * from the .performance-* styles in the Blade view.
+     */
+    private function ratingClass($rating)
+    {
+        if ($rating === null)
+            return 'performance-nodata';
+        if ($rating >= 4.5)
+            return 'performance-excellent';
+        if ($rating >= 3.5)
+            return 'performance-good';
+        if ($rating >= 2.5)
+            return 'performance-average';
+        return 'performance-poor';
+    }
 
 }

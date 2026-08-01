@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         auditLog::create([
             'user_id' => $user->id,
             'action' => 'Login',
-            'details' => 'User logged in.',
+            'details' => $user->email,
         ]);
 
         // If Student, ensure student_info record exists

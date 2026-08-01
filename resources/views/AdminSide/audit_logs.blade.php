@@ -116,17 +116,18 @@
                             <table class="al-table">
                                 <thead>
                                     <tr>
-                                        <th>Date &amp; Time</th>
+                                        
                                         <th>User</th>
                                         <th>Role</th>
                                         <th>Action</th>
                                         <th>Details</th>
+                                        <th>Date &amp; Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($auditLogs as $log)
                                         <tr>
-                                            <td>{{ $log->created_at->format('M d, Y h:i A') }}</td>
+                                            
                                             <td>
                                                 {{ $log->user
                                                     ? trim($log->user->fname.' '.$log->user->lname)
@@ -143,6 +144,7 @@
                                             </td>
                                             <td>{{ $log->action }}</td>
                                             <td>{{ $log->details }}</td>
+                                            <td>{{ $log->created_at->format('M d, Y h:i A') }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -153,7 +155,7 @@
                             </table>
                         </div>
 
-                        <div style="margin-top:16px">
+                        <div style="margin-top:16px;">
                             {{ $auditLogs->links() }}
                         </div>
                     </div>
