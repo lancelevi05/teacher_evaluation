@@ -26,17 +26,11 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* TABLE AREA takes more space */
+        /* TABLE AREA takes full width now (no side form) */
         .table-card {
-            flex: 2;
+            flex: 1;
             display: flex;
             flex-direction: column;
-        }
-
-        /* FORM AREA takes remaining */
-        .form-card {
-            flex: 1;
-            min-width: 280px;
         }
 
         /* Table */
@@ -50,14 +44,20 @@
         }
 
         .sections-table th {
-            background: #f5f6fa;
-            padding: 12px;
+            background: #f3f2fb;
+            color: #4b3cc9;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.03em;
             text-align: left;
+            padding: 12px;
         }
 
         .sections-table td {
             padding: 12px;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #1a1a2e;
         }
 
         .sections-table tr:hover {
@@ -79,10 +79,18 @@
             margin-bottom: 15px;
         }
 
-        .form-group input {
+        .form-group label {
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            font-size: 14px;
         }
 
         .btn-submit {
@@ -105,10 +113,6 @@
             .sections-container {
                 flex-direction: column;
             }
-
-            .form-card {
-                width: 100%;
-            }
         }
 
         .select-input {
@@ -117,6 +121,133 @@
             border-radius: 6px;
             width: 100%;
             background: white;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .error-msg {
+            background: #fdecea;
+            color: #a12622;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        .btn-edit {
+            background: #fff3cd;
+            color: #92700f;
+        }
+
+        .btn-edit:hover {
+            background: #ffe8a1;
+        }
+
+        .btn-delete {
+            background: #fdecea;
+            color: #a12622;
+        }
+
+        .btn-delete:hover {
+            background: #f9d3cf;
+        }
+
+        /* ===== POPUP MODAL ===== */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: .25s;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 16px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            transform: scale(.95);
+            transition: .25s ease;
+            width: 100%;
+            max-width: 520px;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            color: #7a7a7a;
+            font-size: 13px;
+            margin: 0 0 20px 0;
+        }
+
+        .modal-close-btn {
+            border: none;
+            background: #f1f2f6;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .modal-close-btn:hover {
+            background: #e4e6ec;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
@@ -172,8 +303,8 @@
                                 🔍
                             </button>
 
-                            <button class="add-btn01" id="addBtn01">
-                                + Add Section
+                            <button type="button" class="add-btn01" id="addBtn01">
+                                + Add Course
                             </button>
                         </div>
 
@@ -181,16 +312,24 @@
 
                     <div class="sections-container">
 
-                        <!-- LEFT : TABLE -->
+                        <!-- TABLE (now full width, form removed) -->
                         <div class="card table-card">
 
+                            @if(session('success'))
+                                <div class="success-msg">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
-
-
-
-
-
-
+                            @if($errors->any())
+                                <div class="error-msg">
+                                    <ul style="margin:0;padding-left:18px;">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             @if($courses->isEmpty())
                                 <div class="no-data">
@@ -198,20 +337,6 @@
                                 </div>
                             @else
                                 <div class="table-wrapper">
-                                    @if(session('success'))
-                                        <div class="success-msg">
-                                            {{ session('success') }}
-                                        </div>
-                                    @endif
-
-                                    @if($errors->any())
-                                        <div class="error-msg">
-                                            @foreach($errors->all() as $error)
-                                                {{ $error }}
-                                            @endforeach
-                                        </div>
-                                    @endif
-
                                     <table class="sections-table">
                                         <thead>
                                             <tr>
@@ -238,24 +363,24 @@
                                                     </td>
                                                     <td>{{ $course->students_count }}</td>
                                                     <td>{{ $course->max_section ?? '--' }}</td>
-                                                    <td>
-                                                        <button type="button" class="edit-btn01" data-id="{{ $course->id }}"
+                                                    <td class="action-cell">
+                                                        <button type="button" class="btn-edit edit-btn01" data-id="{{ $course->id }}"
                                                             data-code="{{ $course->idstrandcourse }}"
                                                             data-course="{{ $course->strandcourse }}"
                                                             data-max="{{ $course->max_section }}"
                                                             data-department="{{ $course->department_id }}"
                                                             data-category="{{ $course->shs_college }}">
-                                                            EDIT
+                                                            Edit
                                                         </button>
 
                                                         <form action="{{ route('courses.destroy', $course->id) }}"
-                                                            method="POST" style="display:inline;">
+                                                            method="POST" class="inline-form">
                                                             @csrf
                                                             @method('DELETE')
 
-                                                            <button type="submit"
+                                                            <button type="submit" class="btn-delete"
                                                                 onclick="return confirm('Delete this section?')">
-                                                                DELETE
+                                                                Delete
                                                             </button>
                                                         </form>
                                                     </td>
@@ -267,62 +392,6 @@
                             @endif
                         </div>
 
-
-                        <!-- RIGHT : FORM -->
-                        <div class="card form-card">
-                            <h2 id="formTitle01">Add Section</h2>
-
-
-
-
-
-                            <form id="sectionForm01" method="POST" action="{{ route('courses.store') }}">
-
-                                <input type="hidden" name="section_id" id="sectionId01">
-                                @csrf
-
-                                <div class="form-group">
-                                    <label>CODE</label>
-                                    <input id="code01" type="text" name="idstrandcourse"
-                                        placeholder="Enter id strand or course" required>
-
-                                    <label>COURSE NAME</label>
-                                    <input id="course01" type="text" name="strandcourse"
-                                        placeholder="Enter strand or course" required>
-                                    <label>Max Section</label>
-                                    <input id="max01" type="text" name="max_section" placeholder="Enter Maximum section"
-                                        required>
-
-                                    <label>DEPARTMENT</label>
-
-                                    <select id="department01" name="department_id" class="select-input" required>
-                                        <option value="" disabled selected>Select type</option>
-                                        @foreach ($departments as $department)
-                                            <option value="{{ $department->id }}">
-                                                {{ $department->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                    <label>Choose Category</label>
-
-                                    <select id="category01" name="shs_college" class="select-input" required>
-                                        <option value="" disabled selected>Select type</option>
-                                        <option value="1">SHS</option>
-                                        <option value="0">BS</option>
-                                        <option value="2">Degree</option>
-                                    </select>
-                                </div>
-
-                                <button class="btn-submit" id="submitBtn01">
-                                    Save Course
-                                </button>
-                            </form>
-
-
-
-                        </div>
-
                     </div>
                 </main>
             </div>
@@ -331,79 +400,165 @@
         </footer>
     </div>
 
+
+    <!-- ===================== ADD / EDIT SECTION MODAL ===================== -->
+    <div class="modal-overlay" id="sectionModal">
+        <div class="modal-box card">
+            <div class="modal-header">
+                <h2 id="formTitle01">Add Course</h2>
+                <button type="button" class="modal-close-btn" id="closeSectionModal">✕</button>
+            </div>
+            <p class="modal-subtitle">Create or update a strand/course for a department.</p>
+
+            <form id="sectionForm01" method="POST" action="{{ route('courses.store') }}">
+
+                <input type="hidden" name="section_id" id="sectionId01">
+                @csrf
+
+                <div class="form-group">
+                    <label>CODE</label>
+                    <input id="code01" type="text" name="idstrandcourse"
+                        placeholder="Enter id strand or course" required>
+                </div>
+
+                <div class="form-group">
+                    <label>COURSE NAME</label>
+                    <input id="course01" type="text" name="strandcourse"
+                        placeholder="Enter strand or course" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Max Section</label>
+                    <input id="max01" type="text" name="max_section" placeholder="Enter Maximum section"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>DEPARTMENT</label>
+
+                    <select id="department01" name="department_id" class="select-input" required>
+                        <option value="" disabled selected>Select type</option>
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}">
+                                {{ $department->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Choose Category</label>
+
+                    <select id="category01" name="shs_college" class="select-input" required>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="1">SHS</option>
+                        <option value="0">BS</option>
+                        <option value="2">Degree</option>
+                    </select>
+                </div>
+
+                <button class="btn-submit" id="submitBtn01" style="margin-top:20px;">
+                    Save Course
+                </button>
+            </form>
+        </div>
+    </div>
+
+
     <script>
 
+        (function () {
+            const overlay = document.getElementById("sectionModal");
+            const openBtn = document.getElementById("addBtn01");
+            const closeBtn = document.getElementById("closeSectionModal");
 
+            const form01 = document.getElementById("sectionForm01");
+            const formTitle01 = document.getElementById("formTitle01");
+            const code01 = document.getElementById("code01");
+            const course01 = document.getElementById("course01");
+            const max01 = document.getElementById("max01");
+            const department01 = document.getElementById("department01");
+            const category01 = document.getElementById("category01");
+            const sectionId01 = document.getElementById("sectionId01");
+            const submitBtn01 = document.getElementById("submitBtn01");
 
+            function openModal() {
+                overlay.classList.add("active");
+            }
 
-        const form01 = document.getElementById("sectionForm01");
-        const formTitle01 = document.getElementById("formTitle01");
-        const code01 = document.getElementById("code01");
-        const course01 = document.getElementById("course01");
-        const max01 = document.getElementById("max01");
-        const department01 = document.getElementById("department01");
-        const category01 = document.getElementById("category01");
-        const sectionId01 = document.getElementById("sectionId01");
-        const submitBtn01 = document.getElementById("submitBtn01");
+            function closeModal() {
+                overlay.classList.remove("active");
+            }
 
-        document.querySelectorAll(".edit-btn01").forEach(btn => {
+            function resetToAddMode() {
+                form01.reset();
 
-            btn.addEventListener("click", function () {
+                formTitle01.textContent = "Add Course";
+                submitBtn01.textContent = "Save Course";
 
-                formTitle01.textContent = "Edit Section";
-                code01.value = this.dataset.code;
-                course01.value = this.dataset.course;
-                max01.value = this.dataset.max;
-                department01.value = this.dataset.department;
-                category01.value = this.dataset.category;
-                // sectionId01.value = this.dataset.id;
-                form01.action = "/admin/courses/" + this.dataset.id;
+                form01.action = "{{ route('courses.store') }}";
 
-                submitBtn01.innerHTML = "Update Section";
-
-
-
-
-                if (document.getElementById("methodField01") == null) {
-
-                    const method = document.createElement("input");
-
-                    method.type = "hidden";
-                    method.name = "_method";
-                    method.value = "PUT";
-                    method.id = "methodField01";
-
-                    form01.appendChild(method);
+                const methodField = document.getElementById("methodField01");
+                if (methodField) {
+                    methodField.remove();
                 }
+
+                department01.selectedIndex = 0;
+                category01.selectedIndex = 0;
+            }
+
+            // Open modal in "Add" mode
+            openBtn?.addEventListener("click", function () {
+                resetToAddMode();
+                openModal();
+            });
+
+            closeBtn?.addEventListener("click", closeModal);
+
+            // click outside modal box closes it
+            overlay?.addEventListener("click", function (e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            // re-open modal automatically if validation failed (old input present)
+            @if($errors->any())
+                openModal();
+            @endif
+
+            // Open modal in "Edit" mode, prefilled
+            document.querySelectorAll(".edit-btn01").forEach(btn => {
+
+                btn.addEventListener("click", function () {
+
+                    formTitle01.textContent = "Edit Section";
+                    code01.value = this.dataset.code;
+                    course01.value = this.dataset.course;
+                    max01.value = this.dataset.max;
+                    department01.value = this.dataset.department;
+                    category01.value = this.dataset.category;
+                    // sectionId01.value = this.dataset.id;
+                    form01.action = "/admin/courses/" + this.dataset.id;
+
+                    submitBtn01.innerHTML = "Update Section";
+
+                    if (document.getElementById("methodField01") == null) {
+
+                        const method = document.createElement("input");
+
+                        method.type = "hidden";
+                        method.name = "_method";
+                        method.value = "PUT";
+                        method.id = "methodField01";
+
+                        form01.appendChild(method);
+                    }
+
+                    openModal();
+                });
 
             });
 
-        });
-
-        const addBtn01 = document.getElementById("addBtn01");
-
-        addBtn01.addEventListener("click", function () {
-
-            // Reset all form inputs
-            form01.reset();
-
-            // Back to Add mode
-            formTitle01.textContent = "Add Section";
-            submitBtn01.textContent = "Save Course";
-
-            // Restore form action
-            form01.action = "{{ route('courses.store') }}";
-
-            // Remove PUT method if it exists
-            const methodField = document.getElementById("methodField01");
-            if (methodField) {
-                methodField.remove();
-            }
-
-            // Reset dropdown placeholders
-            department01.selectedIndex = 0;
-            category01.selectedIndex = 0;
-        });
+        })();
     </script>
     @include('AdminSide.javascript')
 </body>

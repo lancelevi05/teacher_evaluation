@@ -2,14 +2,7 @@
 
 
 //===============================// (OPEN)SEARCH BAR FUNCTION---------================//
-// searchInput01.addEventListener("keypress", function(e){
 
-//     if(e.key === "Enter"){
-//         e.preventDefault();
-//         searchSection01();
-//     }
-
-// });
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -33,7 +26,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
 
+        
+
     }
+
+    searchInput01.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+        e.preventDefault();
+        searchSection01();
+    }
+
+});
 
     // Search only when button is clicked
     searchBtn01.addEventListener("click", searchSection01);

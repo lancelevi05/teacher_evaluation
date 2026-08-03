@@ -197,6 +197,7 @@
         gap: 24px;
     }
 
+    /*HOME PAGE CSS*/
     .welcome-card {
         background: linear-gradient(135deg, #2c6fba 0%, #1e3a5f 100%);
         border-radius: 14px;
@@ -244,12 +245,26 @@
         margin-top: 6px;
     }
 
+    .activity-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-date{
+    color: #6b7280;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
     .stat-change {
         font-size: 12px;
         color: #2c9c6a;
         margin-top: 4px;
         font-weight: 500;
     }
+
+    
 
     .section-card {
         background: #fff;
@@ -474,6 +489,7 @@
             font-size: 14px;
         }
     }
+    /*HOME PAGE CSS// */
 
 
 
@@ -588,6 +604,12 @@
         border-radius: 6px;
         margin-bottom: 15px;
     }
+
+
+    
+
+
+    
 </style>
 <style>
     body {

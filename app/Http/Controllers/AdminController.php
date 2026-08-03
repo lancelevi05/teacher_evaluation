@@ -49,13 +49,26 @@ class AdminController extends Controller
 
     public function home(Request $request)
     {
+        $totalstudents = User::where('userType', 'Student')->count();
+        $totalteachers = User::where('userType', 'Teacher')->count();
+        $totaldepartments = Department::count();
         $totalcourses = StrandCourse::count();
+
+        $auditLogs = AuditLog::with('user')
+            ->latest()
+            ->limit(6)
+            ->get();
+
 
 
 
         return view('AdminSide.home', [
             'user' => $request->user(),
+            'totalstudents' => $totalstudents,
+            'totalteachers' => $totalteachers,
+            'totaldepartments' => $totaldepartments,
             'totalcourses' => $totalcourses,
+            'auditLogs' => $auditLogs
         ]);
     }
 
@@ -115,7 +128,7 @@ class AdminController extends Controller
             'shs_college' => $request->shs_college,
         ]);
 
-        
+
 
         // redirect back with message
         return redirect()
@@ -159,7 +172,7 @@ class AdminController extends Controller
 
         $course->update($validated);
 
-        
+
 
         return redirect()
             ->route('courses.index')
@@ -185,7 +198,7 @@ class AdminController extends Controller
 
         $section->delete();
 
-        
+
 
 
         return redirect()->route('courses.index')
@@ -219,7 +232,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Add Department',
-            'details' => 'Added department: ' . $request->name.
+            'details' => 'Added department: ' . $request->name .
                 ' (' . $request->code . ')',
         ]);
 
@@ -253,7 +266,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Update Department',
-            'details' => 'Updated department: ' . $request->name.
+            'details' => 'Updated department: ' . $request->name .
                 ' (' . $request->code . ')',
         ]);
 
@@ -267,7 +280,7 @@ class AdminController extends Controller
 
         // Save details before deleting
         $Name = $department->name;
-        $Code= $department->code;
+        $Code = $department->code;
 
         // AUDIT LOG
         auditLog::create([
@@ -560,7 +573,7 @@ class AdminController extends Controller
             'code.unique' => 'This code already exists.',
         ]);
 
-        
+
 
 
         // insert data
@@ -577,7 +590,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Add Subject',
-            'details' => 'Added subject: ' . $request->name.
+            'details' => 'Added subject: ' . $request->name .
                 ' (' . $request->code . ')',
         ]);
 
@@ -603,11 +616,11 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Update Subject',
-            'details' => 'Updated subject: ' . $request->name.
+            'details' => 'Updated subject: ' . $request->name .
                 ' (' . $request->code . ')',
         ]);
 
-        
+
 
         return redirect()->route('subjects.index')
             ->with('success', 'Subject updated successfully.');
@@ -621,7 +634,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Delete Subject',
-            'details' => 'Deleted subject: ' . $subject->name.
+            'details' => 'Deleted subject: ' . $subject->name .
                 ' (' . $subject->code . ')',
         ]);
 
@@ -661,7 +674,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Add Academic Year',
-            'details' =>  $request->academic_year
+            'details' => $request->academic_year
         ]);
 
         // redirect back with message
@@ -679,7 +692,7 @@ class AdminController extends Controller
 
         ]);
 
-        
+
 
         return redirect()->route('academicsemesters.index')
             ->with('success', 'Semester Opened successfully.');
@@ -721,7 +734,7 @@ class AdminController extends Controller
         auditLog::create([
             'user_id' => Auth::id(),
             'action' => 'Add Semester',
-            'details' =>  $request->name
+            'details' => $request->name
         ]);
 
         // redirect back with message

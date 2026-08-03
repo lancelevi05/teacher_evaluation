@@ -47,7 +47,7 @@
                         <h1 id="welcomeHeading">Welcome back,
                             {{ Auth::user()->fname }}
                         </h1>
-                        <p id="welcomeText">Here's what's happening with your projects today.</p>
+                        <p id="welcomeText">Here's what's happening across the system.</p>
                     </div><button class="expand-button" id="expandBtn">⋮ Expand Details</button>
                     <div class="expand-panel" id="expandPanel">
                         <div class="expand-line">
@@ -66,7 +66,7 @@
                                 TOTAL STUDENTS
                             </div>
                             <div class="stat-value">
-                                {{ $totalcourses }}
+                                {{ $totalstudents }}
                             </div>
                             <div class="stat-change">
                                 <!-- ↑ 12% this month -->
@@ -74,13 +74,35 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">
-                                Users
+                                TOTAL TEACHERS
                             </div>
                             <div class="stat-value">
-                                1,842
+                                {{ $totalteachers }}
                             </div>
                             <div class="stat-change">
-                                ↑ 8% this week
+                                <!-- ↑ 8% this week -->
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                DEPARTMENT
+                            </div>
+                            <div class="stat-value">
+                                {{ $totaldepartments }}
+                            </div>
+                            <div class="stat-change">
+                                <!-- ↑ 8% this week -->
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                COURSES
+                            </div>
+                            <div class="stat-value">
+                                {{ $totalcourses }}
+                            </div>
+                            <div class="stat-change">
+                                <!-- ↑ 8% this week -->
                             </div>
                         </div>
                         <div class="stat-card">
@@ -107,24 +129,29 @@
                         </div>
                     </div>
                     <section class="section-card">
+
                         <h2>Recent Activity</h2>
-                        <div class="activity-item">
-                            <span class="activity-dot"></span>New user signup — Sarah M.
-                        </div>
-                        <div class="activity-item">
-                            <span class="activity-dot"></span>Project "Alpha" updated by team lead
-                        </div>
-                        <div class="activity-item">
-                            <span class="activity-dot"></span>Invoice #1042 paid — $1,200
-                        </div>
-                        <div class="activity-item">
-                            <span class="activity-dot"></span>Server migration completed successfully
-                        </div>
+                        @foreach($auditLogs as $log)
+                                            <div class="activity-item">
+                                                <div>
+                                                    <span class="activity-dot"></span>
+                                                    {{ $log->user
+                            ? trim($log->user->fname . ' ' . $log->user->lname)
+                            : 'Deleted user' }} -
+                                                    {{ $log->action }}
+                                                    {{ $log->details }}
+                                                </div>
+
+                                                <span class="activity-date">
+                                                    {{ $log->created_at->format('M d, Y h:i A') }}
+                                                </span>
+                                            </div>
+                        @endforeach
                     </section>
                 </main>
             </div>
         </div>
-        
+
         @include('AdminSide.z-footer')
     </div>
 
