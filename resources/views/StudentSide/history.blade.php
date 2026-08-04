@@ -244,29 +244,29 @@
         }
 
         .rating-excellent {
-            background-color: #22c55e;
-            /* green */
+            background: #d4edda;
+            color: #1e7e34;
         }
 
         .rating-good {
-            background-color: #84cc16;
-            /* lime */
+            background: #dbeafe;
+            color: #1d4ed8;
         }
 
         .rating-average {
-            background-color: #eab308;
-            /* yellow */
-            color: #1a1a1a;
+            background: #fff3cd;
+            color: #92700f;
         }
 
         .rating-poor {
-            background-color: #f97316;
-            /* orange */
+            background: #fdecea;
+            color: #a12622;
+          
         }
 
         .rating-bad {
-            background-color: #ef4444;
-            /* red */
+            background: #fdecea;
+            color: #a12622;
         }
     </style>
 </head>

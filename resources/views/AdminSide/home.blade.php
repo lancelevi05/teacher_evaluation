@@ -49,6 +49,43 @@
             font-size: 14px;
             color: #1a1a2e;
         }
+
+
+
+        .rating-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
+.performance-excellent {
+    background: #d4edda;
+    color: #1e7e34;
+}
+
+.performance-good {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.performance-average {
+    background: #fff3cd;
+    color: #92700f;
+}
+
+.performance-poor {
+    background: #fdecea;
+    color: #a12622;
+}
+
+.performance-nodata {
+    background: #eee;
+    color: #888;
+}
     </style>
 </head>
 
@@ -149,26 +186,52 @@
                                 <!-- ↑ 8% this week -->
                             </div>
                         </div>
+
+
                         <div class="stat-card">
                             <div class="stat-label">
-                                Projects
+                                TOTAL EVALUATIONS
                             </div>
                             <div class="stat-value">
-                                36
+                                {{ $totalEvaluations }}
                             </div>
                             <div class="stat-change">
-                                ↑ 3 new
+                                <!-- optional trend text -->
+                            </div>
+                        </div>
+                        <div class="stat-card">
+    <div class="stat-label">
+        AVERAGE RATING
+    </div>
+    <div class="stat-value">
+        <span class="rating-badge {{ $avgRatingClass }}">
+            {{ $avgRating ? number_format($avgRating, 2) : '—' }}
+        </span>
+    </div>
+    <div class="stat-change">
+        {{ $avgRatingLabel }}
+    </div>
+</div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                PENDING EVALUATIONS
+                            </div>
+                            <div class="stat-value">
+                                {{ $pendingEvaluations }}
+                            </div>
+                            <div class="stat-change">
+                                <!-- optional trend text -->
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">
-                                Tasks
+                                COMPLETED EVALUATIONS
                             </div>
                             <div class="stat-value">
-                                128
+                                {{ $completedEvaluations }}
                             </div>
                             <div class="stat-change">
-                                ↑ 24 completed
+                                <!-- optional trend text -->
                             </div>
                         </div>
                     </div>
@@ -205,7 +268,9 @@
                                             @foreach($topTeachers as $t)
                                                 <tr>
                                                     <td>{{ $t->name }}</td>
-                                                    <td>{{ number_format($t->avg_rating, 2) }}</td>
+                                                    <td>  <span class="rating-badge {{ $t->rating_class }}">
+                        {{ number_format($t->avg_rating, 2) }}
+                    </span></td>
                                                     <td>{{ $t->total }}</td>
                                                 </tr>
                                             @endforeach
