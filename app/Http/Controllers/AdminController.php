@@ -15,6 +15,7 @@ use App\Models\Subject;
 use App\Models\Question;
 use App\Models\QuestionCategory;
 use App\Models\Semester;
+use App\Models\Evaluation;
 
 
 use App\Models\AcademicYear;
@@ -47,30 +48,61 @@ class AdminController extends Controller
 
     }
 
-    public function home(Request $request)
-    {
-        $totalstudents = User::where('userType', 'Student')->count();
-        $totalteachers = User::where('userType', 'Teacher')->count();
-        $totaldepartments = Department::count();
-        $totalcourses = StrandCourse::count();
+   public function home(Request $request)
+{
+    $totalstudents    = User::where('userType', 'Student')->count();
+    $totalteachers    = User::where('userType', 'Teacher')->count();
+    $totaldepartments = Department::count();
+    $totalcourses     = StrandCourse::count();
 
-        $auditLogs = AuditLog::with('user')
-            ->latest()
-            ->limit(6)
-            ->get();
+    $auditLogs = AuditLog::with('user')->latest()->limit(6)->get();
 
+    // Monthly evaluations (last 6 months)
+    $monthly = Evaluation::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as c")
+        ->where('created_at', '>=', now()->subMonths(6))
+        ->groupBy('ym')
+        ->orderBy('ym')
+        ->get();
 
+    // Rating distribution
+    $ratingDist = Evaluation::selectRaw('ROUND(overall_rating) as r, COUNT(*) as c')
+        ->whereNotNull('overall_rating')
+        ->groupBy('r')
+        ->orderBy('r')
+        ->get();
 
+    // Top rated teachers
+    $topTeachers = Teacher::query()
+        ->join('evaluations', 'evaluations.teacher_id', '=', 'teachers.id')
+        ->join('users', 'users.id', '=', 'teachers.user_id')
+        ->selectRaw("CONCAT(users.fname, ' ', users.lname) as name, AVG(evaluations.overall_rating) as avg_rating, COUNT(evaluations.id) as total")
+        ->groupBy('teachers.id', 'users.fname', 'users.lname')
+        ->havingRaw('total > 0')
+        ->orderByDesc('avg_rating')
+        ->limit(5)
+        ->get();
 
-        return view('AdminSide.home', [
-            'user' => $request->user(),
-            'totalstudents' => $totalstudents,
-            'totalteachers' => $totalteachers,
-            'totaldepartments' => $totaldepartments,
-            'totalcourses' => $totalcourses,
-            'auditLogs' => $auditLogs
-        ]);
-    }
+    // Department comparison
+    $deptComparison = Department::query()
+        ->join('teachers', 'teachers.department_id', '=', 'departments.id')
+        ->join('evaluations', 'evaluations.teacher_id', '=', 'teachers.id')
+        ->selectRaw('departments.name as name, AVG(evaluations.overall_rating) as avg_rating')
+        ->groupBy('departments.id', 'departments.name')
+        ->get();
+
+    return view('AdminSide.home', [
+        'user'             => $request->user(),
+        'totalstudents'    => $totalstudents,
+        'totalteachers'    => $totalteachers,
+        'totaldepartments' => $totaldepartments,
+        'totalcourses'     => $totalcourses,
+        'auditLogs'        => $auditLogs,
+        'monthly'          => $monthly,
+        'ratingDist'       => $ratingDist,
+        'topTeachers'      => $topTeachers,
+        'deptComparison'   => $deptComparison,
+    ]);
+}
 
 
 

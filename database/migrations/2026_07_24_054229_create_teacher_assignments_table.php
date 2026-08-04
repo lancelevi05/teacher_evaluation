@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->foreignId('subject_id')
                 ->nullable()
                 ->constrained('subjects')
-                ->nullOnDelete()
+                ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
             $table->foreignId('semester_id')

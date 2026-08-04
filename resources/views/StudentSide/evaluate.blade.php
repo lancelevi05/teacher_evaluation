@@ -378,7 +378,7 @@
                                 @foreach ($evaluates as $evaluate)
                                     <div class="evaluation-card">
                                         <h3>{{ $evaluate->teacher->user->fname }} {{ $evaluate->teacher->user->lname }}</h3>
-                                        <p>{{ $evaluate->subject->code }} — {{ $evaluate->subject->name }}</p>
+                                        <p>{{ $evaluate->subject->code ?? 'NO SUBJ CODE'}} — {{ $evaluate->subject->name ?? 'NO SUBJECT' }}</p>
                                         <span>{{ $evaluate->semester->name }}
                                             {{ $evaluate->semester->academicyear->year_label }}</span>
                                         <a href="{{ route('student.evaluate', ['assignment_id' => $evaluate->id]) }}">
