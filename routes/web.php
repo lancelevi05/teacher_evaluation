@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/student/evaluate', [StudentController::class, 'storeEvaluation'])->name
     ('student.evaluate.store');
     Route::get('/student/history', [StudentController::class, 'studentHistory'])
-    ->name('student.history');
+        ->name('student.history');
 });
 
 // =====================================================
@@ -55,7 +56,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/home', [AdminController::class, 'home'])
         ->name('AdminSide.home');
 
-        Route::get('/admin/auditlogs', [AdminController::class, 'auditLOG'])
+    Route::get('/admin/auditlogs', [AdminController::class, 'auditLOG'])
         ->name('auditLogs.index');
 
 
@@ -194,7 +195,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         ->name('teacherassignment.destroy');
 
 
-        // Display reports teacher
+    // Display reports teacher
     Route::get('/admin/reports', [AdminController::class, 'teacherReport'])
         ->name('reports.index');
 
@@ -211,11 +212,23 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 // TEACHER ROUTES
 // =====================================================
 Route::middleware('auth')->group(function () {
-    Route::get('/teacher/home', function (Request $request) {
-        return view('TeacherSide.home', [
-            'user' => $request->user(),
-        ]);
-    })->name('TeacherSide.home');
+    // Route::get('/teacher/home', function (Request $request) {
+    //     return view('TeacherSide.home', [
+    //         'user' => $request->user(),
+    //     ]);
+    // })->name('TeacherSide.home');
+
+    Route::get('/teacher/home', [TeacherController::class, 'home'])
+        ->name('TeacherSide.home');
+
+    Route::get('/teacher/evaluateresult', [TeacherController::class, 'evalResult'])
+        ->name('evaluateresult.index');
+
+    Route::get('/teacher/comments', [TeacherController::class, 'studentComments'])
+        ->name('comments.index');
+
+    Route::get('/teacher/ai_suggestions', [TeacherController::class, 'AISuggestions'])
+        ->name('aisuggestions.index');
 });
 
 // =====================================================

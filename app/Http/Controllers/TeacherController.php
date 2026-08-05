@@ -2,9 +2,182 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Teacher;
+use App\Models\Evaluation;
+use App\Models\TeacherAssignment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class TeacherController extends Controller
 {
-    //
+    public function home()
+    {
+        $teacher = Teacher::where('user_id', Auth::id())->first();
+
+        if (!$teacher) {
+            return view('TeacherSide.home', [
+                'teacher' => null
+            ]);
+        }
+
+        // Overall Rating and Total Evaluations
+        $stats = Evaluation::where('teacher_id', $teacher->id)
+            ->selectRaw('AVG(overall_rating) as a, COUNT(*) as c')
+            ->first();
+
+        // Subjects Handled
+        $subjects = TeacherAssignment::where('teacher_id', $teacher->id)
+            ->distinct('subject_id')
+            ->count('subject_id');
+
+        // Rating Trend (Last 6 Months)
+        $trend = Evaluation::where('teacher_id', $teacher->id)
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->select(
+                DB::raw("DATE_FORMAT(created_at,'%Y-%m') as ym"),
+                DB::raw("AVG(overall_rating) as avg_rating")
+            )
+            ->groupBy('ym')
+            ->orderBy('ym')
+            ->get();
+
+        return view('TeacherSide.home', compact(
+            'teacher',
+            'stats',
+            'subjects',
+            'trend'
+        ));
+    }
+
+    public function evalResult()
+    {
+
+        $teacher = Teacher::where('user_id', Auth::id())->first();
+
+    if (!$teacher) {
+        return redirect()->route('teacher.dashboard');
+    }
+
+    // Overall statistics
+    $stats = Evaluation::where('teacher_id', $teacher->id)
+        ->selectRaw('AVG(overall_rating) as a, COUNT(*) as c')
+        ->first();
+
+    // Category Breakdown
+    $categories = DB::table('evaluation_answers as ea')
+        ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+        ->join('questions as q', 'ea.question_id', '=', 'q.id')
+        ->join('question_categories as qc', 'q.category_id', '=', 'qc.id')
+        ->where('e.teacher_id', $teacher->id)
+        ->whereNotNull('ea.rating')
+        ->select(
+            'qc.name as category',
+            DB::raw('AVG(ea.rating) as avg_rating'),
+            DB::raw('COUNT(ea.rating) as n')
+        )
+        ->groupBy('qc.id', 'qc.name')
+        ->get();
+
+    // Performance by Subject
+    $subjectRows = DB::table('evaluations as e')
+        ->join('subjects as sub', 'e.subject_id', '=', 'sub.id')
+        ->where('e.teacher_id', $teacher->id)
+        ->select(
+            'sub.name as subject_name',
+            'sub.code',
+            DB::raw('AVG(e.overall_rating) as avg_rating'),
+            DB::raw('COUNT(e.id) as n')
+        )
+        ->groupBy('sub.id', 'sub.name', 'sub.code')
+        ->get();
+
+   $averageRating = $stats->a;
+
+$starHtml = $this->renderStars($averageRating);
+
+$ratingLabel = $this->ratingLabel($averageRating);
+
+$badgeClass = $this->ratingBadgeClass($averageRating);
+
+foreach ($subjectRows as $subject) {
+    $subject->badgeClass = $this->ratingBadgeClass($subject->avg_rating);
+}
+
+return view('TeacherSide.evaluateresult', compact(
+    'teacher',
+    'stats',
+    'categories',
+    'subjectRows',
+    'starHtml',
+    'ratingLabel',
+    'badgeClass'
+));
+    }
+
+    public function studentComments()
+    {
+        return view('TeacherSide.comments');
+    }
+
+    public function AISuggestions()
+    {
+        return view('TeacherSide.ai_suggestions');
+    }
+
+
+    private function renderStars($rating)
+{
+    $rating = round($rating);
+
+    $html = '';
+
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= $rating) {
+            $html .= '<i class="fa-solid fa-star"></i>';
+        } else {
+            $html .= '<i class="fa-regular fa-star"></i>';
+        }
+    }
+
+    return $html;
+}
+
+private function ratingLabel($rating)
+{
+    if ($rating === null) {
+        return 'No Data';
+    }
+
+    if ($rating >= 4.5) {
+        return 'Excellent';
+    }
+
+    if ($rating >= 3.5) {
+        return 'Very Good';
+    }
+
+    if ($rating >= 2.5) {
+        return 'Good';
+    }
+
+    if ($rating >= 1.5) {
+        return 'Fair';
+    }
+
+    return 'Poor';
+}
+
+private function ratingBadgeClass($rating)
+ {
+        if ($rating === null)
+            return 'performance-nodata';
+        if ($rating >= 4.5)
+            return 'performance-excellent';
+        if ($rating >= 3.5)
+            return 'performance-good';
+        if ($rating >= 2.5)
+            return 'performance-average';
+        return 'performance-poor';
+    }
 }

@@ -17,19 +17,19 @@
 
 
 
-        const defaultConfig = {
-            site_title: 'Dashboard',
-            welcome_heading: 'Welcome back, John',
-            welcome_text: "Here's what's happening with your projects today.",
-            footer_text: '© 2025 Dashboard — Built with care.',
-            background_color: '#edf2f7',
-            surface_color: '#ffffff',
-            text_color: '#1e3a5f',
-            primary_action_color: '#2c6fba',
-            secondary_action_color: '#7aa3cc',
-            font_family: 'DM Sans',
-            font_size: 14
-        };
+        // const defaultConfig = {
+        //     site_title: 'Dashboard',
+        //     welcome_heading: 'Welcome back, John',
+        //     welcome_text: "Here's what's happening with your projects today.",
+        //     footer_text: '© 2025 Dashboard — Built with care.',
+        //     background_color: '#edf2f7',
+        //     surface_color: '#ffffff',
+        //     text_color: '#1e3a5f',
+        //     primary_action_color: '#2c6fba',
+        //     secondary_action_color: '#7aa3cc',
+        //     font_family: 'DM Sans',
+        //     font_size: 14
+        // };
 
         function applyConfig(config) {
             const c = key => config[key] || defaultConfig[key];
@@ -123,14 +123,6 @@
             });
         }
 
-        // Expand button toggle
-        const expandBtn = document.getElementById('expandBtn');
-        const expandPanel = document.getElementById('expandPanel');
-        if (expandBtn && expandPanel) {
-            expandBtn.addEventListener('click', () => {
-                expandPanel.classList.toggle('open');
-                expandBtn.textContent = expandPanel.classList.contains('open') ? '⋯ Collapse Details' : '⋮ Expand Details';
-            });
-        }
+       
     </script>
     <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9e474077b3f70707',t:'MTc3NDg3NTE1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>

@@ -189,7 +189,8 @@
                         <p id="welcomeText">Your voice helps improve teaching quality. Thank you for participating.
 
                         </p>
-                    </div><button class="expand-button" id="expandBtn">⋮ Expand Details</button>
+                    </div>
+                    <button class="expand-button" id="expandBtn">⋮ Expand Details</button>
                     <div class="expand-panel" id="expandPanel">
                         <div class="expand-line">
                             📊 Dashboard updated 2 hours ago
