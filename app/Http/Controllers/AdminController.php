@@ -105,20 +105,31 @@ class AdminController extends Controller
 
 
         $avgRatingClass = $this->ratingClass($avgRating);
-$avgRatingLabel = $this->ratingLabel($avgRating);
+        $avgRatingLabel = $this->ratingLabel($avgRating);
 
-$topTeachers = $topTeachers->map(function ($t) {
-    $t->rating_class = $this->ratingClass($t->avg_rating);
-    $t->rating_label = $this->ratingLabel($t->avg_rating);
-    return $t;
-});
+        $topTeachers = $topTeachers->map(function ($t) {
+            $t->rating_class = $this->ratingClass($t->avg_rating);
+            $t->rating_label = $this->ratingLabel($t->avg_rating);
+            return $t;
+        });
 
-return view('AdminSide.home', compact(
-    'totalstudents', 'totalteachers', 'totaldepartments', 'totalcourses',
-    'totalEvaluations', 'avgRating', 'pendingEvaluations', 'completedEvaluations',
-    'topTeachers', 'monthly', 'ratingDist', 'deptComparison', 'auditLogs',
-    'avgRatingClass', 'avgRatingLabel' // <-- new
-));
+        return view('AdminSide.home', compact(
+            'totalstudents',
+            'totalteachers',
+            'totaldepartments',
+            'totalcourses',
+            'totalEvaluations',
+            'avgRating',
+            'pendingEvaluations',
+            'completedEvaluations',
+            'topTeachers',
+            'monthly',
+            'ratingDist',
+            'deptComparison',
+            'auditLogs',
+            'avgRatingClass',
+            'avgRatingLabel' // <-- new
+        ));
     }
 
 

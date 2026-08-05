@@ -19,6 +19,64 @@ use Illuminate\Support\Facades\DB;
 class StudentController extends Controller
 {
     //
+
+
+    public function home()
+    {
+        $userId = Auth::id();
+
+        // Use 'students' if that's a real separate table, or switch to 'student_infos' — see note below
+        $student = DB::table('student_infos')->where('user_id', $userId)->first();
+
+        // if (!$student) {
+        //     return view('StudentSide.dashboard-missing');
+        // }
+
+        $pending = DB::table('teacher_assignments as ta')
+            ->join('semesters as sem', 'ta.semester_id', '=', 'sem.id')
+            ->where('sem.status', 'active')
+            ->whereNotExists(function ($query) use ($student) {
+                $query->select(DB::raw(1))
+                    ->from('evaluations as e')
+                    ->whereColumn('e.teacher_id', 'ta.teacher_id')
+                    ->whereColumn('e.subject_id', 'ta.subject_id')
+                    ->whereColumn('e.semester_id', 'ta.semester_id')
+                    ->where('e.student_id', $student->id);
+            })
+            ->count();
+
+        $completed = DB::table('evaluations')
+            ->where('student_id', $student->id)
+            ->count();
+
+        $recent = DB::table('evaluations as e')
+            ->join('teachers as t', 'e.teacher_id', '=', 't.id')
+            ->join('users as u', 't.user_id', '=', 'u.id')
+            ->join('subjects as sub', 'e.subject_id', '=', 'sub.id')
+            ->where('e.student_id', $student->id)
+            ->orderByDesc('e.created_at')           // was submitted_at
+            ->limit(5)
+            ->select(
+                'e.*',
+                DB::raw("CONCAT(u.fname, ' ', u.lname) as teacher_name"), // was u.name
+                'sub.name as subject_name'
+            )
+            ->get();
+
+            // Attach label + css class per row so the blade stays dumb
+        $recent = $recent->map(function ($r) {
+            $r->rating_label = $this->ratingLabel($r->overall_rating);
+            $r->rating_class = $this->ratingClass($r->overall_rating);
+            return $r;
+        });
+
+
+          
+
+        return view('StudentSide.home', compact('pending', 'completed', 'recent'));
+    }
+
+
     public function infosettings()
     {
         $studentInfo = student_info::where('usn', Auth::user()->usn)->first();
@@ -210,5 +268,35 @@ class StudentController extends Controller
         return view('StudentSide.history', [
             'evaluations' => $evaluations,
         ]);
+    }
+
+    private function ratingLabel($rating)
+    {
+        if ($rating === null)
+            return 'No Data';
+        if ($rating >= 4.5)
+            return 'Excellent';
+        if ($rating >= 3.5)
+            return 'Good';
+        if ($rating >= 2.5)
+            return 'Average';
+        return 'Poor';
+    }
+
+    /**
+     * Maps an average rating to the matching CSS class
+     * from the .performance-* styles in the Blade view.
+     */
+    private function ratingClass($rating)
+    {
+        if ($rating === null)
+            return 'performance-nodata';
+        if ($rating >= 4.5)
+            return 'performance-excellent';
+        if ($rating >= 3.5)
+            return 'performance-good';
+        if ($rating >= 2.5)
+            return 'performance-average';
+        return 'performance-poor';
     }
 }

@@ -53,39 +53,39 @@
 
 
         .rating-badge {
-    display: inline-block;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: center;
-    letter-spacing: 0.3px;
-}
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
 
-.performance-excellent {
-    background: #d4edda;
-    color: #1e7e34;
-}
+        .performance-excellent {
+            background: #d4edda;
+            color: #1e7e34;
+        }
 
-.performance-good {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
+        .performance-good {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
 
-.performance-average {
-    background: #fff3cd;
-    color: #92700f;
-}
+        .performance-average {
+            background: #fff3cd;
+            color: #92700f;
+        }
 
-.performance-poor {
-    background: #fdecea;
-    color: #a12622;
-}
+        .performance-poor {
+            background: #fdecea;
+            color: #a12622;
+        }
 
-.performance-nodata {
-    background: #eee;
-    color: #888;
-}
+        .performance-nodata {
+            background: #eee;
+            color: #888;
+        }
     </style>
 </head>
 
@@ -200,18 +200,18 @@
                             </div>
                         </div>
                         <div class="stat-card">
-    <div class="stat-label">
-        AVERAGE RATING
-    </div>
-    <div class="stat-value">
-        <span class="rating-badge {{ $avgRatingClass }}">
-            {{ $avgRating ? number_format($avgRating, 2) : '—' }}
-        </span>
-    </div>
-    <div class="stat-change">
-        {{ $avgRatingLabel }}
-    </div>
-</div>
+                            <div class="stat-label">
+                                AVERAGE RATING
+                            </div>
+                            <div class="stat-value">
+                                <span class="rating-badge {{ $avgRatingClass }}">
+                                    {{ $avgRating ? number_format($avgRating, 2) : '—' }}
+                                </span>
+                            </div>
+                            <div class="stat-change">
+                                {{ $avgRatingLabel }}
+                            </div>
+                        </div>
                         <div class="stat-card">
                             <div class="stat-label">
                                 PENDING EVALUATIONS
@@ -268,9 +268,9 @@
                                             @foreach($topTeachers as $t)
                                                 <tr>
                                                     <td>{{ $t->name }}</td>
-                                                    <td>  <span class="rating-badge {{ $t->rating_class }}">
-                        {{ number_format($t->avg_rating, 2) }}
-                    </span></td>
+                                                    <td> <span class="rating-badge {{ $t->rating_class }}">
+                                                            {{ number_format($t->avg_rating, 2) }}
+                                                        </span></td>
                                                     <td>{{ $t->total }}</td>
                                                 </tr>
                                             @endforeach
@@ -362,7 +362,7 @@
                 datasets: [{
                     label: 'Avg Rating',
                     data: deptData,
-                    backgroundColor: '#0EA5A4',
+                    backgroundColor: ['#14caca', '#c4ca14', '#23ca14', '#14caca'],
                     borderRadius: 6
                 }]
             },

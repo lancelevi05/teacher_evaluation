@@ -17,19 +17,19 @@
 
 
 
-        const defaultConfig = {
-            site_title: 'Dashboard',
-            welcome_heading: 'Welcome back, John',
-            welcome_text: "Here's what's happening with your projects today.",
-            footer_text: '© 2025 Dashboard — Built with care.',
-            background_color: '#edf2f7',
-            surface_color: '#ffffff',
-            text_color: '#1e3a5f',
-            primary_action_color: '#2c6fba',
-            secondary_action_color: '#7aa3cc',
-            font_family: 'DM Sans',
-            font_size: 14
-        };
+        // const defaultConfig = {
+        //     site_title: 'Dashboard',
+        //     welcome_heading: 'Welcome back, John',
+        //     welcome_text: "Here's what's happening with your projects today.",
+        //     footer_text: '© 2025 Dashboard — Built with care.',
+        //     background_color: '#edf2f7',
+        //     surface_color: '#ffffff',
+        //     text_color: '#1e3a5f',
+        //     primary_action_color: '#2c6fba',
+        //     secondary_action_color: '#7aa3cc',
+        //     font_family: 'DM Sans',
+        //     font_size: 14
+        // };
 
         function applyConfig(config) {
             const c = key => config[key] || defaultConfig[key];

@@ -14,11 +14,14 @@ Route::get('/', function () {
 // STUDENT ROUTES
 // =====================================================
 Route::middleware('auth')->group(function () {
-    Route::get('/home', function (Request $request) {
-        return view('StudentSide.home', [
-            'user' => $request->user(),
-        ]);
-    })->name('StudentSide.home');
+    // Route::get('/home', function (Request $request) {
+    //     return view('StudentSide.home', [
+    //         'user' => $request->user(),
+    //     ]);
+    // })->name('StudentSide.home');
+
+    Route::get('/student/home', [StudentController::class, 'home'])
+        ->name('StudentSide.home');
 
     Route::get('/infosettings', [StudentController::class, 'infosettings'])
         ->name('infosettings');
