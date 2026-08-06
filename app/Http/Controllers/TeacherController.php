@@ -187,9 +187,43 @@ public function __construct(
         return view('TeacherSide.comments');
     }
 
-    public function AISuggestions()
+    public function AISuggestions(PerformanceAnalysisService $analysisService)
     {
-        return view('TeacherSide.ai_suggestions');
+
+    $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
+
+    if (!$teacher) {
+        return redirect()->route('teacher.dashboard');
+    }
+
+    $categoryAverages = DB::table('evaluation_answers as ea')
+        ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+        ->join('questions as q', 'ea.question_id', '=', 'q.id')
+        ->join('question_categories as qc', 'q.category_id', '=', 'qc.id')
+        ->where('e.teacher_id', $teacher->id)
+        ->whereNotNull('ea.rating')
+        ->select('qc.name as category', DB::raw('AVG(ea.rating) as avg_rating'))
+        ->groupBy('qc.id', 'qc.name')
+        ->get()
+        ->mapWithKeys(fn ($row) => [$row->category => round($row->avg_rating, 2)])
+        ->toArray();
+
+    $comments = DB::table('evaluation_answers as ea')
+        ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+        ->join('questions as q', 'ea.question_id', '=', 'q.id')
+        ->where('e.teacher_id', $teacher->id)
+        ->where('q.type', 'text')
+        ->whereNotNull('ea.answer_text')
+        ->where('ea.answer_text', '!=', '')
+        ->pluck('ea.answer_text')
+        ->toArray();
+
+    $summary = (!empty($categoryAverages) || !empty($comments))
+        ? $analysisService->buildPerformanceSummary($categoryAverages, $comments)
+        : null;
+
+
+        return view('TeacherSide.ai_suggestions', compact('summary'));
     }
 
 

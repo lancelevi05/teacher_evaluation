@@ -58,7 +58,8 @@
     <div class="header">
         <h1>Teacher Performance Report</h1>
         <p>
-            <strong>{{ $teacher->user->fname }}  {{ $teacher->user->lname }}</strong> · {{ $teacher->user->email }}<br>
+            <strong>{{ strtoupper($teacher->user->fname) }}
+                {{ strtoupper($teacher->user->lname) }}</strong> · {{ $teacher->user->email }}<br>
             Generated on {{ now()->format('F j, Y') }}
         </p>
     </div>
