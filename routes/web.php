@@ -229,6 +229,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/teacher/ai_suggestions', [TeacherController::class, 'AISuggestions'])
         ->name('aisuggestions.index');
+
+
+        Route::get('/teacher/evaluation-result/print', [TeacherController::class, 'printReport'])
+    ->middleware(['auth', 'role:Teacher'])
+    ->name('teacher.evalresult.print');
 });
 
 // =====================================================

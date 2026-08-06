@@ -30,9 +30,10 @@
             }
 
         }
-        .panel{
-            background-color:white;
-            padding:34px;
+
+        .panel {
+            background-color: white;
+            padding: 34px;
             border-radius: 10px;
         }
 
@@ -89,6 +90,14 @@
             background: #eee;
             color: #888;
         }
+
+
+        .rating-score {
+    font-size: 3rem;      /* Bootstrap's display-5 is ~3rem / 48px */
+    font-weight: 700;     /* fw-bold */
+    line-height: 1.2;
+    color: #4338CA;       /* matches the --brand blue used in your chart bars */
+}
     </style>
 
     @include('StudentSide.css')
@@ -146,7 +155,7 @@
                 {{-- Content --}}
                 <main class="content">
 
-                   <div class="section-header01">
+                    <div class="section-header01">
 
                         <div class="section-title01">
                             <h2>Evaluation History</h2>
@@ -161,7 +170,7 @@
 
                         <div class="panel text-center">
 
-                            <div class="display-5 fw-bold text-brand">
+                            <div class="rating-score">
                                 {{ $stats->a ? number_format($stats->a, 2) : '—' }}
                             </div>
 
@@ -169,7 +178,7 @@
                                 {!! $starHtml !!}
                             </div>
 
-                            <span class="badge bg-{{ $badgeClass }} mt-2">
+                            <span class="rating-badge {{ $badgeClass }} mt-2">
                                 {{ $ratingLabel }}
                             </span>
 
@@ -272,7 +281,7 @@
 
                     <div class="text-end mt-3">
 
-                        <a href="" class="btn btn-outline-primary" target="_blank">
+                        <a href="{{ route('teacher.evalresult.print') }}" class="btn btn-outline-primary" target="_blank">
 
                             <i class="fa-solid fa-print me-2"></i>
 
