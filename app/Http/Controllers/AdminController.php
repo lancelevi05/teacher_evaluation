@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\auditLog;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\PerformanceAnalysisService;
 
 use App\Models\StrandCourse;
 use App\Models\Department;
@@ -25,6 +26,10 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function __construct(
+        protected PerformanceAnalysisService $analysis
+    ) {}
+
     public function index()
     {
 
@@ -48,7 +53,7 @@ class AdminController extends Controller
 
     }
 
-    public function home(Request $request)
+    public function home(PerformanceAnalysisService $analysis)
     {
         $totalstudents = User::where('userType', 'Student')->count();
         $totalteachers = User::where('userType', 'Teacher')->count();
@@ -104,12 +109,12 @@ class AdminController extends Controller
 
 
 
-        $avgRatingClass = $this->ratingClass($avgRating);
-        $avgRatingLabel = $this->ratingLabel($avgRating);
+        $avgRatingClass = $this->analysis->ratingBadgeClass($avgRating);
+        $avgRatingLabel = $this->analysis->ratingLabel($avgRating);
 
         $topTeachers = $topTeachers->map(function ($t) {
-            $t->rating_class = $this->ratingClass($t->avg_rating);
-            $t->rating_label = $this->ratingLabel($t->avg_rating);
+            $t->rating_class = $this->analysis->ratingBadgeClass($t->avg_rating);
+            $t->rating_label = $this->analysis->ratingLabel($t->avg_rating);
             return $t;
         });
 
@@ -978,8 +983,8 @@ class AdminController extends Controller
                 ->orderByDesc('rating')
                 ->get()
                 ->map(function ($row) {
-                    $row->perf_label = $this->ratingLabel($row->rating);
-                    $row->perf_class = $this->ratingClass($row->rating);
+                    $row->perf_label = $this->analysis->ratingLabel($row->rating);
+                    $row->perf_class = $this->analysis->ratingBadgeClass($row->rating);
                     return $row;
                 });
 
@@ -998,8 +1003,8 @@ class AdminController extends Controller
                 ->orderByDesc('rating')
                 ->get()
                 ->map(function ($row) {
-                    $row->perf_label = $this->ratingLabel($row->rating);
-                    $row->perf_class = $this->ratingClass($row->rating);
+                    $row->perf_label = $this->analysis->ratingLabel($row->rating);
+                    $row->perf_class = $this->analysis->ratingBadgeClass($row->rating);
                     return $row;
                 });
 
@@ -1031,38 +1036,68 @@ class AdminController extends Controller
         ));
     }
 
-    /**
-     * Maps an average rating to a human label.
-     * Adjust thresholds to match your rating scale.
-     */
-    private function ratingLabel($rating)
-    {
-        if ($rating === null)
-            return 'No Data';
-        if ($rating >= 4.5)
-            return 'Excellent';
-        if ($rating >= 3.5)
-            return 'Good';
-        if ($rating >= 2.5)
-            return 'Average';
-        return 'Poor';
-    }
+    public function analytics(Request $request, PerformanceAnalysisService $analysis){
+       
+        $teachers = DB::table('teachers as t')
+            ->join('users as u', 't.user_id', '=', 'u.id')
+            ->orderBy('u.fname')
+            ->select('t.id', 'u.fname', 'u.lname')
+            ->get();
 
-    /**
-     * Maps an average rating to the matching CSS class
-     * from the .performance-* styles in the Blade view.
-     */
-    private function ratingClass($rating)
-    {
-        if ($rating === null)
-            return 'performance-nodata';
-        if ($rating >= 4.5)
-            return 'performance-excellent';
-        if ($rating >= 3.5)
-            return 'performance-good';
-        if ($rating >= 2.5)
-            return 'performance-average';
-        return 'performance-poor';
+        $teacherId = $request->query('teacher_id', '');
+        $selectedTeacher = null;
+        $summary = null;
+        $categoryAverages = [];
+
+        if ($teacherId) {
+            $selectedTeacher = DB::table('teachers as t')
+                ->join('users as u', 't.user_id', '=', 'u.id')
+                ->where('t.id', $teacherId)
+                ->select('t.*', 'u.fname','u.lname')
+                ->first();
+
+            if ($selectedTeacher) {
+                // Category averages
+                $catRows = DB::table('evaluation_answers as ea')
+                    ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+                    ->join('questions as q', 'ea.question_id', '=', 'q.id')
+                    ->join('question_categories as qc', 'q.category_id', '=', 'qc.id')
+                    ->where('e.teacher_id', $teacherId)
+                    ->whereNotNull('ea.rating')
+                    ->groupBy('qc.id', 'qc.name')
+                    ->select('qc.name as category', DB::raw('AVG(ea.rating) as avg_rating'))
+                    ->get();
+
+                foreach ($catRows as $r) {
+                    $categoryAverages[$r->category] = round($r->avg_rating, 2);
+                }
+
+                // Comments
+                $comments = DB::table('evaluation_answers as ea')
+                    ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+                    ->join('questions as q', 'ea.question_id', '=', 'q.id')
+                    ->where('e.teacher_id', $teacherId)
+                    ->where('q.type', 'text')
+                    ->whereNotNull('ea.answer_text')
+                    ->where('ea.answer_text', '!=', '')
+                    ->pluck('ea.answer_text')
+                    ->toArray();
+
+                if (!empty($categoryAverages) || !empty($comments)) {
+                    $summary = $analysis->buildPerformanceSummary($categoryAverages, $comments);
+                }
+            }
+        }
+
+        return view('AdminSide.analytics', compact(
+            'teachers',
+            'teacherId',
+            'selectedTeacher',
+            'summary',
+            'categoryAverages',
+            'analysis'
+        ));
+    
     }
 
 }

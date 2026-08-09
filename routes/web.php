@@ -194,6 +194,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::delete('/admin/teacherassignment/{id}', [AdminController::class, 'destroyteacherassignment'])
         ->name('teacherassignment.destroy');
 
+        // Display analytics
+    Route::get('/admin/analytics', [AdminController::class, 'Analytics'])
+        ->name('analytics.index');
+
 
     // Display reports teacher
     Route::get('/admin/reports', [AdminController::class, 'teacherReport'])

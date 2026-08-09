@@ -158,8 +158,8 @@
                     <div class="section-header01">
 
                         <div class="section-title01">
-                            <h2>Evaluation History</h2>
-                            <p>All evaluations you have submitted.</p>
+                            <h2>My Evaluation</h2>
+                            <p>Overview of how students have rated you.</p>
                         </div>
 
 

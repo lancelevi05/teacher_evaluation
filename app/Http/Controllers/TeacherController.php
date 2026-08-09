@@ -182,9 +182,35 @@ public function __construct(
  */
 
 
-    public function studentComments()
+    public function studentComments(PerformanceAnalysisService $analysis)
     {
-        return view('TeacherSide.comments');
+        $teacher = DB::table('teachers')
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$teacher) {
+            return redirect()->route('teacher.dashboard');
+        }
+
+        $comments = DB::table('evaluation_answers as ea')
+            ->join('evaluations as e', 'ea.evaluation_id', '=', 'e.id')
+            ->join('questions as q', 'ea.question_id', '=', 'q.id')
+            ->join('subjects as sub', 'e.subject_id', '=', 'sub.id')
+            ->where('e.teacher_id', $teacher->id)
+            ->where('q.type', 'text')
+            ->whereNotNull('ea.answer_text')
+            ->where('ea.answer_text', '!=', '')
+            ->select('ea.answer_text', 'e.created_at', 'sub.name as subject_name')
+            ->orderByDesc('e.created_at')
+            ->get()
+            ->map(function ($c) use ($analysis) {
+                $result = $analysis->analyzeComment($c->answer_text);
+                $c->sentiment = $result['sentiment'];
+                $c->keywords = $result['keywords'];
+                $c->confidence = $result['confidence'];
+                return $c;
+            });
+        return view('TeacherSide.comments', compact('comments'));
     }
 
     public function AISuggestions(PerformanceAnalysisService $analysisService)

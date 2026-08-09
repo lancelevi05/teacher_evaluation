@@ -20,7 +20,7 @@
         }
 
         /* Header */
-        .section-header01 {
+        /* .section-header01 {
             margin-bottom: 20px;
         }
 
@@ -34,7 +34,7 @@
         .section-header01 p {
             color: #7b7b90;
             font-size: 16px;
-        }
+        } */
 
         /* Cards */
         .panel {
@@ -173,7 +173,7 @@
 
 /* Header */
 
-.section-header01{
+/* .section-header01{
     margin-bottom:25px;
 }
 
@@ -186,7 +186,7 @@
 
 .section-header01 p{
     color:#80849a;
-}
+} */
 
 /* ===========================
    GRID
