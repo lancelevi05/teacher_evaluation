@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign In</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #217ab6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .card {
+    display: flex;
+    width: 810px;
+    max-width: 94vw;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  }
+
+  /* Left panel: solid blue, logo centered */
+  .left {
+    flex: 0 0 340px;
+    background: #1a48c5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-wrap img {
+    max-width: 260px;
+    max-height: 260px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .logo-fallback {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  .brand-title {
+    margin: 4px 0 0;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .brand-desc {
+    margin: 0;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 260px;
+  }
+
+  /* Right panel: the form */
+  .right {
+    flex: 1;
+    padding: 44px 48px;
+  }
+
+  .right h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    color: #1e1b3a;
+  }
+
+  .right p.sub {
+    margin: 0 0 28px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    color: #1e1b3a;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #d8dae0;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 18px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #374151;
+  }
+
+  a {
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  a:hover { text-decoration: underline; }
+
+  button.signin {
+    width: 100%;
+    padding: 13px;
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button.signin:hover { background: #4029b0; }
+
+  .signup {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  .demo {
+    margin-top: 24px;
+    background: #eef0fb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #374151;
+  }
+  .demo strong { display: block; margin-bottom: 4px; color: #1e1b3a; }
+
+  @media (max-width: 640px) {
+    .card { flex-direction: column; width: 94vw; }
+    .left { flex: none; padding: 30px; }
+    .right { padding: 32px 28px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="left">
+      <div class="logo-wrap">
+        <!-- Replace src with your actual logo file -->
+        <img src="images/aclc-Photoroom.png" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="logo-fallback" style="display:none;">LOGO</div>
+        <h2 class="brand-title">Teacher Evaluation &amp; Analytics System</h2>
+        <p class="brand-desc">A simple, fast way for students to evaluate teachers — with automatic AI-powered insights for administrators and department heads.</p>
+      </div>
+    </div>
+
+    <div class="right">
+      <h1>Welcome back</h1>
+      <p class="sub">Sign in to continue to your dashboard.</p>
+
+      <form method="POST" action="{{ route('login') }}">
+        @csrf
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="you@school.edu" name="email" value="{{ old('email') }}">
+        
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" name="password">
+
+        <div class="row">
+          <label class="remember"><input type="checkbox" style="margin:0;"> Remember me</label>
+
+          
+          <a href="{{ route('password.request') }}">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="signin">Sign In</button>
+      </form>
+
+      <div class="signup">New student? <a href="#">Create an account</a></div>
+<!-- 
+      <div class="demo">
+        <strong>Demo account:</strong>
+        admin@school.edu / Admin123!
+      </div> -->
+    </div>
+  </div>
+
+</body>
+</html>

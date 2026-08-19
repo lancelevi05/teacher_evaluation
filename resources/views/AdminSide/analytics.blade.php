@@ -168,6 +168,47 @@
     .content #radarChart {
         max-height: 260px;
     }
+
+    .rating-badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        .performance-excellent {
+            background: #d4edda;
+            color: #1e7e34;
+        }
+
+        .performance-good {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .performance-average {
+            background: #fff3cd;
+            color: #92700f;
+        }
+
+        .performance-poor {
+            background: #fdecea;
+            color: #a12622;
+        }
+
+        .performance-nodata {
+            background: #eee;
+            color: #888;
+        }
+        .rating-score {
+    font-size: 3rem;      /* Bootstrap's display-5 is ~3rem / 48px */
+    font-weight: 700;     /* fw-bold */
+    line-height: 1.2;
+    color: #4338CA;       /* matches the --brand blue used in your chart bars */
+}
 </style>
 
 </head>
@@ -208,10 +249,12 @@
                 </header>
                 <main class="content">
 
-                    <div class="mb-4">
-                        <h4 class="fw-bold mb-0">AI Analytics</h4>
-                        <p class="subtle mb-0">Automatic sentiment analysis, keyword extraction, and performance
+                   <div class="section-header01">
+                        <div class="section-title01">
+                            <h2>Analytics</h2>
+                            <p>Automatic sentiment analysis, keyword extraction, and performance
                             recommendations.</p>
+                        </div>
                     </div>
 
                     <div class="panel mb-4">
@@ -222,7 +265,7 @@
                                     <option value="">-- Choose a teacher --</option>
                                     @foreach ($teachers as $t)
                                         <option value="{{ $t->id }}" {{ (string) $teacherId === (string) $t->id ? 'selected' : '' }}>
-                                            {{ $t->fname }}
+                                            {{ $t->fname }}  {{ $t->lname }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -238,13 +281,13 @@
                                         style="width:60px;height:60px;font-size:1.4rem;background:var(--brand-light);color:var(--brand)">
                                         {{ strtoupper(substr($selectedTeacher->fname, 0, 1)) }}
                                     </div>
-                                    <h5 class="fw-bold mb-0">{{ $selectedTeacher->fname }}</h5>
+                                    <h5 class="fw-bold mb-0">{{ $selectedTeacher->fname }} {{ $selectedTeacher->lname }}</h5>
                                     <div class="my-3">
-                                        <div class="display-6 fw-bold text-brand">
+                                        <div class="rating-score">
                                             {{ $summary['overall_rating'] ? number_format($summary['overall_rating'], 2) : '—' }}
                                         </div>
                                         <span
-                                            class="badge bg-{{ $analysis->ratingBadgeClass($summary['overall_rating']) }}">
+                                            class="rating-badge {{ $analysis->ratingBadgeClass($summary['overall_rating']) }}">
                                             {{ $summary['overall_label'] }}
                                         </span>
                                     </div>

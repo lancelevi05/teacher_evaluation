@@ -93,11 +93,14 @@
 
 
         .rating-score {
-    font-size: 3rem;      /* Bootstrap's display-5 is ~3rem / 48px */
-    font-weight: 700;     /* fw-bold */
-    line-height: 1.2;
-    color: #4338CA;       /* matches the --brand blue used in your chart bars */
-}
+            font-size: 3rem;
+            /* Bootstrap's display-5 is ~3rem / 48px */
+            font-weight: 700;
+            /* fw-bold */
+            line-height: 1.2;
+            color: #4338CA;
+            /* matches the --brand blue used in your chart bars */
+        }
     </style>
 
     @include('StudentSide.css')
@@ -281,7 +284,8 @@
 
                     <div class="text-end mt-3">
 
-                        <a href="{{ route('teacher.evalresult.print') }}" class="btn btn-outline-primary" target="_blank">
+                        <a href="{{ route('teacher.evalresult.print') }}" class="btn btn-outline-primary"
+                            target="_blank">
 
                             <i class="fa-solid fa-print me-2"></i>
 
