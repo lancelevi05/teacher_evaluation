@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Sign In</title>
+  <title>Forgot Password</title>
   <style>
     * {
       box-sizing: border-box;
@@ -102,6 +102,7 @@
       margin: 0 0 28px;
       color: #6b7280;
       font-size: 14px;
+      line-height: 1.5;
     }
 
     label {
@@ -112,8 +113,7 @@
       font-weight: 500;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    input[type="email"] {
       width: 100%;
       padding: 11px 14px;
       border: 1px solid #d8dae0;
@@ -124,34 +124,9 @@
       transition: border-color 0.15s;
     }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
+    input[type="email"]:focus {
       border-color: #4f46e5;
       box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
-    .remember {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #374151;
-    }
-
-    a {
-      color: #1d4ed8;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
     }
 
     button.signin {
@@ -171,26 +146,55 @@
       background: #4029b0;
     }
 
-    .signup {
+    .back-link {
       text-align: center;
       margin-top: 16px;
       font-size: 14px;
       color: #6b7280;
     }
 
-    .demo {
-      margin-top: 24px;
-      background: #eef0fb;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 13px;
-      color: #374151;
+    a {
+      color: #1d4ed8;
+      text-decoration: none;
     }
 
-    .demo strong {
-      display: block;
-      margin-bottom: 4px;
-      color: #1e1b3a;
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      background: #edd9d4;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .status-msg {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #eef0fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .icon-wrap svg {
+      width: 24px;
+      height: 24px;
+      stroke: #1d4ed8;
     }
 
     @media (max-width: 640px) {
@@ -208,14 +212,6 @@
         padding: 32px 28px;
       }
     }
-
-    .error-msg {
-      background: #edd9d4;
-      color: #721c24;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-    }
   </style>
 </head>
 
@@ -230,51 +226,43 @@
         <div class="logo-fallback" style="display:none;">LOGO</div>
         <h2 class="brand-title">Teacher Evaluation &amp; Analytics System</h2>
         <p class="brand-desc">
-         
+          Don't worry — it happens. Enter your email and we'll send you a link to get back into your account.
         </p>
       </div>
     </div>
 
     <div class="right">
-      <h1>Welcome back</h1>
-      <p class="sub">Sign in to continue to your dashboard.</p>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
 
-      <form method="POST" action="{{ route('login') }}">
-        @csrf
-        <label for="email">Email address</label>
-        <input type="email" id="email" placeholder="you@school.edu" name="email" value="{{ old('email') }}">
+      <h1>Forgot your password?</h1>
+      <p class="sub">No problem. Enter the email address associated with your account and we'll email you a link to reset your password.</p>
 
-
-
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••" name="password">
-
-        <div class="row">
-          <label class="remember"><input type="checkbox" style="margin:0;"> Remember me</label>
-
-
-          <a href="{{ route('password.request') }}">Forgot password?</a>
+      @if (session('status'))
+        <div class="status-msg">
+          {{ session('status') }}
         </div>
+      @endif
 
-        <button type="submit" class="signin">Sign In</button>
-      </form>
-
-      <div class="signup">New student? <a href="#">Create an account</a></div>
       @error('email')
         <div class="error-msg">
-
           {{ $message }}
-
         </div>
       @enderror
 
+      <form method="POST" action="{{ route('password.email') }}">
+        @csrf
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="you@school.edu" name="email" value="{{ old('email') }}" required autofocus>
 
+        <button type="submit" class="signin">Send Password Reset Link</button>
+      </form>
 
-      <!-- 
-      <div class="demo">
-        <strong>Demo account:</strong>
-        admin@school.edu / Admin123!
-      </div> -->
+      <div class="back-link">Remembered your password? <a href="{{ route('login') }}">Back to Sign In</a></div>
     </div>
   </div>
 
