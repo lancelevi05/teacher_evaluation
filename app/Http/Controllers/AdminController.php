@@ -117,6 +117,7 @@ class AdminController extends Controller
             $t->rating_label = $this->analysis->ratingLabel($t->avg_rating);
             return $t;
         });
+   
 
         return view('AdminSide.home', compact(
             'totalstudents',

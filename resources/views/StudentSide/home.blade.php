@@ -182,15 +182,18 @@
 
                 </header>
                 <main class="content">
-                    <div class="welcome-card">
-                        <h1 id="welcomeHeading">Welcome back,
-                            {{ Auth::user()->fname }}
-                        </h1>
-                        <p id="welcomeText">Your voice helps improve teaching quality. Thank you for participating.
+                    @if (session('just_logged_in'))
+                        <div class="welcome-card">
+                            <h1 id="welcomeHeading">
+                                Welcome back, {{ Auth::user()->fname }}
+                            </h1>
 
-                        </p>
-                    </div>
-                    <button class="expand-button" id="expandBtn">⋮ Expand Details</button>
+                            <p id="welcomeText">
+                                Here's what's happening across the system.
+                            </p>
+                        </div>
+                    @endif
+                    <!-- <button class="expand-button" id="expandBtn">⋮ Expand Details</button>
                     <div class="expand-panel" id="expandPanel">
                         <div class="expand-line">
                             📊 Dashboard updated 2 hours ago
@@ -201,7 +204,7 @@
                         <div class="expand-line">
                             🔔 2 pending notifications
                         </div>
-                    </div>
+                    </div> -->
                     <div class="cards-grid">
                         <div class="stat-card">
                             <div class="stat-label">Pending Evaluations</div>

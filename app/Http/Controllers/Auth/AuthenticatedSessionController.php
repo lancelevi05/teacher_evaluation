@@ -65,6 +65,8 @@ class AuthenticatedSessionController extends Controller
                 'employee_id' => $user->usn,
 
             ]);
+
+            
             return redirect()->intended(route('TeacherSide.home', absolute: false));
 
 
@@ -72,13 +74,16 @@ class AuthenticatedSessionController extends Controller
 
         // Redirect based on user type
         if ($user->userType === 'Admin') {
+            session()->flash('just_logged_in', true);
             return redirect()->intended(route('AdminSide.home', absolute: false));
         } elseif ($user->userType === 'Teacher') {
+            session()->flash('just_logged_in', true);
             return redirect()->intended(route('TeacherSide.home', absolute: false));
         }
 
         // Default to Student home
         elseif ($user->userType === 'Student') {
+            session()->flash('just_logged_in', true);
             return redirect()->intended(route('StudentSide.home', absolute: false));
         }
     }

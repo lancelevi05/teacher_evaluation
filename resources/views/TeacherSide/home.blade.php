@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
 
-    @include('StudentSide.css')
+    @include('TeacherSide.css')
 
     {{-- Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -87,6 +87,18 @@
                     </p>
 
                 </div>
+
+                 @if (session('just_logged_in'))
+                        <div class="welcome-card">
+                            <h1 id="welcomeHeading">
+                                Welcome back, {{ Auth::user()->fname }}
+                            </h1>
+
+                            <p id="welcomeText">
+                                  Here's a snapshot of your teaching performance.
+                            </p>
+                        </div>
+                    @endif
 
                
 
