@@ -31,83 +31,83 @@
         //     font_size: 14
         // };
 
-        function applyConfig(config) {
-            const c = key => config[key] || defaultConfig[key];
+        // function applyConfig(config) {
+        //     const c = key => config[key] || defaultConfig[key];
 
-            document.getElementById('sidebarBrand').textContent = c('site_title');
-            // document.getElementById('welcomeHeading').textContent = c('welcome_heading');
-            document.getElementById('welcomeText').textContent = c('welcome_text');
-            document.getElementById('footerText').textContent = c('footer_text');
+        //     document.getElementById('sidebarBrand').textContent = c('site_title');
+        //     // document.getElementById('welcomeHeading').textContent = c('welcome_heading');
+        //     document.getElementById('welcomeText').textContent = c('welcome_text');
+        //     document.getElementById('footerText').textContent = c('footer_text');
 
-            const root = document.documentElement;
-            const wrapper = document.querySelector('.app-wrapper');
-            wrapper.style.background = c('background_color');
+        //     const root = document.documentElement;
+        //     const wrapper = document.querySelector('.app-wrapper');
+        //     wrapper.style.background = c('background_color');
 
-            document.querySelectorAll('.stat-card, .section-card, .top-bar').forEach(el => {
-                el.style.background = c('surface_color');
-            });
+        //     document.querySelectorAll('.stat-card, .section-card, .top-bar').forEach(el => {
+        //         el.style.background = c('surface_color');
+        //     });
 
-            document.querySelectorAll('.stat-value, .section-card h2, .top-bar-title').forEach(el => {
-                el.style.color = c('text_color');
-            });
+        //     document.querySelectorAll('.stat-value, .section-card h2, .top-bar-title').forEach(el => {
+        //         el.style.color = c('text_color');
+        //     });
 
-            document.querySelectorAll('.nav-item.active, .activity-dot').forEach(el => {
-                el.style.background = c('primary_action_color');
-            });
-            document.querySelector('.welcome-card').style.background =
-                `linear-gradient(135deg, ${c('primary_action_color')} 0%, ${c('text_color')} 100%)`;
-            document.querySelector('.avatar').style.background = c('primary_action_color');
+        //     document.querySelectorAll('.nav-item.active, .activity-dot').forEach(el => {
+        //         el.style.background = c('primary_action_color');
+        //     });
+        //     document.querySelector('.welcome-card').style.background =
+        //         `linear-gradient(135deg, ${c('primary_action_color')} 0%, ${c('text_color')} 100%)`;
+        //     document.querySelector('.avatar').style.background = c('primary_action_color');
 
-            document.querySelectorAll('.sidebar-brand').forEach(el => el.style.borderBottomColor = c('secondary_action_color') + '22');
+        //     document.querySelectorAll('.sidebar-brand').forEach(el => el.style.borderBottomColor = c('secondary_action_color') + '22');
 
-            const font = c('font_family');
-            const baseSize = c('font_size');
-            const stack = `${font}, sans-serif`;
-            document.body.style.fontFamily = stack;
-            document.querySelector('.welcome-card h1').style.fontSize = `${baseSize * 1.7}px`;
-            document.querySelector('.welcome-card p').style.fontSize = `${baseSize}px`;
-            document.querySelectorAll('.stat-value').forEach(el => el.style.fontSize = `${baseSize * 2}px`);
-            document.querySelectorAll('.stat-label').forEach(el => el.style.fontSize = `${baseSize * 0.85}px`);
-        }
+        //     const font = c('font_family');
+        //     const baseSize = c('font_size');
+        //     const stack = `${font}, sans-serif`;
+        //     document.body.style.fontFamily = stack;
+        //     document.querySelector('.welcome-card h1').style.fontSize = `${baseSize * 1.7}px`;
+        //     document.querySelector('.welcome-card p').style.fontSize = `${baseSize}px`;
+        //     document.querySelectorAll('.stat-value').forEach(el => el.style.fontSize = `${baseSize * 2}px`);
+        //     document.querySelectorAll('.stat-label').forEach(el => el.style.fontSize = `${baseSize * 0.85}px`);
+        // }
 
-        if (window.elementSdk && typeof window.elementSdk.init === 'function') {
-            window.elementSdk.init({
-                defaultConfig,
-                onConfigChange: async (config) => applyConfig(config),
-                mapToCapabilities: (config) => {
-                    const color = (key) => ({
-                        get: () => config[key] || defaultConfig[key],
-                        set: (v) => { config[key] = v; window.elementSdk.setConfig({ [key]: v }); }
-                    });
-                    return {
-                        recolorables: [
-                            color('background_color'),
-                            color('surface_color'),
-                            color('text_color'),
-                            color('primary_action_color'),
-                            color('secondary_action_color')
-                        ],
-                        borderables: [],
-                        fontEditable: {
-                            get: () => config.font_family || defaultConfig.font_family,
-                            set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
-                        },
-                        fontSizeable: {
-                            get: () => config.font_size || defaultConfig.font_size,
-                            set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
-                        }
-                    };
-                },
-                mapToEditPanelValues: (config) => new Map([
-                    ['site_title', config.site_title || defaultConfig.site_title],
-                    ['welcome_heading', config.welcome_heading || defaultConfig.welcome_heading],
-                    ['welcome_text', config.welcome_text || defaultConfig.welcome_text],
-                    ['footer_text', config.footer_text || defaultConfig.footer_text]
-                ])
-            });
-        } else {
-            applyConfig(defaultConfig);
-        }
+        // if (window.elementSdk && typeof window.elementSdk.init === 'function') {
+        //     window.elementSdk.init({
+        //         defaultConfig,
+        //         onConfigChange: async (config) => applyConfig(config),
+        //         mapToCapabilities: (config) => {
+        //             const color = (key) => ({
+        //                 get: () => config[key] || defaultConfig[key],
+        //                 set: (v) => { config[key] = v; window.elementSdk.setConfig({ [key]: v }); }
+        //             });
+        //             return {
+        //                 recolorables: [
+        //                     color('background_color'),
+        //                     color('surface_color'),
+        //                     color('text_color'),
+        //                     color('primary_action_color'),
+        //                     color('secondary_action_color')
+        //                 ],
+        //                 borderables: [],
+        //                 fontEditable: {
+        //                     get: () => config.font_family || defaultConfig.font_family,
+        //                     set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+        //                 },
+        //                 fontSizeable: {
+        //                     get: () => config.font_size || defaultConfig.font_size,
+        //                     set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+        //                 }
+        //             };
+        //         },
+        //         mapToEditPanelValues: (config) => new Map([
+        //             ['site_title', config.site_title || defaultConfig.site_title],
+        //             ['welcome_heading', config.welcome_heading || defaultConfig.welcome_heading],
+        //             ['welcome_text', config.welcome_text || defaultConfig.welcome_text],
+        //             ['footer_text', config.footer_text || defaultConfig.footer_text]
+        //         ])
+        //     });
+        // } else {
+        //     applyConfig(defaultConfig);
+        // }
 
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');

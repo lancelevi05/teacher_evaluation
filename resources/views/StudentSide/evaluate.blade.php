@@ -69,7 +69,7 @@
             padding: 14px;
             border: none;
             border-radius: 10px;
-            background: #5b21b6;
+            background: #1a48c5;
             color: #fff;
             font-size: 18px;
             font-weight: 600;
@@ -78,7 +78,7 @@
         }
 
         .evaluation-card button:hover {
-            background: #4c1d95;
+            background: #1f54e5;
         }
 
         .page-header {

@@ -35,6 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         // Get the authenticated user
         $user = Auth::user();
+        
 
         // ===========================
         // INSERT LOGIN AUDIT LOG HERE
@@ -44,6 +45,8 @@ class AuthenticatedSessionController extends Controller
             'action' => 'Login',
             'details' => $user->email,
         ]);
+
+        session()->flash('just_logged_in', true);
 
         // If Student, ensure student_info record exists
         if ($user->userType === 'Student') {
@@ -66,24 +69,23 @@ class AuthenticatedSessionController extends Controller
 
             ]);
 
-            
+
             return redirect()->intended(route('TeacherSide.home', absolute: false));
 
 
         }
 
         // Redirect based on user type
-        if ($user->userType === 'Admin') {
-            session()->flash('just_logged_in', true);
-            return redirect()->intended(route('AdminSide.home', absolute: false));
-        } elseif ($user->userType === 'Teacher') {
-            session()->flash('just_logged_in', true);
-            return redirect()->intended(route('TeacherSide.home', absolute: false));
-        }
+        
 
-        // Default to Student home
-        elseif ($user->userType === 'Student') {
-            session()->flash('just_logged_in', true);
+        // Redirect based on user type
+        if ($user->userType === 'Admin') {
+            return redirect()->intended(route('AdminSide.home', absolute: false));
+
+        } elseif ($user->userType === 'Teacher') {
+            return redirect()->intended(route('TeacherSide.home', absolute: false));
+
+        } elseif ($user->userType === 'Student') {
             return redirect()->intended(route('StudentSide.home', absolute: false));
         }
     }
@@ -102,7 +104,7 @@ class AuthenticatedSessionController extends Controller
             'action' => 'Logout',
             'details' => 'User logged out.',
         ]);
-        
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
