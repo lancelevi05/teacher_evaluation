@@ -215,7 +215,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 // =====================================================
 // TEACHER ROUTES
 // =====================================================
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','role:Admin,Teacher'])->group(function () {
     // Route::get('/teacher/home', function (Request $request) {
     //     return view('TeacherSide.home', [
     //         'user' => $request->user(),

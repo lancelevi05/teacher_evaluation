@@ -65,7 +65,7 @@ public function __construct(
         $teacher = Teacher::where('user_id', Auth::id())->first();
 
         if (!$teacher) {
-            return redirect()->route('teacher.dashboard');
+            return redirect()->route('TeacherSide.home');
         }
 
         // Overall statistics
@@ -132,7 +132,7 @@ public function __construct(
         $teacher = Teacher::with('user')->where('user_id', Auth::id())->first();
 
         if (!$teacher) {
-            return redirect()->route('teacher.dashboard');
+            return redirect()->route('TeacherSide.home');
         }
 
         $stats = Evaluation::where('teacher_id', $teacher->id)
@@ -189,7 +189,7 @@ public function __construct(
             ->first();
 
         if (!$teacher) {
-            return redirect()->route('teacher.dashboard');
+            return redirect()->route('TeacherSide.home');
         }
 
         $comments = DB::table('evaluation_answers as ea')
@@ -219,7 +219,7 @@ public function __construct(
     $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
 
     if (!$teacher) {
-        return redirect()->route('teacher.dashboard');
+        return redirect()->route('TeacherSide.home');
     }
 
     $categoryAverages = DB::table('evaluation_answers as ea')
